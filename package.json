@@ -1,0 +1,15 @@
+{
+  "name": "relax",
+  "version": "1.0.0",
+  "description": "hooks collection",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hooks",
+    "react"
+  ],
+  "author": "tutu@fantufantu.com",
+  "license": "MIT"
+}
