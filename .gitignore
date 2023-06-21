@@ -1,0 +1,6 @@
+# npm
+*node_modules
+
+# build output
+dist
+typings
