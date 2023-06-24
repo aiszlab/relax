@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 /** @type {import("webpack").Configuration} */
 const configuration = {
   optimization: {
-    minimize: false
+    minimize: true
   },
 
   mode: 'production',
