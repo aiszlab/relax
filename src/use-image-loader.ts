@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Subject } from 'rxjs'
+import { useState, useEffect, useRef } from 'react'
+import { Observable, Subscriber } from 'rxjs'
 
 type Status = 'none' | 'loading' | 'error' | 'loaded'
 
@@ -7,7 +7,12 @@ interface Dependencies {
   src: string
 }
 
+/**
+ * @author murukal
+ * @description 图片加载状态
+ */
 export const useImageLoader = ({ src }: Dependencies) => {
+  const loader = useRef<Subscriber<void>>()
   const [status, setStatus] = useState<Status>('none')
 
   useEffect(() => {
@@ -15,20 +20,22 @@ export const useImageLoader = ({ src }: Dependencies) => {
       return setStatus('none')
     }
 
-    setStatus('loading')
-
-    const $loader = new Subject<void>()
-    $loader.subscribe({
+    // create observable to listen img status
+    new Observable<void>((subscriber) => {
+      loader.current = subscriber
+      subscriber.next()
+    }).subscribe({
+      next: () => setStatus('loading'),
       complete: () => setStatus('loaded'),
       error: () => setStatus('error')
     })
 
     const image = new Image()
     image.addEventListener('load', () => {
-      $loader.complete()
+      loader.current?.complete()
     })
     image.addEventListener('error', () => {
-      $loader.error(null)
+      loader.current?.error(null)
     })
     image.src = src
   }, [src])
