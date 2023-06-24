@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack",
     "clean:build": "rm -rf dist && rm -rf typings",
-    "prepatch": "npm run clean:build && npm run build && npm version prepatch && npm publish --tag beta"
+    "prepatch": "npm run clean:build && npm run build && npm version prepatch && npm publish"
   },
   "dependencies": {
     "rxjs": "^7.8.1"
