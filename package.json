@@ -4,7 +4,6 @@
   "description": "react utils collection",
   "type": "module",
   "main": "./dist/main.mjs",
-  "types": "./typings",
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
