@@ -1,12 +1,25 @@
 import { EffectCallback, useEffect } from 'react'
-import { VoidAsyncCallable } from '../types'
 
-export const useMounted = (callable: EffectCallback | VoidAsyncCallable) => {
+/**
+ * @author murukal
+ *
+ * @description
+ * when components mounted
+ */
+export const useMounted = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
   useEffect(() => {
     const called = callable()
-    const isPromise = called instanceof Promise
 
-    if (isPromise) return
-    return called
+    // if result is void
+    if (!called) {
+      return void 0
+    }
+
+    // if result is promise like, return void
+    if ((called as PromiseLike<void>).then) {
+      return void 0
+    }
+
+    return called as VoidFunction
   }, [])
 }

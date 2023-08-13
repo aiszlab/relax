@@ -1,7 +1,13 @@
 import { useCallback, useState } from 'react'
 
-export const useBoolean = () => {
-  const [isOn, setIsOn] = useState(false)
+/**
+ * @author murukal
+ *
+ * @description
+ * boolean state
+ */
+export const useBoolean = (initialValue?: boolean) => {
+  const [isOn, setIsOn] = useState(initialValue || false)
 
   const turnOn = useCallback(() => setIsOn(true), [])
   const turnOff = useCallback(() => setIsOn(false), [])
@@ -12,6 +18,7 @@ export const useBoolean = () => {
     isOn,
     turnOn,
     turnOff,
-    toggle
+    toggle,
+    setIsOn
   }
 }

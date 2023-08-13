@@ -9,7 +9,9 @@ interface Dependencies {
 
 /**
  * @author murukal
- * @description 图片加载状态
+ *
+ * @description
+ * image loader
  */
 export const useImageLoader = ({ src }: Dependencies) => {
   const loader = useRef<Subscriber<void>>()

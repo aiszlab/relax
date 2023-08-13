@@ -1,12 +1,25 @@
 import { EffectCallback, useLayoutEffect } from 'react'
-import { VoidAsyncCallable } from '../types'
 
-export const useMount = (callable: EffectCallback | VoidAsyncCallable) => {
+/**
+ * @author murukal
+ *
+ * @description
+ * when components will mount
+ */
+export const useMount = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
   useLayoutEffect(() => {
     const called = callable()
-    const isPromise = called instanceof Promise
 
-    if (isPromise) return
-    return called
+    // if result is void
+    if (!called) {
+      return void 0
+    }
+
+    // if result is promise like, return void
+    if ((called as PromiseLike<void>).then) {
+      return void 0
+    }
+
+    return called as VoidFunction
   }, [])
 }

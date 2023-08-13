@@ -11,7 +11,9 @@ interface Options {
 
 /**
  * @author murukal
- * @description 防抖hooks
+ *
+ * @description
+ * debounce callback
  */
 export const useDebounceCallback = <T>(callable: Function, options: Options) => {
   // delay
