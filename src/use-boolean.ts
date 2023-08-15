@@ -10,6 +10,7 @@ export const useBoolean = (initialValue?: boolean) => {
   const [isOn, setIsOn] = useState(initialValue || false)
 
   const turnOn = useCallback(() => setIsOn(true), [])
+
   const turnOff = useCallback(() => setIsOn(false), [])
 
   const toggle = useCallback(() => setIsOn((prev) => !prev), [])
