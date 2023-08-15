@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 
 /**
  * @author murukal
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
  * @description
  * controlled state
  */
-export const useControlledState = <T>(value: T) => {
+export const useControlledState = <T>(value: T): [T, Dispatch<SetStateAction<T>>] => {
   const [state, setState] = useState(value)
 
   useEffect(() => {
