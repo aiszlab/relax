@@ -11,7 +11,7 @@ interface Options {
  * timeout effect
  */
 export const useTimeout = (handler: UnderlyingSinkCloseCallback, { duration }: Options) => {
-  const timer = useRef<NodeJS.Timeout | null>(null)
+  const timer = useRef<number | null>(null)
 
   useEffect(() => {
     timer.current = setTimeout(handler, duration)
