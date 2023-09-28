@@ -13,7 +13,7 @@ export const useBoolean = (initialValue?: boolean) => {
 
   const turnOff = useCallback(() => setIsOn(false), [])
 
-  const toggle = useCallback(() => setIsOn((prev) => !prev), [])
+  const toggle = useCallback(() => setIsOn((_isOn) => !_isOn), [])
 
   return {
     isOn,
