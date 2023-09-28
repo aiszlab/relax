@@ -1,0 +1,17 @@
+{
+  "name": "@aiszlab/fuzzy",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "devDependencies": {
+    "@types/react": "^18.2.12",
+    "@types/react-dom": "^18.2.5"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "author": "",
+  "license": "ISC"
+}
