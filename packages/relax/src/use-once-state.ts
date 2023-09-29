@@ -7,5 +7,5 @@ import { useState } from 'react'
  * state always be same after first render
  */
 export const useOnceState = <T>(initialState: T | (() => T)) => {
-  return useState(() => initialState)[0]
+  return useState<T>(initialState)[0]
 }
