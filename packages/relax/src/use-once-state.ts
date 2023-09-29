@@ -6,6 +6,6 @@ import { useState } from 'react'
  * @description
  * state always be same after first render
  */
-export const useOnceState = <T>(initialValue: T) => {
-  return useState(() => initialValue)[0]
+export const useOnceState = <T>(initialState: T | (() => T)) => {
+  return useState(() => initialState)[0]
 }
