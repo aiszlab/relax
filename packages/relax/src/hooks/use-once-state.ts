@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { State } from '../types/state'
 
 /**
  * @author murukal
@@ -6,6 +7,6 @@ import { useState } from 'react'
  * @description
  * state always be same after first render
  */
-export const useOnceState = <T>(initialState: T | (() => T)) => {
+export const useOnceState = <T>(initialState: State<T>) => {
   return useState<T>(initialState)[0]
 }
