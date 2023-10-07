@@ -1,5 +1,5 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
-import { isFunction } from '../utils/state'
+import { isFunction, isVoid } from '../utils/state'
 import type { State } from '../types/state'
 
 interface Props<T> {
@@ -14,23 +14,16 @@ interface Props<T> {
  */
 export const useControlledState = <T>(
   controlledState: State<T>,
-  props?: Props<T>
+  { defaultState }: Props<T> = {}
 ): [T, Dispatch<SetStateAction<T>>] => {
+  /// initialize state
   const [state, setState] = useState<T>(() => {
-    if (isFunction(controlledState)) {
-      return controlledState()
-    }
+    if (isFunction(controlledState)) return controlledState()
 
-    if (controlledState === void 0) {
-      if (props?.defaultState === void 0) {
-        return controlledState
-      }
-
-      if (isFunction(props.defaultState)) {
-        return props.defaultState()
-      }
-
-      return props.defaultState
+    if (isVoid(controlledState)) {
+      if (isVoid(defaultState)) return controlledState
+      if (isFunction(defaultState)) return defaultState()
+      return defaultState
     }
 
     return controlledState
@@ -38,15 +31,10 @@ export const useControlledState = <T>(
 
   useEffect(() => {
     // when state is not controlled
-    if (controlledState === void 0) {
-      return
-    }
-
+    if (isVoid(controlledState)) return
     // if state is equal with value
-    if (controlledState === state) {
-      return
-    }
-
+    if (controlledState === state) return
+    /// update inner state
     setState(controlledState)
   }, [controlledState])
 
