@@ -1055,6 +1055,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-is@^18.2.2":
+  version "18.2.2"
+  resolved "https://registry.npmjs.org/@types/react-is/-/react-is-18.2.2.tgz#c2f4f8c7c7449376dab648dec9327f7148983d06"
+  integrity sha512-bNmRDADVsOivYLvqYQATYRbf60SlK++spu97SK65pSCjdtuTqczFexBQtOK+gQdG6cqOsvQZ3mR12ueEoaq5iA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^18.2.12":
   version "18.2.23"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.2.23.tgz#60ad6cf4895e93bed858db0e03bcc4ff97d0410e"
@@ -1307,6 +1314,11 @@ picomatch@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
+
+react-is@^18.2.0:
+  version "18.2.0"
+  resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
+  integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
 regenerate-unicode-properties@^10.1.0:
   version "10.1.1"

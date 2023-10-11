@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
-import { isFunction, isVoid } from '../utils/state'
-import type { State } from '../types/state'
+import { isStateGetter, type State } from '../utils/is-state-getter'
+import { isVoid } from '../utils/is-void'
 
 interface Props<T> {
   defaultState?: State<T>
@@ -18,11 +18,11 @@ export const useControlledState = <T>(
 ): [T, Dispatch<SetStateAction<T>>] => {
   /// initialize state
   const [state, setState] = useState<T>(() => {
-    if (isFunction(controlledState)) return controlledState()
+    if (isStateGetter(controlledState)) return controlledState()
 
     if (isVoid(controlledState)) {
       if (isVoid(defaultState)) return controlledState
-      if (isFunction(defaultState)) return defaultState()
+      if (isStateGetter(defaultState)) return defaultState()
       return defaultState
     }
 
