@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { isStateGetter, type State } from '../utils/is-state-getter'
-import { isVoid } from '../utils/is-void'
+import { isUndefined } from '../utils/is-undefined'
 
 interface Props<T> {
   defaultState?: State<T>
@@ -20,8 +20,8 @@ export const useControlledState = <T>(
   const [state, setState] = useState<T>(() => {
     if (isStateGetter(controlledState)) return controlledState()
 
-    if (isVoid(controlledState)) {
-      if (isVoid(defaultState)) return controlledState
+    if (isUndefined(controlledState)) {
+      if (isUndefined(defaultState)) return controlledState
       if (isStateGetter(defaultState)) return defaultState()
       return defaultState
     }
@@ -31,7 +31,7 @@ export const useControlledState = <T>(
 
   useEffect(() => {
     // when state is not controlled
-    if (isVoid(controlledState)) return
+    if (isUndefined(controlledState)) return
     // if state is equal with value
     if (controlledState === state) return
     /// update inner state

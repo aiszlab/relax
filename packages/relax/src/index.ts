@@ -16,5 +16,7 @@ export { useOnceState } from './hooks/use-once-state'
  * utils
  */
 export { isRefable } from './utils/is-refable'
-export { isVoid } from './utils/is-void'
+export { isUndefined } from './utils/is-undefined'
 export { isStateGetter } from './utils/is-state-getter'
+export { isNull } from './utils/is-null'
+export { isVoid } from './utils/is-void'
