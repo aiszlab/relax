@@ -10,6 +10,7 @@ export { useMounted } from './hooks/use-mounted'
 export { useTimeout } from './hooks/use-timeout'
 export { useControlledState } from './hooks/use-controlled-state'
 export { useOnceState } from './hooks/use-once-state'
+export { useScrollLocker } from './hooks/use-scroll-locker'
 
 /**
  * @description
@@ -22,3 +23,7 @@ export { isNull } from './utils/is-null'
 export { isVoid } from './utils/is-void'
 export { isArray } from './utils/is-array'
 export { isEmpty } from './utils/is-empty'
+export { isDomUsable } from './utils/is-dom-usable'
+export { isMobile } from './utils/is-mobile'
+export { isOverflow } from './utils/is-overflow'
+export { isStyleElement } from './utils/is-style-element'
