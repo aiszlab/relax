@@ -1,4 +1,4 @@
-import { isVoid } from '..'
+import { isVoid } from './is-void'
 import { isArray } from './is-array'
 
 /**
