@@ -11,6 +11,7 @@ export { useTimeout } from './hooks/use-timeout'
 export { useControlledState } from './hooks/use-controlled-state'
 export { useOnceState } from './hooks/use-once-state'
 export { useScrollLocker } from './hooks/use-scroll-locker'
+export { useForceUpdate } from './hooks/use-force-update'
 
 /**
  * @description
