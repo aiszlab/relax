@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "react utils collection",
   "type": "module",
   "main": "./dist/index.js",
