@@ -15,18 +15,18 @@ export { useForceUpdate } from './hooks/use-force-update'
 
 /**
  * @description
- * utils
+ * is
  */
-export { isRefable } from './utils/is-refable'
-export { isUndefined } from './utils/is-undefined'
-export { isStateGetter } from './utils/is-state-getter'
-export { isNull } from './utils/is-null'
-export { isVoid } from './utils/is-void'
-export { isArray } from './utils/is-array'
-export { isComplex } from './utils/is-complex'
-export { isEmpty } from './utils/is-empty'
-export { isDomUsable } from './utils/is-dom-usable'
-export { isMobile } from './utils/is-mobile'
-export { isOverflow } from './utils/is-overflow'
-export { isStyleElement } from './utils/is-style-element'
-export { isFunction } from './utils/is-function'
+export { isRefable } from './is/is-refable'
+export { isUndefined } from './is/is-undefined'
+export { isStateGetter } from './is/is-state-getter'
+export { isNull } from './is/is-null'
+export { isVoid } from './is/is-void'
+export { isArray } from './is/is-array'
+export { isComplex } from './is/is-complex'
+export { isEmpty } from './is/is-empty'
+export { isDomUsable } from './is/is-dom-usable'
+export { isMobile } from './is/is-mobile'
+export { isOverflow } from './is/is-overflow'
+export { isStyleElement } from './is/is-style-element'
+export { isFunction } from './is/is-function'
