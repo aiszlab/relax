@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
-import { isStateGetter, type State } from '../utils/is-state-getter'
-import { isUndefined } from '../utils/is-undefined'
+import { isStateGetter, type State } from '../is/is-state-getter'
+import { isUndefined } from '../is/is-undefined'
 
 interface Props<T> {
   defaultState?: State<T>

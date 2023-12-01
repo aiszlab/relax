@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { State } from '../utils/is-state-getter'
+import type { State } from '../is/is-state-getter'
 
 /**
  * @author murukal

@@ -1,6 +1,6 @@
 import { useId, useLayoutEffect } from 'react'
-import { isOverflow } from '../utils/is-overflow'
-import { isStyleElement } from '../utils/is-style-element'
+import { isOverflow } from '../is/is-overflow'
+import { isStyleElement } from '../is/is-style-element'
 
 const isComputable = (value: string) => /^(.*)px$/.test(value)
 
