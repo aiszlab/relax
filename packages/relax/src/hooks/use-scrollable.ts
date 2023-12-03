@@ -9,16 +9,13 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>() =>
   const itemRefs = useRef<Map<Key, C | null>>(new Map())
   const scroller = useRef<number | null>(null)
 
-  const scrollTo = useCallback((key: Key, duration = 0) => {
+  const scrollTo = useCallback((to: number, duration = 0) => {
     if (scroller.current) {
       cancelAnimationFrame(scroller.current)
     }
 
     const group = groupRef.current
     if (!group) return
-    const item = itemRefs.current.get(key)
-    if (!item) return
-    const to = item.offsetTop
 
     // if duration <= 0, jump immediately
     if (duration <= 0) {
@@ -35,13 +32,20 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>() =>
     scroller.current = requestAnimationFrame(() => {
       group.scrollTop = group.scrollTop + step
       if (group.scrollTop === to) return
-      scrollTo(key, duration - 10)
+      scrollTo(to, duration - 10)
     })
+  }, [])
+
+  const to = useCallback((key: Key) => {
+    const item = itemRefs.current.get(key)
+    if (!item) return 0
+    return item.offsetTop
   }, [])
 
   return {
     groupRef,
     itemRefs,
-    scrollTo
+    scrollTo,
+    to
   }
 }
