@@ -1,33 +1,11 @@
 import { Key, useCallback, useRef } from 'react'
+import { scrollTo } from '../dom/scroll-to'
 
 type Direction = 'horizontal' | 'vertical'
 
 interface Props {
   direction?: Direction
 }
-
-const PROPERTY = new Map<
-  Direction,
-  {
-    target: Extract<keyof HTMLElement, 'offsetTop' | 'offsetLeft'>
-    trigger: Extract<keyof HTMLElement, 'scrollTop' | 'scrollLeft'>
-  }
->([
-  [
-    'vertical',
-    {
-      trigger: 'scrollTop',
-      target: 'offsetTop'
-    }
-  ],
-  [
-    'horizontal',
-    {
-      trigger: 'scrollLeft',
-      target: 'offsetLeft'
-    }
-  ]
-])
 
 /**
  * @description
