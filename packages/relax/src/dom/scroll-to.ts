@@ -38,7 +38,7 @@ interface ScrollBy {
  * scroll to for wrapper element
  */
 export const scrollTo = (
-  trigger: HTMLElement,
+  target: HTMLElement,
   to: number,
   { duration = 0, direction = 'vertical' }: ScrollBy = {
     duration: 0,
@@ -46,39 +46,39 @@ export const scrollTo = (
   }
 ): void => {
   const scroller = new Scroller()
-  const scrolled = scroller.scrolled.get(trigger)
+  const scrolled = scroller.scrolled.get(target)
   const currentAtProperty = scroller.currentAt(direction)
 
   if (scrolled) {
     cancelAnimationFrame(scrolled)
-    scroller.scrolled.delete(trigger)
+    scroller.scrolled.delete(target)
   }
 
   // if duration <= 0, jump immediately
   if (duration <= 0) {
     scroller.scrolled.set(
-      trigger,
+      target,
       requestAnimationFrame(() => {
-        trigger[currentAtProperty] = to
+        target[currentAtProperty] = to
       })
     )
     return
   }
 
   // animate
-  const currentAt = trigger[currentAtProperty]
+  const currentAt = target[currentAtProperty]
   const difference = to - currentAt
   const step = (difference / duration) * 10
 
   scroller.scrolled.set(
-    trigger,
+    target,
     requestAnimationFrame(() => {
-      trigger[currentAtProperty] = currentAt + step
+      target[currentAtProperty] = currentAt + step
 
       // over end, stop any animation
-      if (trigger[currentAtProperty] === to) return
+      if (target[currentAtProperty] === to) return
 
-      scrollTo(trigger, to, {
+      scrollTo(target, to, {
         duration: duration - 10,
         direction
       })

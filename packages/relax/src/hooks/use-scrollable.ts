@@ -12,16 +12,16 @@ interface Dependencies {
 export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
   direction = 'vertical'
 }: Dependencies = {}) => {
-  const triggerRef = useRef<P>(null)
-  const targetRefs = useRef<Map<Key, C | null>>(new Map())
+  const targetRef = useRef<P>(null)
+  const triggerRefs = useRef<Map<Key, C | null>>(new Map())
 
   const scrollTo = useCallback(
     (to: number, duration = 0) => {
-      const trigger = triggerRef.current
-      if (!trigger) return
+      const target = targetRef.current
+      if (!target) return
 
       // use animated scroll
-      _scrollTo(trigger, to, {
+      _scrollTo(target, to, {
         duration,
         direction
       })
@@ -31,17 +31,17 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
 
   const to = useCallback(
     (key: Key) => {
-      const item = targetRefs.current.get(key)
-      if (!item) return 0
+      const trigger = triggerRefs.current.get(key)
+      if (!trigger) return 0
       // different direction, use different property
-      return direction === 'vertical' ? item.offsetTop : item.offsetLeft
+      return direction === 'vertical' ? trigger.offsetTop : trigger.offsetLeft
     },
     [direction]
   )
 
   return {
-    triggerRef,
-    targetRefs,
+    targetRef,
+    triggerRefs,
     scrollTo,
     to
   }
