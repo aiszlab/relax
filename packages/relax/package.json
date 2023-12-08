@@ -4,6 +4,12 @@
   "description": "react utils collection",
   "type": "module",
   "main": "./dist/index.js",
+  "exports": {
+    "./dom": {
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.js"
+    }
+  },
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
