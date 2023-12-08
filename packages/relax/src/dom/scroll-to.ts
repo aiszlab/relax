@@ -1,4 +1,4 @@
-type Direction = 'horizontal' | 'vertical'
+export type Direction = 'horizontal' | 'vertical'
 
 class Scroller {
   #scrolled = new Map<HTMLElement, number>()
@@ -75,6 +75,7 @@ export const scrollTo = (
     requestAnimationFrame(() => {
       trigger[currentAtProperty] = currentAt + step
 
+      // over end, stop any animation
       if (trigger[currentAtProperty] === to) return
 
       scrollTo(trigger, to, {
