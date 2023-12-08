@@ -5,11 +5,15 @@ import pkg from './package.json' assert { type: 'json' }
 
 /** @type {import("rollup").RollupOptions} */
 const configuration = {
-  input: './src/index.ts',
+  input: {
+    index: './src/index.ts',
+    'dom/index': './src/dom/index.ts'
+  },
 
   output: {
     format: 'es',
     dir: './dist',
+    entryFileNames: '[name].js',
     preserveModules: true,
     preserveModulesRoot: './src'
   },
