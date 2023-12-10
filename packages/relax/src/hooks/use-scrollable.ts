@@ -40,7 +40,7 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
   )
 
   /// set trigger
-  const setTrigger = useCallback((key: Key, trigger: C | null) => {
+  const setTrigger = useCallback((key: Key, trigger: C) => {
     triggerRefs.current.set(key, trigger)
   }, [])
 
