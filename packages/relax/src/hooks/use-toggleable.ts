@@ -1,18 +1,18 @@
 import { Key, useCallback, useMemo, useState } from 'react'
 
 type Dependencies = {
-  keys: Key[]
-  isAllDefaultToggled: boolean
+  keys?: Key[]
+  isAllDefaultToggled?: boolean
 }
 
 /**
  * @description
  * toggle able
  */
-export const useToggleable = ({ keys, isAllDefaultToggled }: Dependencies) => {
+export const useToggleable = ({ keys, isAllDefaultToggled }: Dependencies = {}) => {
   const [toggledKeys, setToggledKeys] = useState<Map<Key, true>>(() => {
     if (isAllDefaultToggled) {
-      return new Map(keys.map((key) => [key, true]))
+      return new Map(keys?.map((key) => [key, true]))
     }
     return new Map()
   })
@@ -32,7 +32,7 @@ export const useToggleable = ({ keys, isAllDefaultToggled }: Dependencies) => {
 
   /// if all key is toggled
   const isAllToggled = useMemo(() => {
-    return keys.length === toggledKeys.size
+    return toggledKeys.size === keys?.length
   }, [toggledKeys, keys])
 
   /// is toggled
@@ -56,7 +56,7 @@ export const useToggleable = ({ keys, isAllDefaultToggled }: Dependencies) => {
     if (isAllToggled) {
       setToggledKeys(new Map())
     } else {
-      setToggledKeys(new Map(keys.map((key) => [key, true])))
+      setToggledKeys(new Map(keys?.map((key) => [key, true])))
     }
   }, [isAllToggled, keys])
 
