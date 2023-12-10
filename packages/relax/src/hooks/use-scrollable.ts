@@ -39,10 +39,16 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
     [direction]
   )
 
+  /// set trigger
+  const setTrigger = useCallback((key: Key, trigger: C | null) => {
+    triggerRefs.current.set(key, trigger)
+  }, [])
+
   return {
     targetRef,
     triggerRefs,
     scrollTo,
-    to
+    to,
+    setTrigger
   }
 }
