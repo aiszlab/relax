@@ -6,8 +6,9 @@ import pkg from './package.json' assert { type: 'json' }
 /** @type {import("rollup").RollupOptions} */
 const configuration = {
   input: {
-    index: './src/index.ts',
-    'dom/index': './src/dom/index.ts'
+    index: './src/index',
+    'dom/index': './src/dom/index',
+    'types/index': './src/types/index'
   },
 
   output: {

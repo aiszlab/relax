@@ -1,5 +1,6 @@
-import { Key, useCallback, useMemo, useState } from 'react'
+import { Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Nullable } from '../types'
+import { Partialable } from '../types/partial-able'
 
 /**
  * @description
@@ -28,118 +29,227 @@ type Options = {
    * @description
    * default toggled
    */
-  defaultToggled?: boolean
+  isDefaultToggled?: boolean
+
+  /**
+   * @description
+   * toggled keys
+   */
+  toggledKeys?: Key[]
 }
 
 /**
  * @description
- * toggled keys
+ * leaf props
  */
-type ToggledKeys = Map<Key, ToggleableKey | true>
+type LeafProps = {
+  /**
+   * @description
+   * leaf key
+   */
+  key: Key
 
-/**
- * @description
- * readable toggleable keys
- */
-type ReadableToggleableKeys = Map<Key, Nullable<ReadableToggleableKeys>>
+  /**
+   * @description
+   * parent leaf
+   */
+  parent: Nullable<Leaf>
 
-/**
- * @description
- * readable key paths
- */
-type ReadableKeyPaths = Map<Key, Key[][]>
+  /**
+   * @description
+   * the tree of the leaf
+   */
+  belongTo: Tree
+}
 
-/**
- * @description
- * read toggleable key
- */
-const readToggleableKeys = (toggleableKeys: ToggleableKey[], path: Key[] = []) => {
-  return toggleableKeys.reduce<[ReadableToggleableKeys, ReadableKeyPaths]>(
-    ([_readableToggleableKeys, _readableKeyPaths], { key, children }) => {
-      // recursion, read children
-      const [_keys, _paths] = readToggleableKeys(children ?? [], [...path, key])
+class Tree {
+  #leaves: Set<Leaf>
+  #toggledLeaves: Set<Leaf>
+  #groupedLeaves: Map<Key, Set<Leaf>>
+  #isDefaultToggled: boolean
 
-      // collect current item
-      _readableToggleableKeys.set(key, _keys)
+  constructor({ isDefaultToggled }: Pick<Required<Options>, 'isDefaultToggled'>) {
+    this.#leaves = new Set()
+    this.#toggledLeaves = new Set()
+    this.#groupedLeaves = new Map()
+    this.#isDefaultToggled = !!isDefaultToggled
+  }
 
-      // merge key paths
-      ;[...(_paths?.entries() || [])].concat([[key, [path]]]).forEach(([key, paths]) => {
-        _readableKeyPaths.has(key)
-          ? _readableKeyPaths.set(key, [..._readableKeyPaths.get(key)!, ...paths])
-          : _readableKeyPaths.set(key, paths)
+  get isAllToggled() {
+    return this.#leaves.size === this.#toggledLeaves.size
+  }
+
+  get toggledLeaves() {
+    return this.#toggledLeaves
+  }
+
+  get groupedLeaves() {
+    return this.#groupedLeaves
+  }
+
+  public grow(toggleableKey: ToggleableKey) {
+    this.#leaves.add(
+      new Leaf({
+        key: toggleableKey.key,
+        parent: null,
+        belongTo: this
+      }).grow(toggleableKey.children)
+    )
+    return this
+  }
+
+  public collect(leaf: Leaf) {
+    this.#groupedLeaves.has(leaf.key)
+      ? this.#groupedLeaves.set(leaf.key, new Set([leaf]))
+      : this.#groupedLeaves.get(leaf.key)!.add(leaf)
+
+    // if default toggled, add leaf to toggled leaves
+    this.#isDefaultToggled && this.toggledLeaves.add(leaf)
+  }
+
+  public toggle(key: Key) {
+    const leaves = this.#groupedLeaves.get(key)
+    if (!leaves?.size) return
+
+    leaves.forEach((leaf) => {
+      const _isToggled = this.toggledLeaves.has(leaf)
+      leaf.toggleBy(!_isToggled)
+    })
+  }
+
+  public toggleWith(keys: Key[]) {
+    this.toggledLeaves.clear()
+    keys.forEach((key) => {
+      this.#groupedLeaves.get(key)?.forEach((leaf) => {
+        this.#toggledLeaves.add(leaf)
       })
+    })
+  }
+}
 
-      return [_readableToggleableKeys, _readableKeyPaths]
-    },
-    [new Map(), new Map()]
-  )
+class Leaf {
+  #key: Key
+
+  #belongTo: Tree
+  #parent: Nullable<Leaf>
+
+  #children: Set<Leaf>
+  #toggledChildren: Set<Leaf>
+
+  constructor(props: LeafProps) {
+    this.#key = props.key
+
+    this.#parent = props.parent
+    this.#belongTo = props.belongTo
+
+    this.#children = new Set()
+    this.#toggledChildren = new Set()
+
+    // when leaf has grew, let tree collect leaf
+    this.#belongTo.collect(this)
+  }
+
+  public get key() {
+    return this.#key
+  }
+
+  public toggleBy(isToggled: boolean, isPrevent: boolean = false) {
+    if (isToggled) {
+      this.#belongTo.toggledLeaves.add(this)
+    } else {
+      this.#belongTo.toggledLeaves.delete(this)
+    }
+
+    if (isPrevent) return
+    // fall to every child
+    Array.from(this.#children.values()).forEach((child) => {
+      child.fall(isToggled)
+    })
+    // rise to parent
+    this.#parent?.rise(this, isToggled)
+  }
+
+  public grow(toggleableKeys: Partialable<ToggleableKey[]> = []): Leaf {
+    if (toggleableKeys.length > 0) {
+      toggleableKeys.forEach((_toggleableKey) => {
+        const child = new Leaf({
+          key: _toggleableKey.key,
+          parent: this,
+          belongTo: this.#belongTo
+        }).grow(_toggleableKey.children)
+
+        this.#children.add(child)
+      })
+    }
+
+    return this
+  }
+
+  public rise(child: Leaf, isToggled: boolean) {
+    if (isToggled) {
+      this.#toggledChildren.add(child)
+    } else {
+      this.#toggledChildren.delete(child)
+    }
+
+    // if toggled state is same, stop
+    const _isToggled = this.#children.size === this.#toggledChildren.size
+    const _hasToggled = !!this.#belongTo.toggledLeaves.has(this)
+    if (_hasToggled === _isToggled) return
+    this.toggleBy(_isToggled, true)
+
+    // rise to parent
+    this.#parent?.rise(this, _isToggled)
+  }
+
+  public fall(isToggled: boolean) {
+    // if toggled state is same, stop
+    const _hasToggled = !!this.#belongTo.toggledLeaves.has(this)
+    if (_hasToggled === isToggled) return
+    this.toggleBy(isToggled, true)
+
+    // fall to every child
+    Array.from(this.#children.values()).forEach((child) => {
+      child.fall(isToggled)
+    })
+  }
 }
 
 /**
  * @description
  * toggle able
  */
-export const useToggleable = (toggleableKeys: ToggleableKey[], { defaultToggled }: Options = {}) => {
-  /// read keys
-  const [readableToggleableKeys, readableKeyPaths] = useMemo(() => readToggleableKeys(toggleableKeys), [toggleableKeys])
+export const useToggleable = (toggleableKeys: ToggleableKey[], options: Options = {}) => {
+  /// use once
+  const _isDefaultToggled = useRef(!!options.isDefaultToggled)
 
-  const [toggledKeys, setToggledKeys] = useState<ToggledKeys>(() => {
-    return new Map((defaultToggled ? toggleableKeys : []).map(({ key }) => [key, true]))
-  })
+  /// re-create tree when toggleable keys changed
+  const tree = useMemo(() => {
+    return toggleableKeys.reduce(
+      (_tree, toggleable) => _tree.grow(toggleable),
+      new Tree({
+        isDefaultToggled: _isDefaultToggled.current
+      })
+    )
+  }, [toggleableKeys])
 
-  /// toggle by flag
-  const toggleBy = useCallback((key: Key, isToggled: boolean) => {
-    readableKeyPaths.get(key)?.forEach((path) => {
-      path.forEach((_key) => {})
-    })
+  /// toggled keys
+  useEffect(() => {
+    if (!options.toggledKeys) return
+    tree.toggleWith(options.toggledKeys)
+  }, [options.toggledKeys])
 
-    setToggledKeys((prev) => {
-      if (isToggled) {
-        return new Map(prev).set(key, true)
-      }
+  /// toggled keys
+  const _toggledKeys = useMemo(() => {
+    return new Set(Array.from(tree.toggledLeaves).map((leaf) => leaf.key))
+  }, [tree])
 
-      const _toggledKeys = new Map(prev)
-      _toggledKeys.delete(key)
-      return _toggledKeys
-    })
-  }, [])
-
-  /// if all key is toggled
-  const isAllToggled = useMemo(() => {
-    return toggledKeys.size === keys?.length
-  }, [toggledKeys, keys])
-
-  /// is toggled
-  const isToggled = useCallback(
-    (key: Key) => {
-      return toggledKeys.has(key)
-    },
-    [toggledKeys]
-  )
-
-  /// toggle
-  const toggle = useCallback(
-    (key: Key) => {
-      toggleBy(key, !isToggled(key))
-    },
-    [toggleBy, isToggled]
-  )
-
-  /// toggle all
-  const toggleAll = useCallback(() => {
-    if (isAllToggled) {
-      setToggledKeys(new Map())
-    } else {
-      setToggledKeys(new Map(keys?.map((key) => [key, true])))
-    }
-  }, [isAllToggled, keys])
+  /// check current key is toggled
+  const isToggled = useCallback((key: Key) => _toggledKeys.has(key), [tree])
 
   return {
-    toggleBy,
-    toggle,
-    toggleAll,
-    isToggled,
-    toggledKeys,
-    isAllToggled
+    isAllToggled: tree.isAllToggled,
+    toggledKeys: _toggledKeys,
+    isToggled
   }
 }
