@@ -247,9 +247,13 @@ export const useToggleable = (toggleableKeys: ToggleableKey[], options: Options 
   /// check current key is toggled
   const isToggled = useCallback((key: Key) => _toggledKeys.has(key), [tree])
 
+  /// toggle one key
+  const toggle = useCallback((key: Key) => tree.toggle(key), [tree])
+
   return {
     isAllToggled: tree.isAllToggled,
     toggledKeys: _toggledKeys,
-    isToggled
+    isToggled,
+    toggle
   }
 }
