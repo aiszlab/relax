@@ -93,8 +93,8 @@ class Tree {
 
   public collect(leaf: Leaf) {
     this.#groupedLeaves.has(leaf.key)
-      ? this.#groupedLeaves.set(leaf.key, new Set([leaf]))
-      : this.#groupedLeaves.get(leaf.key)!.add(leaf)
+      ? this.#groupedLeaves.get(leaf.key)!.add(leaf)
+      : this.#groupedLeaves.set(leaf.key, new Set([leaf]))
   }
 
   public toggle(key: Key, toggledKeys: Set<Key>) {
