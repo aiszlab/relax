@@ -7,8 +7,7 @@ import pkg from './package.json' assert { type: 'json' }
 const configuration = {
   input: {
     index: './src/index',
-    'dom/index': './src/dom/index',
-    'types/index': './src/types/index'
+    'dom/index': './src/dom/index'
   },
 
   output: {

@@ -5,8 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./dom": "./dist/dom/index.js",
-    "./types": "./dist/types/index.d.ts"
+    "./dom": "./dist/dom/index.js"
   },
   "scripts": {
     "dev": "rollup -c -w",

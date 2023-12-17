@@ -1,6 +1,7 @@
-import { Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Nullable } from '../types'
-import { Partialable } from '../types/partial-able'
+import { Key, useCallback, useEffect, useMemo } from 'react'
+import { Nullable } from '../utils/null-able'
+import { Partialable } from '../utils/partial-able'
+import { useControlledState } from './use-controlled-state'
 
 /**
  * @description
@@ -36,6 +37,12 @@ type Options = {
    * toggled keys
    */
   toggledKeys?: Key[]
+
+  /**
+   * @description
+   * on toggle callback
+   */
+  onToggle?: (keys: Key[]) => void
 }
 
 /**
@@ -63,24 +70,10 @@ type LeafProps = {
 }
 
 class Tree {
-  #leaves: Set<Leaf>
-  #toggledLeaves: Set<Leaf>
   #groupedLeaves: Map<Key, Set<Leaf>>
-  #isDefaultToggled: boolean
 
-  constructor({ isDefaultToggled }: Pick<Required<Options>, 'isDefaultToggled'>) {
-    this.#leaves = new Set()
-    this.#toggledLeaves = new Set()
+  constructor() {
     this.#groupedLeaves = new Map()
-    this.#isDefaultToggled = !!isDefaultToggled
-  }
-
-  get isAllToggled() {
-    return this.#leaves.size === this.#toggledLeaves.size
-  }
-
-  get toggledLeaves() {
-    return this.#toggledLeaves
   }
 
   get groupedLeaves() {
@@ -88,13 +81,13 @@ class Tree {
   }
 
   public grow(toggleableKey: ToggleableKey) {
-    this.#leaves.add(
-      new Leaf({
-        key: toggleableKey.key,
-        parent: null,
-        belongTo: this
-      }).grow(toggleableKey.children)
-    )
+    // create leaf, leaf will auto trigger tree collect callback
+    new Leaf({
+      key: toggleableKey.key,
+      parent: null,
+      belongTo: this
+    }).grow(toggleableKey.children)
+
     return this
   }
 
@@ -102,28 +95,25 @@ class Tree {
     this.#groupedLeaves.has(leaf.key)
       ? this.#groupedLeaves.set(leaf.key, new Set([leaf]))
       : this.#groupedLeaves.get(leaf.key)!.add(leaf)
-
-    // if default toggled, add leaf to toggled leaves
-    this.#isDefaultToggled && this.toggledLeaves.add(leaf)
   }
 
-  public toggle(key: Key) {
-    const leaves = this.#groupedLeaves.get(key)
-    if (!leaves?.size) return
+  public toggle(key: Key, toggledKeys: Set<Key>) {
+    const hasToggled = toggledKeys.has(key)
+    const _isToggled = !hasToggled
 
-    leaves.forEach((leaf) => {
-      const _isToggled = this.toggledLeaves.has(leaf)
-      leaf.toggleBy(!_isToggled)
-    })
+    return this.toggleBy(key, _isToggled, toggledKeys)
   }
 
-  public toggleWith(keys: Key[]) {
-    this.toggledLeaves.clear()
-    keys.forEach((key) => {
-      this.#groupedLeaves.get(key)?.forEach((leaf) => {
-        this.#toggledLeaves.add(leaf)
-      })
-    })
+  private toggleBy(key: Key, isToggled: boolean, toggledKeys: Set<Key>) {
+    return Array.from(this.#groupedLeaves.get(key) ?? []).reduce((prev, leaf) => {
+      // deep fall, add or remove child key
+      const fell = leaf.fall(isToggled, prev)
+
+      // deep rise, add or remove parent key
+      const rised = leaf.rise(fell)
+
+      return rised
+    }, new Set(toggledKeys))
   }
 }
 
@@ -133,8 +123,7 @@ class Leaf {
   #belongTo: Tree
   #parent: Nullable<Leaf>
 
-  #children: Set<Leaf>
-  #toggledChildren: Set<Leaf>
+  #children: Leaf[]
 
   constructor(props: LeafProps) {
     this.#key = props.key
@@ -142,8 +131,7 @@ class Leaf {
     this.#parent = props.parent
     this.#belongTo = props.belongTo
 
-    this.#children = new Set()
-    this.#toggledChildren = new Set()
+    this.#children = []
 
     // when leaf has grew, let tree collect leaf
     this.#belongTo.collect(this)
@@ -153,23 +141,7 @@ class Leaf {
     return this.#key
   }
 
-  public toggleBy(isToggled: boolean, isPrevent: boolean = false) {
-    if (isToggled) {
-      this.#belongTo.toggledLeaves.add(this)
-    } else {
-      this.#belongTo.toggledLeaves.delete(this)
-    }
-
-    if (isPrevent) return
-    // fall to every child
-    Array.from(this.#children.values()).forEach((child) => {
-      child.fall(isToggled)
-    })
-    // rise to parent
-    this.#parent?.rise(this, isToggled)
-  }
-
-  public grow(toggleableKeys: Partialable<ToggleableKey[]> = []): Leaf {
+  public grow(toggleableKeys: Partialable<ToggleableKey[]> = []) {
     if (toggleableKeys.length > 0) {
       toggleableKeys.forEach((_toggleableKey) => {
         const child = new Leaf({
@@ -178,40 +150,46 @@ class Leaf {
           belongTo: this.#belongTo
         }).grow(_toggleableKey.children)
 
-        this.#children.add(child)
+        this.#children.push(child)
       })
     }
-
     return this
   }
 
-  public rise(child: Leaf, isToggled: boolean) {
+  public rise(toggledKeys: Set<Key>): Set<Key> {
+    // if current key is toggled or children is all toggled
+    // just add current key into toggled keys
+    // else remove current key
+    const isToggled = toggledKeys.has(this.#key) || this.#children.every((child) => toggledKeys.has(child.key))
+    const rised = new Set(toggledKeys)
+
     if (isToggled) {
-      this.#toggledChildren.add(child)
+      rised.add(this.#key)
     } else {
-      this.#toggledChildren.delete(child)
+      rised.delete(this.#key)
     }
 
-    // if toggled state is same, stop
-    const _isToggled = this.#children.size === this.#toggledChildren.size
-    const _hasToggled = !!this.#belongTo.toggledLeaves.has(this)
-    if (_hasToggled === _isToggled) return
-    this.toggleBy(_isToggled, true)
-
-    // rise to parent
-    this.#parent?.rise(this, _isToggled)
+    if (this.#parent) {
+      return this.#parent.rise(rised)
+    }
+    return rised
   }
 
-  public fall(isToggled: boolean) {
-    // if toggled state is same, stop
-    const _hasToggled = !!this.#belongTo.toggledLeaves.has(this)
-    if (_hasToggled === isToggled) return
-    this.toggleBy(isToggled, true)
+  public fall(isToggled: boolean, toggledKeys: Set<Key>): Set<Key> {
+    return this.#children.reduce((prev, leaf) => {
+      // deep loop, remove or add key
+      const fell = leaf.fall(isToggled, prev)
 
-    // fall to every child
-    Array.from(this.#children.values()).forEach((child) => {
-      child.fall(isToggled)
-    })
+      // toggle true, add key
+      // toggle false, remove key
+      if (isToggled) {
+        fell.add(this.#key)
+      } else {
+        fell.delete(this.#key)
+      }
+
+      return fell
+    }, new Set(toggledKeys))
   }
 }
 
@@ -219,40 +197,52 @@ class Leaf {
  * @description
  * toggle able
  */
-export const useToggleable = (toggleableKeys: ToggleableKey[], options: Options = {}) => {
-  /// use once
-  const _isDefaultToggled = useRef(!!options.isDefaultToggled)
-
+export const useToggleable = (toggleableKeys: ToggleableKey[], { onToggle, ...options }: Options = {}) => {
   /// re-create tree when toggleable keys changed
   const tree = useMemo(() => {
-    return toggleableKeys.reduce(
-      (_tree, toggleable) => _tree.grow(toggleable),
-      new Tree({
-        isDefaultToggled: _isDefaultToggled.current
-      })
-    )
+    return toggleableKeys.reduce((_tree, toggleable) => {
+      return _tree.grow(toggleable)
+    }, new Tree())
   }, [toggleableKeys])
 
-  /// toggled keys
-  useEffect(() => {
-    if (!options.toggledKeys) return
-    tree.toggleWith(options.toggledKeys)
-  }, [options.toggledKeys])
+  /// use controlled state to record toggled keys
+  const [_toggledKeys, _setToggledKeys] = useControlledState(options.toggledKeys!, {
+    defaultState: () => {
+      return options.isDefaultToggled
+        ? Array.from(
+            Array.from(tree.groupedLeaves.values()).reduce<Set<Key>>((prev, leaves) => {
+              leaves.forEach((leaf) => prev.add(leaf.key))
+              return prev
+            }, new Set())
+          )
+        : []
+    }
+  })
 
-  /// toggled keys
-  const _toggledKeys = useMemo(() => {
-    return new Set(Array.from(tree.toggledLeaves).map((leaf) => leaf.key))
-  }, [tree])
+  /// use set for toggled keys to make it read-only
+  const readableToggledKeys = useMemo(() => new Set(_toggledKeys), [_toggledKeys])
 
   /// check current key is toggled
-  const isToggled = useCallback((key: Key) => _toggledKeys.has(key), [tree])
+  const isToggled = useCallback(
+    (key: Key) => !readableToggledKeys || readableToggledKeys.has(key),
+    [readableToggledKeys]
+  )
 
   /// toggle one key
-  const toggle = useCallback((key: Key) => tree.toggle(key), [tree])
+  const toggle = useCallback(
+    (key: Key) => {
+      // get new toggled keys by toggle current key
+      const _toggledKeys = Array.from(tree.toggle(key, readableToggledKeys))
+      // set state
+      _setToggledKeys(_toggledKeys)
+      // trigger on toggle callback
+      onToggle?.(_toggledKeys)
+    },
+    [tree, readableToggledKeys, _setToggledKeys, onToggle]
+  )
 
   return {
-    isAllToggled: tree.isAllToggled,
-    toggledKeys: _toggledKeys,
+    toggledKeys: readableToggledKeys,
     isToggled,
     toggle
   }

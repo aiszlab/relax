@@ -33,3 +33,11 @@ export { isMobile } from './is/is-mobile'
 export { isOverflow } from './is/is-overflow'
 export { isStyleElement } from './is/is-style-element'
 export { isFunction } from './is/is-function'
+
+/**
+ * @description
+ * utils
+ */
+export { type Nullable } from './utils/null-able'
+export { type Partialable } from './utils/partial-able'
+export { unique, uniqueBy } from './utils/unique'
