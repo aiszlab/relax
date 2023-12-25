@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useMemo } from 'react'
+import { Key, useCallback, useMemo } from 'react'
 import { Nullable } from '../utils/null-able'
 import { Partialable } from '../utils/partial-able'
 import { useControlledState } from './use-controlled-state'
