@@ -15,6 +15,7 @@ export { useForceUpdate } from './hooks/use-force-update'
 export { useScrollable } from './hooks/use-scrollable'
 export { useRefs } from './hooks/use-refs'
 export { useToggleable } from './hooks/use-toggleable'
+export { useEvent } from './hooks/use-event'
 
 /**
  * @description
