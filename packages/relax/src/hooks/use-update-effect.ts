@@ -1,5 +1,5 @@
 import { DependencyList, useEffect, useRef } from 'react'
-import { useMounted } from '..'
+import { useMounted } from './use-mounted'
 import { ThenableEffectCallback, callAsEffect } from '../utils/thenable-effect-callback'
 
 export const useUpdateEffect = (callable: ThenableEffectCallback, deps?: DependencyList) => {
