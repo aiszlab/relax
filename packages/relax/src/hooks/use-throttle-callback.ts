@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { Observable, Subscriber, Subscription, debounceTime } from 'rxjs'
+import { Observable, Subscriber, Subscription, throttleTime } from 'rxjs'
 
 interface Options {
   /**
-   * The delay time (in milliseconds) until the debounce function is called.
+   * The delay time (in milliseconds) until the throttle function is called.
    * default 1000
    */
-  readonly delay: number
+  readonly duration: number
 }
 
 /**
  * @author murukal
  *
  * @description
- * debounce callback
+ * throttle callback
  */
-export const useDebounceCallback = <T>(
+export const useThrottleCallback = <T>(
   callable: Function,
-  { delay = 1000 }: Options = {
-    delay: 1000
+  { duration = 1000 }: Options = {
+    duration: 1000
   }
 ) => {
   // runner
@@ -31,7 +31,7 @@ export const useDebounceCallback = <T>(
     listener.current = new Observable<T>((subscriber) => {
       runner.current = subscriber
     })
-      .pipe(debounceTime(delay))
+      .pipe(throttleTime(duration))
       .subscribe({
         next: (value) => {
           callable(value)
@@ -40,7 +40,7 @@ export const useDebounceCallback = <T>(
           initialize()
         }
       })
-  }, [callable, delay])
+  }, [callable, duration])
 
   /// initialize debounce function
   /// when delay / callable changed, need reinitialize

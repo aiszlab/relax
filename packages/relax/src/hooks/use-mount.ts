@@ -1,4 +1,5 @@
 import { EffectCallback, useLayoutEffect } from 'react'
+import { callAsEffect } from '../utils/thenable-effect-callback'
 
 /**
  * @author murukal
@@ -8,18 +9,6 @@ import { EffectCallback, useLayoutEffect } from 'react'
  */
 export const useMount = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
   useLayoutEffect(() => {
-    const called = callable()
-
-    // if result is void
-    if (!called) {
-      return void 0
-    }
-
-    // if result is promise like, return void
-    if ((called as PromiseLike<void>).then) {
-      return void 0
-    }
-
-    return called as VoidFunction
+    return callAsEffect(callable)
   }, [])
 }
