@@ -1,7 +1,7 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import { isStateGetter, type State } from '../is/is-state-getter'
 import { isUndefined } from '../is/is-undefined'
-import { useUpdateEffect } from '..'
+import { useUpdateEffect } from './use-update-effect'
 
 interface Dependencies<T> {
   defaultState?: State<T>
