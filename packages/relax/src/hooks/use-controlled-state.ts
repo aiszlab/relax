@@ -1,6 +1,7 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { isStateGetter, type State } from '../is/is-state-getter'
 import { isUndefined } from '../is/is-undefined'
+import { useUpdateEffect } from '..'
 
 interface Dependencies<T> {
   defaultState?: State<T>
@@ -30,7 +31,7 @@ export const useControlledState = <T>(
   })
 
   /// sync value back to `undefined` when it from control to un-control
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (!isUndefined(controlledState)) return
     _setState(controlledState)
   }, [controlledState])
