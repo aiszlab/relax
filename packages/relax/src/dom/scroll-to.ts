@@ -4,10 +4,10 @@ class Scroller {
   #scrolled = new Map<HTMLElement, number>()
 
   // singleton mode
-  #scroller: Scroller | null = null
+  static #scroller: Scroller | null = null
 
   constructor() {
-    return (this.#scroller ??= this)
+    return (Scroller.#scroller ??= this)
   }
 
   get scrolled() {

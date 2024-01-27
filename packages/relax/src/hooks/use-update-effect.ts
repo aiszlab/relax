@@ -3,14 +3,17 @@ import { useMounted } from './use-mounted'
 import { ThenableEffectCallback, callAsEffect } from '../utils/thenable-effect-callback'
 
 export const useUpdateEffect = (callable: ThenableEffectCallback, deps?: DependencyList) => {
-  const isMounted = useRef<boolean>(false)
+  const isMounted = useRef(false)
 
   useEffect(() => {
-    if (!isMounted.current) return void 0
+    if (!isMounted.current) return
     return callAsEffect(callable)
   }, deps)
 
   useMounted(() => {
     isMounted.current = true
+    return () => {
+      isMounted.current = false
+    }
   })
 }
