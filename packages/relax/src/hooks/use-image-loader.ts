@@ -40,6 +40,10 @@ export const useImageLoader = ({ src }: Dependencies) => {
       loader.current?.error(null)
     })
     image.src = src
+
+    return () => {
+      image.remove()
+    }
   }, [src])
 
   return status
