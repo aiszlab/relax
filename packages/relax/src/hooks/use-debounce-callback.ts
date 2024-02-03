@@ -21,15 +21,15 @@ export const useDebounceCallback = <T>(
     delay: 1000
   }
 ) => {
-  // runner
-  const runner = useRef<Subscriber<T>>()
+  // trigger
+  const trigger = useRef<Subscriber<T>>()
   // listener
   const listener = useRef<Subscription>()
 
   /// initialze listener function for debouce
   const initialize = useCallback(() => {
     listener.current = new Observable<T>((subscriber) => {
-      runner.current = subscriber
+      trigger.current = subscriber
     })
       .pipe(debounceTime(delay))
       .subscribe({
@@ -55,12 +55,12 @@ export const useDebounceCallback = <T>(
 
   /// next function has been debounced for hooks user
   const next = useCallback((value: T) => {
-    runner.current?.next(value)
+    trigger.current?.next(value)
   }, [])
 
   /// flush the debounce
   const complete = useCallback(() => {
-    runner.current?.complete()
+    trigger.current?.complete()
   }, [])
 
   /// cancel only valid in debounce time
