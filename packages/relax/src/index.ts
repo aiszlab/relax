@@ -18,6 +18,7 @@ export { useRefs } from './hooks/use-refs'
 export { useToggleable } from './hooks/use-toggleable'
 export { useEvent } from './hooks/use-event'
 export { useUpdateEffect } from './hooks/use-update-effect'
+export { useCounter } from './hooks/use-counter'
 
 /**
  * @description
