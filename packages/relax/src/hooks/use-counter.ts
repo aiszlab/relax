@@ -25,6 +25,7 @@ export const useCounter = () => {
     count,
     next,
     prev,
-    first
+    first,
+    setCount
   }
 }
