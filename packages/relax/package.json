@@ -1,16 +1,16 @@
 {
   "name": "@aiszlab/relax",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "description": "react utils collection",
   "type": "module",
   "exports": {
     ".": {
-      "default": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
     },
     "./dom": {
-      "default": "./dist/dom/index.mjs",
-      "types": "./dist/dom/index.d.ts"
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.mjs"
     }
   },
   "scripts": {
