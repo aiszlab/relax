@@ -13,7 +13,7 @@ const configuration = {
   output: {
     format: 'es',
     dir: './dist',
-    entryFileNames: '[name].js',
+    entryFileNames: '[name].mjs',
     preserveModules: true,
     preserveModulesRoot: './src'
   },
