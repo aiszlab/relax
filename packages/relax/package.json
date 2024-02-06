@@ -4,8 +4,8 @@
   "description": "react utils collection",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./dom": "./dist/dom/index.js"
+    ".": "./dist/index.mjs",
+    "./dom": "./dist/dom/index.mjs"
   },
   "scripts": {
     "dev": "rollup -c -w",
