@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { Observable, Subscriber, Subscription, debounceTime } from 'rxjs'
+import { useEvent } from '../hooks/use-event'
 
 interface Options {
   /**
+   * @description
    * The delay time (in milliseconds) until the debounce function is called.
    * default 1000
+   *
+   * @example
+   * 2000
    */
   readonly delay: number
 }
+
+type Callable<T, R> = ReturnType<typeof useEvent<[T], R>>
 
 /**
  * @author murukal
@@ -15,59 +22,48 @@ interface Options {
  * @description
  * debounce callback
  */
-export const useDebounceCallback = <T>(
-  callable: Function,
-  { delay = 1000 }: Options = {
-    delay: 1000
-  }
-) => {
-  // trigger
-  const trigger = useRef<Subscriber<T>>()
-  // listener
-  const listener = useRef<Subscription>()
+export const useDebounceCallback = <T, R>(_callable: Callable<T, R>, options?: Options) => {
+  const trigger = useRef<Subscriber<T> | null>(null)
+  const listener = useRef<Subscription | null>(null)
+  const delay = options?.delay ?? 1000
+  const callable = useEvent(_callable)
 
-  /// initialze listener function for debouce
-  const initialize = useCallback(() => {
-    listener.current = new Observable<T>((subscriber) => {
+  const listen = useCallback(() => {
+    const listened = new Observable<T>((subscriber) => {
       trigger.current = subscriber
     })
       .pipe(debounceTime(delay))
       .subscribe({
-        next: (value) => {
-          callable(value)
-        },
-        complete: () => {
-          initialize()
-        }
+        next: callable,
+        complete: listen
       })
-  }, [callable, delay])
 
-  /// initialize debounce function
-  /// when delay / callable changed, need reinitialize
+    listener.current = listened
+    return listened
+  }, [delay])
+
   useEffect(() => {
-    initialize()
+    const listened = listen()
 
     // dispose
     return () => {
-      listener.current?.unsubscribe()
+      listened.unsubscribe()
+      listener.current = null
+      trigger.current = null
     }
-  }, [initialize])
+  }, [listen])
 
-  /// next function has been debounced for hooks user
-  const next = useCallback((value: T) => {
+  const next = useEvent((value: T) => {
     trigger.current?.next(value)
-  }, [])
+  })
 
-  /// flush the debounce
-  const complete = useCallback(() => {
+  const complete = useEvent(() => {
     trigger.current?.complete()
-  }, [])
+  })
 
-  /// cancel only valid in debounce time
-  /// if the callback has been called, it can not be canceled
-  const cancel = useCallback(() => {
+  const cancel = useEvent(() => {
     listener.current?.unsubscribe()
-  }, [])
+  })
 
   return {
     next,
