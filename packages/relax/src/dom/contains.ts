@@ -1,4 +1,4 @@
-export const contains = (root: Node | null | undefined, n?: Node) => {
+export const contains = (root: Node | null | undefined, n?: Node | null) => {
   if (!root) {
     return false
   }
@@ -14,7 +14,7 @@ export const contains = (root: Node | null | undefined, n?: Node) => {
     if (node === root) {
       return true
     }
-    node = node.parentNode as Node
+    node = node.parentNode as Node | null
   }
 
   return false
