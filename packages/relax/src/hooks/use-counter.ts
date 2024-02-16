@@ -42,7 +42,7 @@ export const useCounter = (
 
   const prev = useCallback(
     (step = 1) => {
-      setCount((prev) => Math.max(prev - step))
+      setCount((prev) => Math.max(min, prev - step))
     },
     [min]
   )
