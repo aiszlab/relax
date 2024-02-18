@@ -14,7 +14,7 @@ interface Options {
   readonly delay: number
 }
 
-type Callable<T, R> = ReturnType<typeof useEvent<[T], R>>
+type Callable<T, R> = (value: T) => R
 
 /**
  * @author murukal

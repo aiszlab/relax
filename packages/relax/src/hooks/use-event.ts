@@ -1,10 +1,9 @@
 import { useRef, useCallback } from 'react'
+import { Arguments } from '../utils/arguments'
 
-type Callable<U extends Array<unknown>, R> = (...args: U) => R
-
-export const useEvent = <U extends Array<unknown>, R>(callable: Callable<U, R>): Callable<U, R> => {
-  const ref = useRef<Callable<U, R>>()
+export const useEvent = <T extends Function>(callable: T): T => {
+  const ref = useRef<T>(callable)
   ref.current = callable
 
-  return useCallback((...args: U) => ref.current!(...args), [])
+  return useCallback(((...args: Arguments<T>) => ref.current(...args)) as unknown as T, [])
 }
