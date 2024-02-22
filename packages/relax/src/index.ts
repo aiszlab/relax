@@ -43,10 +43,7 @@ export { isThenable } from './is/is-thenable'
  * @description
  * utils
  */
-export { type Nullable } from './utils/null-able'
-export { type Partialable } from './utils/partial-able'
-export { type RequiredIn } from './utils/required-in'
-export { type ThenableEffectCallback, callAsEffect } from './utils/thenable-effect-callback'
+export { effect } from './utils/effect'
 export { unique, uniqueBy } from './utils/unique'
 export { range } from './utils/range'
 export { clamp } from './utils/clamp'

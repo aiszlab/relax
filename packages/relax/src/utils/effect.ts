@@ -1,17 +1,12 @@
 import type { EffectCallback } from 'react'
 import { isThenable } from '../is/is-thenable'
+import { ThenableEffectCallback } from '@aiszlab/tatoba'
 
 /**
  * @description
- * thenable effect callback
+ * call thenable effect
  */
-export type ThenableEffectCallback = () => ReturnType<EffectCallback> | PromiseLike<ReturnType<EffectCallback>>
-
-/**
- * @description
- * call thenable effect callback
- */
-export const callAsEffect = (callable: ThenableEffectCallback): ReturnType<EffectCallback> => {
+export const effect = (callable: ThenableEffectCallback): ReturnType<EffectCallback> => {
   const called = callable()
 
   // if result is void

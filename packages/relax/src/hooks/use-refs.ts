@@ -1,6 +1,6 @@
 import { type MutableRefObject, type RefCallback, useMemo } from 'react'
 import { isFunction } from '../is/is-function'
-import type { Nullable } from '../utils/null-able'
+import type { Nullable } from '@aiszlab/tatoba'
 
 type Refable<T> = RefCallback<T> | MutableRefObject<T>
 

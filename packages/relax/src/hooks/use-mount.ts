@@ -1,5 +1,5 @@
 import { EffectCallback, useLayoutEffect } from 'react'
-import { callAsEffect } from '../utils/thenable-effect-callback'
+import { callAsEffect } from '../utils/effect'
 
 /**
  * @author murukal
