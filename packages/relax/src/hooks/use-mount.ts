@@ -1,5 +1,5 @@
 import { EffectCallback, useLayoutEffect } from 'react'
-import { callAsEffect } from '../utils/effect'
+import { effect } from '../utils/effect'
 
 /**
  * @author murukal
@@ -9,6 +9,6 @@ import { callAsEffect } from '../utils/effect'
  */
 export const useMount = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
   useLayoutEffect(() => {
-    return callAsEffect(callable)
+    return effect(callable)
   }, [])
 }

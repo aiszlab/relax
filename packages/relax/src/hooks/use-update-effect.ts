@@ -1,7 +1,7 @@
 import { DependencyList, useEffect, useRef } from 'react'
 import { useMounted } from './use-mounted'
 import { effect } from '../utils/effect'
-import type { ThenableEffectCallback } from '@aiszlab/tatoba'
+import type { ThenableEffectCallback } from '../types'
 
 export const useUpdateEffect = (callable: ThenableEffectCallback, deps?: DependencyList) => {
   const isMounted = useRef(false)

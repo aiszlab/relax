@@ -1,5 +1,5 @@
 import { EffectCallback, useEffect } from 'react'
-import { callAsEffect } from '../utils/effect'
+import { effect } from '../utils/effect'
 
 /**
  * @author murukal
@@ -9,6 +9,6 @@ import { callAsEffect } from '../utils/effect'
  */
 export const useMounted = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
   useEffect(() => {
-    return callAsEffect(callable)
+    return effect(callable)
   }, [])
 }

@@ -1,4 +1,4 @@
-import type { Partialable } from '@aiszlab/tatoba'
+import type { Partialable } from '../types'
 
 type Callable<R> = (...args: R[]) => void
 

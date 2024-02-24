@@ -1,5 +1,5 @@
 import { type Key, useCallback, useMemo } from 'react'
-import type { Nullable, Partialable } from '@aiszlab/tatoba'
+import type { Nullable, Partialable } from '../types'
 import { useControlledState } from './use-controlled-state'
 
 /**

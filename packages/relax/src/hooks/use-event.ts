@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react'
-import { Arguments } from '@aiszlab/tatoba'
+import type { Arguments } from '../types'
 
 export const useEvent = <T extends Function>(callable: T): T => {
   const ref = useRef<T>(callable)

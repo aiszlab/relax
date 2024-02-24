@@ -11,7 +11,8 @@
     "./dom": {
       "types": "./dist/dom/index.d.ts",
       "default": "./dist/dom/index.mjs"
-    }
+    },
+    "./types": "./dist/types/index.d.ts"
   },
   "scripts": {
     "dev": "rollup -c -w",

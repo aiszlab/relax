@@ -1,6 +1,6 @@
-import type { EffectCallback } from 'react'
 import { isThenable } from '../is/is-thenable'
-import { ThenableEffectCallback } from '@aiszlab/tatoba'
+import type { EffectCallback } from 'react'
+import type { ThenableEffectCallback } from '../types'
 
 /**
  * @description
