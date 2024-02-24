@@ -1,73 +1,45 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { Observable, Subscriber, Subscription, throttleTime } from 'rxjs'
-import { useEvent } from '../hooks/use-event'
-
-interface Options {
-  /**
-   * @description
-   * The delay time (in milliseconds) until the throttle function is called.
-   * default 1000
-   *
-   * @example
-   * 2000
-   */
-  readonly duration: number
-}
-
-type Callable<T, R> = (value: T) => R
+import { useEffect, useMemo, useRef } from 'react'
+import { throttle, type Throttled } from '../utils/throttle'
+import { useEvent } from './use-event'
 
 /**
  * @author murukal
  *
  * @description
  * throttle callback
+ *
+ * @param callback
+ * @param duration number
+ * @description
+ * The duration time (in milliseconds) until the throttle function is called.
+ * default 1000
+ *
+ * @example
+ * 1000
  */
-export const useThrottleCallback = <T, R>(_callable: Callable<T, R>, options?: Options) => {
-  const trigger = useRef<Subscriber<T> | null>(null)
-  const listener = useRef<Subscription | null>(null)
-  const duration = options?.duration ?? 1000
-  const callable = useEvent(_callable)
-
-  const listen = useCallback(() => {
-    const listened = new Observable<T>((subscriber) => {
-      trigger.current = subscriber
-    })
-      .pipe(throttleTime(duration))
-      .subscribe({
-        next: callable,
-        complete: listen
-      })
-
-    listener.current = listened
-    return listened
-  }, [duration])
+export const useThrottleCallback = <T extends Function>(callback: T, duration: number = 1000) => {
+  const trigger = useRef<Throttled<T> | null>(null)
+  const callable = useEvent(callback)
 
   useEffect(() => {
-    const listened = listen()
+    const throttled = throttle(callable, duration)
+    trigger.current = throttled
 
     // dispose
     return () => {
-      listened.unsubscribe()
-      listener.current = null
+      throttled.cancel()
       trigger.current = null
     }
-  }, [listen])
+  }, [duration])
 
-  const next = useEvent((value: T) => {
-    trigger.current?.next(value)
-  })
+  const throttled = useMemo<Throttled<T>>(
+    () => ({
+      next: ((...args: unknown[]) => trigger.current?.next(...args)) as unknown as T,
+      complete: () => trigger.current?.complete(),
+      cancel: () => trigger.current?.cancel()
+    }),
+    []
+  )
 
-  const complete = useEvent(() => {
-    trigger.current?.complete()
-  })
-
-  const cancel = useEvent(() => {
-    listener.current?.unsubscribe()
-  })
-
-  return {
-    next,
-    complete,
-    cancel
-  }
+  return throttled
 }

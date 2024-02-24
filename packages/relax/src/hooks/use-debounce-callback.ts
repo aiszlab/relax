@@ -1,73 +1,45 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { Observable, Subscriber, Subscription, debounceTime } from 'rxjs'
-import { useEvent } from '../hooks/use-event'
-
-interface Options {
-  /**
-   * @description
-   * The delay time (in milliseconds) until the debounce function is called.
-   * default 1000
-   *
-   * @example
-   * 2000
-   */
-  readonly delay: number
-}
-
-type Callable<T, R> = (value: T) => R
+import { useEffect, useMemo, useRef } from 'react'
+import { debounce, type Debounced } from '../utils/debounce'
+import { useEvent } from './use-event'
 
 /**
  * @author murukal
  *
  * @description
  * debounce callback
+ *
+ * @param callback
+ * @param wait number
+ * @description
+ * The delay time (in milliseconds) until the debounce function is called.
+ * default 1000
+ *
+ * @example
+ * 1000
  */
-export const useDebounceCallback = <T, R>(_callable: Callable<T, R>, options?: Options) => {
-  const trigger = useRef<Subscriber<T> | null>(null)
-  const listener = useRef<Subscription | null>(null)
-  const delay = options?.delay ?? 1000
-  const callable = useEvent(_callable)
-
-  const listen = useCallback(() => {
-    const listened = new Observable<T>((subscriber) => {
-      trigger.current = subscriber
-    })
-      .pipe(debounceTime(delay))
-      .subscribe({
-        next: callable,
-        complete: listen
-      })
-
-    listener.current = listened
-    return listened
-  }, [delay])
+export const useDebounceCallback = <T extends Function>(callback: T, wait: number = 1000) => {
+  const trigger = useRef<Debounced<T> | null>(null)
+  const callable = useEvent(callback)
 
   useEffect(() => {
-    const listened = listen()
+    const debounced = debounce(callable, wait)
+    trigger.current = debounced
 
     // dispose
     return () => {
-      listened.unsubscribe()
-      listener.current = null
+      debounced.cancel()
       trigger.current = null
     }
-  }, [listen])
+  }, [wait])
 
-  const next = useEvent((value: T) => {
-    trigger.current?.next(value)
-  })
+  const debounced = useMemo<Debounced<T>>(
+    () => ({
+      next: ((...args: unknown[]) => trigger.current?.next(...args)) as unknown as T,
+      complete: () => trigger.current?.complete(),
+      cancel: () => trigger.current?.cancel()
+    }),
+    []
+  )
 
-  const complete = useEvent(() => {
-    trigger.current?.complete()
-  })
-
-  const cancel = useEvent(() => {
-    listener.current?.unsubscribe()
-  })
-
-  return {
-    next,
-    complete,
-    cancel
-  }
+  return debounced
 }
