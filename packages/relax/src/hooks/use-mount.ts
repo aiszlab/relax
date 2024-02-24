@@ -1,5 +1,6 @@
-import { EffectCallback, useLayoutEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { effect } from '../utils/effect'
+import type { ThenableEffectCallback } from '../types'
 
 /**
  * @author murukal
@@ -7,7 +8,7 @@ import { effect } from '../utils/effect'
  * @description
  * when components will mount
  */
-export const useMount = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
+export const useMount = (callable: ThenableEffectCallback) => {
   useLayoutEffect(() => {
     return effect(callable)
   }, [])

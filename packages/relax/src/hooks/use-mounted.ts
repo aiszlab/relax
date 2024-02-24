@@ -1,5 +1,6 @@
-import { EffectCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { effect } from '../utils/effect'
+import type { ThenableEffectCallback } from '../types'
 
 /**
  * @author murukal
@@ -7,7 +8,7 @@ import { effect } from '../utils/effect'
  * @description
  * when components mounted
  */
-export const useMounted = (callable: EffectCallback | UnderlyingSinkCloseCallback) => {
+export const useMounted = (callable: ThenableEffectCallback) => {
   useEffect(() => {
     return effect(callable)
   }, [])
