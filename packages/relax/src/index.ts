@@ -19,6 +19,7 @@ export { useToggleable } from './hooks/use-toggleable'
 export { useEvent } from './hooks/use-event'
 export { useUpdateEffect } from './hooks/use-update-effect'
 export { useCounter } from './hooks/use-counter'
+export { useHover } from './hooks/use-hover'
 
 /**
  * @description

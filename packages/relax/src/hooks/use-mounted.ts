@@ -8,8 +8,8 @@ import type { ThenableEffectCallback } from '../types'
  * @description
  * when components mounted
  */
-export const useMounted = (callable: ThenableEffectCallback) => {
+export const useMounted = (callback: ThenableEffectCallback) => {
   useEffect(() => {
-    return effect(callable)
+    return effect(callback)
   }, [])
 }
