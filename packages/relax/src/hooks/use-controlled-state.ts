@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction, useState } from 'react'
-import { isStateGetter, type State } from '../is/is-state-getter'
+import type { State } from "../types";
+import { isStateGetter } from '../is/is-state-getter'
 import { isUndefined } from '../is/is-undefined'
 import { useUpdateEffect } from './use-update-effect'
 

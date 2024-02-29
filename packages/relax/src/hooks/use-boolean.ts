@@ -1,4 +1,5 @@
 import { useCallback, useState, type Dispatch, type SetStateAction } from 'react'
+import type { State } from "../types";
 
 type UsedBoolean = [boolean, {
   turnOn: () => void
@@ -13,7 +14,7 @@ type UsedBoolean = [boolean, {
  * @description
  * boolean state, in relax, we already create some api to easy use
  */
-export const useBoolean = (initialState?: (boolean | (() => boolean))): UsedBoolean => {
+export const useBoolean = (initialState?: State<boolean>): UsedBoolean => {
   const [isOn, setIsOn] = useState(initialState ?? false)
 
   const turnOn = useCallback(() => setIsOn(true), [])
