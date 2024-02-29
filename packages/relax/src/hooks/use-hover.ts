@@ -1,5 +1,5 @@
+import { useCallback } from 'react'
 import { useBoolean } from '../hooks/use-boolean'
-import { useEvent } from '../hooks/use-event'
 
 type UsedHover = [
   boolean,
@@ -12,13 +12,13 @@ type UsedHover = [
 export const useHover = (): UsedHover => {
   const [isHovered, { turnOn, turnOff }] = useBoolean(false)
 
-  const onPointerEnter = useEvent(() => {
+  const onPointerEnter = useCallback(() => {
     turnOn()
-  })
+  }, [])
 
-  const onPointerLeave = useEvent(() => {
+  const onPointerLeave = useCallback(() => {
     turnOff()
-  })
+  }, [])
 
   return [isHovered, { onPointerEnter, onPointerLeave }]
 }
