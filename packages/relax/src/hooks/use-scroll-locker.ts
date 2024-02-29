@@ -6,13 +6,13 @@ const isComputable = (value: string) => /^(.*)px$/.test(value)
 
 class ScrollLocker {
   // singleton mode
-  #scrollLocker: ScrollLocker | null = null
+  static #scrollLocker: ScrollLocker | null = null
 
   // bar size
   #barSize: Pick<CSSStyleDeclaration, 'width' | 'height'> | null = null
 
   constructor() {
-    return (this.#scrollLocker ??= this)
+    return (ScrollLocker.#scrollLocker ??= this)
   }
 
   get barSize() {

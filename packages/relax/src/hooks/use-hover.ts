@@ -1,8 +1,16 @@
 import { useBoolean } from '../hooks/use-boolean'
 import { useEvent } from '../hooks/use-event'
 
-export const useHover = () => {
-  const { isOn: isHovered, turnOff, turnOn } = useBoolean(false)
+type UsedHover = [
+  boolean,
+  {
+    onPointerEnter: () => void
+    onPointerLeave: () => void
+  }
+]
+
+export const useHover = (): UsedHover => {
+  const [isHovered, { turnOn, turnOff }] = useBoolean(false)
 
   const onPointerEnter = useEvent(() => {
     turnOn()
@@ -12,9 +20,5 @@ export const useHover = () => {
     turnOff()
   })
 
-  return {
-    isHovered,
-    onPointerEnter,
-    onPointerLeave
-  }
+  return [isHovered, { onPointerEnter, onPointerLeave }]
 }

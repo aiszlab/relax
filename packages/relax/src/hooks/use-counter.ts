@@ -1,25 +1,38 @@
 import { useCallback, useMemo, useState } from 'react'
 import { clamp } from '../utils/clamp'
+import type { State } from '../types'
+import { useDefault } from '..'
 
-interface Props {
+type Props = {
   /**
    * @description
    * initial value
    */
-  initialValue?: number
+  initialState?: State<number>
 
   /**
    * @description
-   * max
+   * max: count will not be greater than max
    */
   max?: number
 
   /**
    * @description
-   * min
+   * min: count will not be smaller than min
    */
   min?: number
 }
+
+type UsedCounter = [
+  number,
+  {
+    add: (step?: number) => void
+    subtract: (step?: number) => void
+    first: () => void
+    last: () => void
+    reset: () => void
+  }
+]
 
 /**
  * @author murukal
@@ -28,19 +41,20 @@ interface Props {
  * a number counter with some useful apis
  */
 export const useCounter = (
-  { max = Infinity, min = 0, ...props }: Props = { initialValue: 0, max: Infinity, min: 0 }
-) => {
-  const initialValue = useMemo(() => clamp(props.initialValue ?? 0, min, max), [max, min, props.initialValue])
-  const [count, setCount] = useState(initialValue)
+  initialState?: State<number>,
+  { max = Infinity, min = 0 }: Props = { max: Infinity, min: 0 }
+): UsedCounter => {
+  const defaultState = useDefault(initialState ?? 0)
+  const [count, setCount] = useState(defaultState)
 
-  const next = useCallback(
+  const add = useCallback(
     (step = 1) => {
       setCount((prev) => Math.min(max, prev + step))
     },
     [max]
   )
 
-  const prev = useCallback(
+  const subtract = useCallback(
     (step = 1) => {
       setCount((prev) => Math.max(min, prev - step))
     },
@@ -56,16 +70,8 @@ export const useCounter = (
   }, [max])
 
   const reset = useCallback(() => {
-    setCount(initialValue)
-  }, [initialValue])
+    setCount(defaultState)
+  }, [])
 
-  return {
-    count,
-    next,
-    prev,
-    first,
-    last,
-    reset,
-    setCount
-  }
+  return [count, { add, subtract, first, last, reset }]
 }

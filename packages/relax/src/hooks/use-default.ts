@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
-import { isStateGetter, type State } from '../is/is-state-getter'
+import type { State } from '../types'
+import { toFunction } from '../utils/to-function'
 
 /**
  * @author murukal
@@ -9,10 +10,7 @@ import { isStateGetter, type State } from '../is/is-state-getter'
  */
 export const useDefault = <T>(initialState: State<T>) => {
   return useMemo(() => {
-    if (isStateGetter(initialState)) {
-      return initialState()
-    } else {
-      return initialState
-    }
+    const getter = toFunction<() => T>(initialState)
+    return getter()
   }, [])
 }

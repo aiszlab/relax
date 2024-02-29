@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { State } from '../is/is-state-getter'
+import type { State } from '../types'
 
 /**
  * @description

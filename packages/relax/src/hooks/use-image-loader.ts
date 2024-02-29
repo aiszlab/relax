@@ -3,7 +3,7 @@ import { Observable, Subscriber } from 'rxjs'
 
 type Status = 'none' | 'loading' | 'error' | 'loaded'
 
-interface Dependencies {
+interface Props {
   src: string
 }
 
@@ -13,7 +13,7 @@ interface Dependencies {
  * @description
  * image loader
  */
-export const useImageLoader = ({ src }: Dependencies) => {
+export const useImageLoader = ({ src }: Props) => {
   const loader = useRef<Subscriber<void>>()
   const [status, setStatus] = useState<Status>('none')
 

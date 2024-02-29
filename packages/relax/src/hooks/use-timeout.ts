@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 interface Options {
   duration: number
@@ -10,15 +10,13 @@ interface Options {
  * @description
  * timeout effect
  */
-export const useTimeout = (handler: UnderlyingSinkCloseCallback, { duration }: Options) => {
-  const timer = useRef<number | null>(null)
-
+export const useTimeout = (handler: Function, { duration }: Options) => {
   useEffect(() => {
-    timer.current = setTimeout(handler, duration)
+    const timer = setTimeout(handler, duration)
 
     return () => {
-      if (!timer.current) return
-      clearTimeout(timer.current)
+      if (!timer) return
+      clearTimeout(timer)
     }
   }, [duration])
 }
