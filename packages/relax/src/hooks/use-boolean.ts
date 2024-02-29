@@ -1,13 +1,20 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, type Dispatch, type SetStateAction } from 'react'
+
+type UsedBoolean = [boolean, {
+  turnOn: () => void
+  turnOff: () => void
+  toggle: () => void
+  setBoolean: Dispatch<SetStateAction<boolean>>
+}]
 
 /**
  * @author murukal
  *
  * @description
- * boolean state
+ * boolean state, in relax, we already create some api to easy use
  */
-export const useBoolean = (initialValue?: boolean) => {
-  const [isOn, setIsOn] = useState(initialValue || false)
+export const useBoolean = (initialState?: (boolean | (() => boolean))): UsedBoolean => {
+  const [isOn, setIsOn] = useState(initialState ?? false)
 
   const turnOn = useCallback(() => setIsOn(true), [])
 
@@ -15,11 +22,10 @@ export const useBoolean = (initialValue?: boolean) => {
 
   const toggle = useCallback(() => setIsOn((_isOn) => !_isOn), [])
 
-  return {
-    isOn,
+  return [isOn, {
     turnOn,
     turnOff,
     toggle,
-    setIsOn
-  }
+    setBoolean: setIsOn
+  }]
 }
