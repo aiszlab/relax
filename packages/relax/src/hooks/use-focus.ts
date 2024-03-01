@@ -16,16 +16,16 @@ type UseFoucsBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
  */
 type UsedFocus<T> = [boolean, Required<Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'>>]
 
-export const useFoucs = <T = Element>(useBy: UseFoucsBy<T>): UsedFocus<T> => {
+export const useFoucs = <T = Element>(useBy?: UseFoucsBy<T>): UsedFocus<T> => {
   const [isFocused, { turnOn, turnOff }] = useBoolean(false)
 
   const onFocus = useCallback(() => {
-    chain(useBy.onFocus, turnOn, () => useBy.onFocusChange?.(true))()
-  }, [useBy.onFocus, useBy.onFocusChange])
+    chain(useBy?.onFocus, turnOn, () => useBy?.onFocusChange?.(true))()
+  }, [useBy?.onFocus, useBy?.onFocusChange])
 
   const onBlur = useCallback(() => {
-    chain(useBy.onBlur, turnOff, () => useBy.onFocusChange?.(false))()
-  }, [useBy.onBlur, useBy.onFocusChange])
+    chain(useBy?.onBlur, turnOff, () => useBy?.onFocusChange?.(false))()
+  }, [useBy?.onBlur, useBy?.onFocusChange])
 
   return [isFocused, { onFocus, onBlur }]
 }
