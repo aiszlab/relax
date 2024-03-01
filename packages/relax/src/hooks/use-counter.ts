@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react'
 import { clamp } from '../utils/clamp'
 import type { State } from '../types'
 import { useDefault } from '..'
@@ -31,6 +31,7 @@ type UsedCounter = [
     first: () => void
     last: () => void
     reset: () => void
+    setCount: Dispatch<SetStateAction<number>>
   }
 ]
 
@@ -45,33 +46,35 @@ export const useCounter = (
   { max = Infinity, min = 0 }: Props = { max: Infinity, min: 0 }
 ): UsedCounter => {
   const defaultState = useDefault(initialState ?? 0)
-  const [count, setCount] = useState(defaultState)
+  const [_count, _setCount] = useState(defaultState)
 
   const add = useCallback(
     (step = 1) => {
-      setCount((prev) => Math.min(max, prev + step))
+      _setCount((prev) => Math.min(max, prev + step))
     },
     [max]
   )
 
   const subtract = useCallback(
     (step = 1) => {
-      setCount((prev) => Math.max(min, prev - step))
+      _setCount((prev) => Math.max(min, prev - step))
     },
     [min]
   )
 
   const first = useCallback(() => {
-    setCount(min)
+    _setCount(min)
   }, [min])
 
   const last = useCallback(() => {
-    setCount(max)
+    _setCount(max)
   }, [max])
 
   const reset = useCallback(() => {
-    setCount(defaultState)
+    _setCount(defaultState)
   }, [])
 
-  return [count, { add, subtract, first, last, reset }]
+  const count = useMemo(() => clamp(_count, min, max), [min, max])
+
+  return [count, { add, subtract, first, last, reset, setCount: _setCount }]
 }
