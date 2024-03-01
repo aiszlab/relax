@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "1.2.27",
+  "version": "1.2.28-beta.0",
   "description": "react utils collection",
   "type": "module",
   "exports": {
