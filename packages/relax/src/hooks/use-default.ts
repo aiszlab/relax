@@ -9,8 +9,5 @@ import { toFunction } from '../utils/to-function'
  * state always be same after first render
  */
 export const useDefault = <T>(initialState: State<T>) => {
-  return useMemo(() => {
-    const getter = toFunction<() => T>(initialState)
-    return getter()
-  }, [])
+  return useMemo(toFunction<() => T>(initialState), [])
 }
