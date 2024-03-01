@@ -1,24 +1,31 @@
-import { useCallback } from 'react'
+import { type FocusEvent, useCallback, type DOMAttributes } from 'react'
 import { useBoolean } from './use-boolean'
+import { chain } from '../utils/chain'
 
-type UsedFocus = [
-  boolean,
-  {
-    onFocus: () => void
-    onBlur: () => void
-  }
-]
+/**
+ * @description
+ * hooks for focus
+ */
+type UseFoucsBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
+  onFocusChange?: (isFocused: boolean) => void
+}
 
-export const useFoucs = (): UsedFocus => {
+/**
+ * @description
+ * dom attributes
+ */
+type UsedFocus<T> = [boolean, Required<Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'>>]
+
+export const useFoucs = <T = Element>(useBy: UseFoucsBy<T>): UsedFocus<T> => {
   const [isFocused, { turnOn, turnOff }] = useBoolean(false)
 
   const onFocus = useCallback(() => {
-    turnOn()
-  }, [])
+    chain(useBy.onFocus, turnOn, () => useBy.onFocusChange?.(true))()
+  }, [useBy.onFocus, useBy.onFocusChange])
 
   const onBlur = useCallback(() => {
-    turnOff()
-  }, [])
+    chain(useBy.onBlur, turnOff, () => useBy.onFocusChange?.(false))()
+  }, [useBy.onBlur, useBy.onFocusChange])
 
   return [isFocused, { onFocus, onBlur }]
 }
