@@ -20,7 +20,7 @@ export { useEvent } from './hooks/use-event'
 export { useUpdateEffect } from './hooks/use-update-effect'
 export { useCounter } from './hooks/use-counter'
 export { useHover } from './hooks/use-hover'
-export { useFoucs } from './hooks/use-focus'
+export { useFocus } from './hooks/use-focus'
 
 /**
  * @description

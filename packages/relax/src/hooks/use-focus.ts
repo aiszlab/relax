@@ -6,7 +6,7 @@ import { chain } from '../utils/chain'
  * @description
  * hooks for focus
  */
-type UseFoucsBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
+type UseFocusBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
   onFocusChange?: (isFocused: boolean) => void
 }
 
@@ -16,7 +16,7 @@ type UseFoucsBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
  */
 type UsedFocus<T> = [boolean, Required<Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'>>]
 
-export const useFoucs = <T = Element>(useBy?: UseFoucsBy<T>): UsedFocus<T> => {
+export const useFocus = <T = Element>(useBy?: UseFocusBy<T>): UsedFocus<T> => {
   const [isFocused, { turnOn, turnOff }] = useBoolean(false)
 
   const onFocus = useCallback(() => {
