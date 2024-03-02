@@ -11,13 +11,13 @@ export const throttle = <T extends Function>(callback: T, wait: number): Throttl
     trigger.use = subscriber
   })
     .pipe(throttleTime(wait))
-    .subscribe(() => {
-      callback()
+    .subscribe((value) => {
+      callback(value)
     })
 
   return {
-    next: trigger.next.bind(trigger) as unknown as T,
-    complete: trigger.complete.bind(trigger),
+    next: ((value: First<Arguments<T>>) => trigger.next(value)) as unknown as T,
+    complete: () => trigger.complete(),
     cancel: () => {
       listened.unsubscribe()
       trigger.error()
