@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { debounce, type Debounced } from '../utils/debounce'
 import { useEvent } from './use-event'
+import type { Arguments, First } from '../types'
 
 /**
  * @author murukal
@@ -34,7 +35,7 @@ export const useDebounceCallback = <T extends Function>(callback: T, wait: numbe
 
   const debounced = useMemo<Debounced<T>>(
     () => ({
-      next: ((...args: unknown[]) => trigger.current?.next(...args)) as unknown as T,
+      next: (value: First<Arguments<T>>) => trigger.current?.next(value),
       complete: () => trigger.current?.complete(),
       cancel: () => trigger.current?.cancel()
     }),

@@ -1,12 +1,12 @@
-import { Observable, Subscriber, debounceTime } from 'rxjs'
+import { Observable, debounceTime, type Subscriber } from 'rxjs'
 import type { Arguments, First } from '../types'
 
-export interface Debounced<T> {
+export interface Debounced<T extends Function> {
   /**
    * @description
    * value trigger
    */
-  next: T
+  next: (value: First<Arguments<T>>) => void
 
   /**
    * @description
@@ -65,7 +65,7 @@ export const debounce = <T extends Function>(callback: T, wait: number): Debounc
     })
 
   return {
-    next: ((value: First<Arguments<T>>) => trigger.next(value)) as unknown as T,
+    next: (value: First<Arguments<T>>) => trigger.next(value),
     complete: () => trigger.complete(),
     cancel: () => {
       listened.unsubscribe()
