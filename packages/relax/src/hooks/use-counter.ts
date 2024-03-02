@@ -43,7 +43,7 @@ type UsedCounter = [
  */
 export const useCounter = (
   initialState?: State<number>,
-  { max = Infinity, min = 0 }: Props = { max: Infinity, min: 0 }
+  { max = Infinity, min = -Infinity }: Props = { max: Infinity, min: -Infinity }
 ): UsedCounter => {
   const defaultState = useDefault(initialState ?? 0)
   const [_count, _setCount] = useState(defaultState)
