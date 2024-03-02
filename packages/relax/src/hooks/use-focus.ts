@@ -7,7 +7,7 @@ import type { Last } from '../types'
  * @description
  * hooks for focus
  */
-type UseFocusBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
+type Props<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
   onFocusChange?: (isFocused: boolean) => void
 }
 
@@ -17,21 +17,21 @@ type UseFocusBy<T> = Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'> & {
  */
 type UsedFocus<T> = [boolean, Required<Pick<DOMAttributes<T>, 'onFocus' | 'onBlur'>>]
 
-export const useFocus = <T = Element>(useBy?: UseFocusBy<T>): UsedFocus<T> => {
+export const useFocus = <T extends Element = Element>(props?: Props<T>): UsedFocus<T> => {
   const [isFocused, { turnOn, turnOff }] = useBoolean(false)
 
   const onFocus = useCallback<Last<UsedFocus<T>>['onFocus']>(
     (e) => {
-      chain(useBy?.onFocus, turnOn, () => useBy?.onFocusChange?.(true))(e)
+      chain(props?.onFocus, turnOn, () => props?.onFocusChange?.(true))(e)
     },
-    [useBy?.onFocus, useBy?.onFocusChange]
+    [props?.onFocus, props?.onFocusChange]
   )
 
   const onBlur = useCallback<Last<UsedFocus<T>>['onBlur']>(
     (e) => {
-      chain(useBy?.onBlur, turnOff, () => useBy?.onFocusChange?.(false))(e)
+      chain(props?.onBlur, turnOff, () => props?.onFocusChange?.(false))(e)
     },
-    [useBy?.onBlur, useBy?.onFocusChange]
+    [props?.onBlur, props?.onFocusChange]
   )
 
   return [isFocused, { onFocus, onBlur }]
