@@ -74,7 +74,7 @@ export const useCounter = (
     _setCount(defaultState)
   }, [])
 
-  const count = useMemo(() => clamp(_count, min, max), [min, max])
+  const count = useMemo(() => clamp(_count, min, max), [_count, min, max])
 
   return [count, { add, subtract, first, last, reset, setCount: _setCount }]
 }
