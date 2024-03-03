@@ -1,22 +1,18 @@
 import { useEffect } from 'react'
 
-interface Options {
-  duration: number
-}
-
 /**
  * @author murukal
  *
  * @description
  * timeout effect
  */
-export const useTimeout = (handler: Function, { duration }: Options) => {
+export const useTimeout = (handler: Function, wait: number) => {
   useEffect(() => {
-    const timer = setTimeout(handler, duration)
+    const timer = setTimeout(handler, wait)
 
     return () => {
       if (!timer) return
       clearTimeout(timer)
     }
-  }, [duration])
+  }, [wait])
 }
