@@ -35,7 +35,7 @@
     "@types/react-dom": "^18",
     "@types/react-is": "^18",
     "rollup": "^4.13.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "peerDependencies": {
     "react": "^18",
