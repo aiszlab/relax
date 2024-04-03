@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { debounce, type Debounced } from '../utils/debounce'
 import { useEvent } from './use-event'
-import type { Arguments, First } from '../types'
+import { useDefault } from './use-default'
 
 /**
  * @author murukal
@@ -18,7 +18,7 @@ import type { Arguments, First } from '../types'
  * @example
  * 1000
  */
-export const useDebounceCallback = <T extends Function>(callback: T, wait: number = 1000) => {
+export const useDebounceCallback = <T>(callback: Debounced<T>['next'], wait: number = 1000) => {
   const trigger = useRef<Debounced<T> | null>(null)
   const callable = useEvent(callback)
 
@@ -33,14 +33,11 @@ export const useDebounceCallback = <T extends Function>(callback: T, wait: numbe
     }
   }, [wait])
 
-  const debounced = useMemo<Debounced<T>>(
-    () => ({
-      next: (value: First<Arguments<T>>) => trigger.current?.next(value),
-      complete: () => trigger.current?.complete(),
-      cancel: () => trigger.current?.cancel()
-    }),
-    []
-  )
+  const debounced = useDefault<Debounced<T>>(() => ({
+    next: (value: T) => trigger.current?.next(value),
+    complete: () => trigger.current?.complete(),
+    cancel: () => trigger.current?.cancel()
+  }))
 
   return debounced
 }
