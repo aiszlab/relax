@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { debounce, type Debounced, type Callable, type Debouncer } from '../utils/debounce'
-import { useEvent } from './use-event'
+import { debounce, type Debounced, type Debouncer } from '../utils/debounce'
+import { type Callable, useEvent } from './use-event'
 import { isFunction } from '../is/is-function'
-import { useDefault } from '..'
+import { useDefault } from '../hooks/use-default'
 
 const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
   debouncer: T | Debouncer<T, R>

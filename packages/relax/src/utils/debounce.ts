@@ -1,8 +1,9 @@
-import { Observable, debounceTime, type Subscriber, Subscription, concatMap, from, map } from 'rxjs'
-import { isFunction } from '..'
-import { Nullable } from '../types'
+import { Observable, debounceTime, type Subscriber, type Subscription, map, throttleTime } from 'rxjs'
+import { isFunction } from '../is/is-function'
+import { type Nullable } from '../types'
+import { type Callable } from '../hooks/use-event'
 
-export type Callable = (...args: any) => any
+type Type = 'debounce' | 'throttle'
 
 export interface Debounced<T extends Callable> {
   /**
@@ -13,7 +14,7 @@ export interface Debounced<T extends Callable> {
 
   /**
    * @description
-   * complete current debounce function
+   * complete current debounce/throttle function
    */
   flush: () => void
 
@@ -36,25 +37,28 @@ export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T
   #callback: Nullable<Debouncer<T, R>['callback']>
   #pipeable: Exclude<Debouncer<T, R>['pipeable'], null>
   #wait: number
+  #type: Type
 
-  constructor(debouncer: Debouncer<T, R>, wait: number) {
+  constructor(debouncer: Debouncer<T, R>, wait: number, type: Type = 'debounce') {
     this.#subscriber = null
     this.#subscription = null
     this.#callback = debouncer.callback
-    this.#pipeable = debouncer.pipeable ?? ((args) => args)
+    this.#pipeable = debouncer.pipeable ?? ((...args) => args)
     this.#wait = wait
+    this.#type = type
   }
 
   /**
    * @description
-   * 创建监听器
+   * create observable
+   * used for debounce/throttle handler
    */
   use() {
     this.#subscription = new Observable<Parameters<T>>((subscriber) => {
       this.#subscriber = subscriber
     })
       .pipe(
-        debounceTime(this.#wait),
+        this.#type === 'debounce' ? debounceTime(this.#wait) : throttleTime(this.#wait),
         map((args) => this.#pipeable(...args))
       )
       .subscribe((args) => {
@@ -68,7 +72,7 @@ export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T
    * @description
    * flush
    * complete all debounced handlers
-   * in relax, we will create a new observable for next debounce handler
+   * in relax, we will create a new observable for next debounce/throttle handler
    * so it will make some async problems, pls attention
    */
   flush() {
@@ -80,7 +84,7 @@ export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T
    * @description
    * abort
    * cancel all debounced handlers
-   * in relax, we will create a new observable for next debounce handler
+   * in relax, we will create a new observable for next debounce/throttle handler
    */
   abort() {
     this.#subscription?.unsubscribe()
