@@ -1,4 +1,4 @@
-import { Observable, debounceTime, type Subscriber, type Subscription, map, throttleTime } from 'rxjs'
+import { Observable, debounceTime, type Subscriber, type Subscription, map, throttleTime, concatMap, from } from 'rxjs'
 import { isFunction } from '../is/is-function'
 import { type Nullable } from '../types'
 import { type Callable } from '../hooks/use-event'
@@ -27,7 +27,7 @@ export interface Debounced<T extends Callable> {
 
 export type Debouncer<T extends Callable, R extends Array<unknown> = Parameters<T>> = {
   callback: (...args: R) => ReturnType<T>
-  pipeable: Nullable<(...args: Parameters<T>) => R>
+  pipeable: Nullable<(...args: Parameters<T>) => R | Promise<R>>
 }
 
 export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T>> {
@@ -59,7 +59,7 @@ export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T
     })
       .pipe(
         this.#type === 'debounce' ? debounceTime(this.#wait) : throttleTime(this.#wait),
-        map((args) => this.#pipeable(...args))
+        concatMap((args) => from(Promise.resolve(this.#pipeable(...args))))
       )
       .subscribe((args) => {
         this.#callback?.(...args)

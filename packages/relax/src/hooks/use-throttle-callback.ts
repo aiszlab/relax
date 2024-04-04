@@ -60,7 +60,7 @@ export const useThrottleCallback = <T extends Callable, R extends Array<unknown>
     }
   }, [duration])
 
-  return useDefault(() => ({
+  return useDefault<Throttled<T>>(() => ({
     next: (...args: Parameters<T>) => throttled.current?.next(...args),
     flush: () => throttled.current?.flush(),
     abort: () => throttled.current?.abort()

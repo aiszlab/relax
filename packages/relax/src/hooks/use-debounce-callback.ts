@@ -60,7 +60,7 @@ export const useDebounceCallback = <T extends Callable, R extends Array<unknown>
     }
   }, [wait])
 
-  return useDefault(() => ({
+  return useDefault<Debounced<T>>(() => ({
     next: (...args: Parameters<T>) => debounced.current?.next(...args),
     flush: () => debounced.current?.flush(),
     abort: () => debounced.current?.abort()
