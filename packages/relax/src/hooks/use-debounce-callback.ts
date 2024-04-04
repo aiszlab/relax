@@ -1,7 +1,25 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { debounce, type Debounced } from '../utils/debounce'
+import { debounce, type Debounced, type Callable, type Debouncer } from '../utils/debounce'
 import { useEvent } from './use-event'
-import { useDefault } from './use-default'
+import { isFunction } from '../is/is-function'
+import { useDefault } from '..'
+
+const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+  debouncer: T | Debouncer<T, R>
+): Debouncer<T, R> => {
+  const _debouncer = useMemo(() => {
+    return isFunction(debouncer) ? { callback: debouncer, pipeable: null } : debouncer
+  }, [debouncer])
+
+  return {
+    callback: useEvent((...args) => {
+      return _debouncer.callback(...args)
+    }),
+    pipeable: useEvent((...args: Parameters<T>) => {
+      return _debouncer.pipeable?.(...args) ?? args
+    })
+  }
+}
 
 /**
  * @author murukal
@@ -18,26 +36,33 @@ import { useDefault } from './use-default'
  * @example
  * 1000
  */
-export const useDebounceCallback = <T>(callback: Debounced<T>['next'], wait: number = 1000) => {
-  const trigger = useRef<Debounced<T> | null>(null)
-  const callable = useEvent(callback)
+export const useDebounceCallback = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+  debouncer: T | Debouncer<T, R>,
+  wait: number = 1000
+) => {
+  const debounced = useRef<Debounced<T> | null>(null)
+  const { callback, pipeable } = useDebouncer(debouncer)
 
   useEffect(() => {
-    const debounced = debounce(callable, wait)
-    trigger.current = debounced
+    const _debounced = debounce<T, R>(
+      {
+        callback,
+        pipeable
+      },
+      wait
+    )
+    debounced.current = _debounced
 
     // dispose
     return () => {
-      debounced.cancel()
-      trigger.current = null
+      _debounced.abort()
+      debounced.current = null
     }
   }, [wait])
 
-  const debounced = useDefault<Debounced<T>>(() => ({
-    next: (value: T) => trigger.current?.next(value),
-    complete: () => trigger.current?.complete(),
-    cancel: () => trigger.current?.cancel()
+  return useDefault(() => ({
+    next: (...args: Parameters<T>) => debounced.current?.next(...args),
+    flush: () => debounced.current?.flush(),
+    abort: () => debounced.current?.abort()
   }))
-
-  return debounced
 }

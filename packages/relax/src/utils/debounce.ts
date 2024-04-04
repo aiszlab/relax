@@ -24,24 +24,24 @@ export interface Debounced<T extends Callable> {
   abort: () => void
 }
 
-export type Debouncer<T extends Callable, P extends Nullable<(...args: Parameters<T>) => R> = null, R = unknown> = {
-  callback: (...args: P extends Callable ? R[] : Parameters<T>) => ReturnType<T>
-  pipeable: P
+export type Debouncer<T extends Callable, R extends Array<unknown> = Parameters<T>> = {
+  callback: (...args: R) => ReturnType<T>
+  pipeable: Nullable<(...args: Parameters<T>) => R>
 }
 
-export class Trigger<T extends Callable, P extends Nullable<(...args: Parameters<T>) => R> = null, R = unknown> {
+export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T>> {
   #subscriber: Nullable<Subscriber<Parameters<T>>>
   #subscription: Nullable<Subscription>
 
-  #callback: Nullable<Debouncer<T, P, R>['callback']>
-  #pipeable: Nullable<Debouncer<T, P, R>['pipeable']>
+  #callback: Nullable<Debouncer<T, R>['callback']>
+  #pipeable: Exclude<Debouncer<T, R>['pipeable'], null>
   #wait: number
 
-  constructor(debouncer: Debouncer<T, P, R>, wait: number) {
+  constructor(debouncer: Debouncer<T, R>, wait: number) {
     this.#subscriber = null
     this.#subscription = null
     this.#callback = debouncer.callback
-    this.#pipeable = debouncer.pipeable
+    this.#pipeable = debouncer.pipeable ?? ((args) => args)
     this.#wait = wait
   }
 
@@ -55,10 +55,9 @@ export class Trigger<T extends Callable, P extends Nullable<(...args: Parameters
     })
       .pipe(
         debounceTime(this.#wait),
-        map((args) => (this.#pipeable ? ([this.#pipeable(...args)] satisfies [R]) : args))
+        map((args) => this.#pipeable(...args))
       )
       .subscribe((args) => {
-        // @ts-ignore
         this.#callback?.(...args)
       })
 
@@ -98,9 +97,12 @@ export class Trigger<T extends Callable, P extends Nullable<(...args: Parameters
   }
 }
 
-export const debounce = <T extends (...args: any) => any>(debouncer: Debouncer<T> | T, wait: number): Debounced<T> => {
+export const debounce = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+  debouncer: Debouncer<T, R> | T,
+  wait: number
+): Debounced<T> => {
   const _isFunction = isFunction(debouncer)
-  const trigger = new Trigger<T>(
+  const trigger = new Trigger<T, R>(
     {
       callback: _isFunction ? debouncer : debouncer.callback,
       pipeable: _isFunction ? null : debouncer.pipeable
