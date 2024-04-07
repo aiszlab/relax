@@ -1,4 +1,4 @@
-import { Observable, debounceTime, type Subscriber, type Subscription, map, throttleTime, concatMap, from } from 'rxjs'
+import { Observable, debounceTime, type Subscriber, type Subscription, throttleTime, concatMap, from } from 'rxjs'
 import { isFunction } from '../is/is-function'
 import { type Nullable } from '../types'
 import { type Callable } from '../hooks/use-event'
