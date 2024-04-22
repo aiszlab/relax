@@ -17,11 +17,27 @@ class ScrollLocker {
 
   get barSize() {
     if (this.#barSize) return this.#barSize
-    const { width, height } = getComputedStyle(document.body, '::-webkit-scrollbar')
-    return (this.#barSize ??= {
-      width: isComputable(width) ? width : '0',
-      height: isComputable(height) ? height : '0'
-    })
+
+    // how to calculate dom scroll bar size
+    // create a backend dom element, set force scrollable
+    const _target = document.createElement('div')
+    _target.attributeStyleMap.set('position', 'absolute')
+    _target.attributeStyleMap.set('left', '0')
+    _target.attributeStyleMap.set('top', '0')
+    _target.attributeStyleMap.set('width', '100vw')
+    _target.attributeStyleMap.set('height', '100vh')
+    _target.attributeStyleMap.set('overflow', 'scroll')
+
+    // calculate, then clear
+    document.body.appendChild(_target)
+    const scrollWidth = _target.offsetWidth - _target.clientWidth
+    const scrollHeight = _target.offsetHeight - _target.clientHeight
+    document.body.removeChild(_target)
+
+    return {
+      width: scrollWidth,
+      height: scrollHeight
+    }
   }
 
   get isOverflow() {
