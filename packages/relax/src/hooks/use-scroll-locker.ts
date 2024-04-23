@@ -1,15 +1,19 @@
-import { useId, useLayoutEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { isOverflow } from '../is/is-overflow'
-import { isStyleElement } from '../is/is-style-element'
+import { setStyle } from '../utils/set-style'
 
-const isComputable = (value: string) => /^(.*)px$/.test(value)
+type ScrollBarSize = {
+  width: number
+  height: number
+}
 
 class ScrollLocker {
   // singleton mode
   static #scrollLocker: ScrollLocker | null = null
-
   // bar size
-  #barSize: Pick<CSSStyleDeclaration, 'width' | 'height'> | null = null
+  #barSize: ScrollBarSize | null = null
+  // locked elements, with previous styles
+  #locked: Map<Element, Partial<CSSStyleDeclaration>> = new Map()
 
   constructor() {
     return (ScrollLocker.#scrollLocker ??= this)
@@ -17,73 +21,70 @@ class ScrollLocker {
 
   get barSize() {
     if (this.#barSize) return this.#barSize
-    const { width, height } = getComputedStyle(document.body, '::-webkit-scrollbar')
-    return (this.#barSize ??= {
-      width: isComputable(width) ? width : '0',
-      height: isComputable(height) ? height : '0'
-    })
+
+    // how to calculate dom scroll bar size
+    // create a backend dom element, set force scrollable
+    const _target = document.createElement('div')
+    _target.attributeStyleMap.set('position', 'absolute')
+    _target.attributeStyleMap.set('left', '0')
+    _target.attributeStyleMap.set('top', '0')
+    _target.attributeStyleMap.set('width', '100vw')
+    _target.attributeStyleMap.set('height', '100vh')
+    _target.attributeStyleMap.set('overflow', 'scroll')
+
+    // calculate, then clear
+    document.body.appendChild(_target)
+    this.#barSize = {
+      width: _target.offsetWidth - _target.clientWidth,
+      height: _target.offsetHeight - _target.clientHeight
+    }
+    document.body.removeChild(_target)
+    return this.#barSize
   }
 
   get isOverflow() {
     return isOverflow()
   }
 
-  get locker() {
-    return `html body {
-  overflow-y: hidden;
-  ${this.isOverflow ? `width: calc(100% - ${this.barSize.width});` : ''}
-}`
+  lock(element: HTMLElement = document.body) {
+    // if locked, do not lock again
+    if (this.#locked.has(element)) return
+
+    this.#locked.set(
+      element,
+      setStyle(element, {
+        overflow: 'hidden',
+        width: `calc(100% - ${this.barSize.width}px)`
+      })
+    )
   }
 
-  get container() {
-    return document.head || document.body
-  }
+  unlock(element: HTMLElement = document.body) {
+    // not locked, no need to unlock
+    if (!this.#locked.has(element)) return
 
-  getLocked(id: string) {
-    return (
-      Array.from(this.container.children).filter((element) => isStyleElement(element)) as HTMLStyleElement[]
-    ).find((element) => element.id === id)
-  }
-
-  lock(id: string) {
-    if (!this.container) return
-
-    const locked = this.getLocked(id)
-    if (locked) {
-      if (locked.innerHTML !== this.locker) {
-        locked.innerHTML = this.locker
-      }
-      return locked
-    }
-
-    const locker = document.createElement('style')
-    locker.id = id
-    locker.innerHTML = this.locker
-    this.container.appendChild(locker)
-    return locker
-  }
-
-  unlock(id: string) {
-    const locked = this.getLocked(id)
-    if (!locked) return
-    this.container.removeChild(locked)
+    // reset style, in lock, some styled are setted
+    setStyle(element, this.#locked.get(element))
+    this.#locked.delete(element)
   }
 }
 
+/**
+ * @description
+ * hooks
+ */
 export const useScrollLocker = (isLock?: boolean) => {
-  const id = useId()
-
   useLayoutEffect(() => {
     const scrollLocker = new ScrollLocker()
 
     if (!!isLock) {
-      scrollLocker.lock(id)
+      scrollLocker.lock(document.body)
     } else {
-      scrollLocker.unlock(id)
+      scrollLocker.unlock(document.body)
     }
 
     return () => {
-      scrollLocker.unlock(id)
+      scrollLocker.unlock(document.body)
     }
-  }, [!!isLock, id])
+  }, [!!isLock])
 }
