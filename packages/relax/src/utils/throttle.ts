@@ -1,26 +1,28 @@
-import { Observable, throttleTime } from 'rxjs'
-import type { Arguments, First } from '../types'
-import { type Debounced, Trigger } from './debounce'
+import { type Debounced, Trigger, type Debouncer } from './debounce'
+import { isFunction } from '../is/is-function'
+import { type Callable } from '../hooks/use-event'
 
-export type Throttled<T extends Function> = Debounced<T>
+export type Throttled<T extends Callable> = Debounced<T>
 
-export const throttle = <T extends Function>(callback: T, duration: number): Throttled<T> => {
-  const trigger = new Trigger<First<Arguments<T>>>()
+export type Throttler<T extends Callable, R extends Array<unknown> = Parameters<T>> = Debouncer<T, R>
 
-  const listened = new Observable((subscriber) => {
-    trigger.use = subscriber
-  })
-    .pipe(throttleTime(duration))
-    .subscribe((value) => {
-      callback(value)
-    })
+export const throttle = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+  throttler: Throttler<T, R> | T,
+  duration: number
+): Throttled<T> => {
+  const _isFunction = isFunction(throttler)
+  const trigger = new Trigger<T, R>(
+    {
+      callback: _isFunction ? throttler : throttler.callback,
+      pipeable: _isFunction ? null : throttler.pipeable
+    },
+    duration,
+    'throttle'
+  ).use()
 
   return {
-    next: (value: First<Arguments<T>>) => trigger.next(value),
-    complete: () => trigger.complete(),
-    cancel: () => {
-      listened.unsubscribe()
-      trigger.error()
-    }
+    next: (...args: Parameters<T>) => trigger.next(...args),
+    flush: () => trigger.flush(),
+    abort: () => trigger.abort()
   }
 }

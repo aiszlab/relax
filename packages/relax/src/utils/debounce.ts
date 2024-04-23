@@ -1,75 +1,122 @@
-import { Observable, debounceTime, type Subscriber } from 'rxjs'
-import type { Arguments, First } from '../types'
+import { Observable, debounceTime, type Subscriber, type Subscription, throttleTime, concatMap, from } from 'rxjs'
+import { isFunction } from '../is/is-function'
+import { type Nullable } from '../types'
+import { type Callable } from '../hooks/use-event'
 
-export interface Debounced<T extends Function> {
+type Type = 'debounce' | 'throttle'
+
+export interface Debounced<T extends Callable> {
   /**
    * @description
    * value trigger
    */
-  next: (value: First<Arguments<T>>) => void
+  next: (...args: Parameters<T>) => void
 
   /**
    * @description
-   * complete current debounce function
-   * this function will not be usable
+   * complete current debounce/throttle function
    */
-  complete: () => void
+  flush: () => void
 
   /**
    * @description
    * ignore any value after call cancel
-   * this function will not be usable
    */
-  cancel: () => void
+  abort: () => void
 }
 
-export class Trigger<T> {
-  #next: ((value?: T) => void) | null
-  #error: ((error?: unknown) => void) | null
-  #complete: (() => void) | null
-
-  constructor() {
-    this.#next = null
-    this.#error = null
-    this.#complete = null
-  }
-
-  set use(subscriber: Subscriber<T>) {
-    this.#next = (value) => subscriber.next(value)
-    this.#error = (error) => subscriber.error(error)
-    this.#complete = () => subscriber.complete()
-  }
-
-  next(value: T) {
-    this.#next?.(value)
-  }
-
-  error(error?: unknown) {
-    this.#error?.(error)
-  }
-
-  complete() {
-    this.#complete?.()
-  }
+export type Debouncer<T extends Callable, R extends Array<unknown> = Parameters<T>> = {
+  callback: (...args: R) => ReturnType<T>
+  pipeable: Nullable<(...args: Parameters<T>) => R | Promise<R>>
 }
 
-export const debounce = <T extends Function>(callback: T, wait: number): Debounced<T> => {
-  const trigger = new Trigger<First<Arguments<T>>>()
+export class Trigger<T extends Callable, R extends Array<unknown> = Parameters<T>> {
+  #subscriber: Nullable<Subscriber<Parameters<T>>>
+  #subscription: Nullable<Subscription>
 
-  const listened = new Observable((subscriber) => {
-    trigger.use = subscriber
-  })
-    .pipe(debounceTime(wait))
-    .subscribe((value) => {
-      callback(value)
+  #callback: Nullable<Debouncer<T, R>['callback']>
+  #pipeable: Exclude<Debouncer<T, R>['pipeable'], null>
+  #wait: number
+  #type: Type
+
+  constructor(debouncer: Debouncer<T, R>, wait: number, type: Type = 'debounce') {
+    this.#subscriber = null
+    this.#subscription = null
+    this.#callback = debouncer.callback
+    this.#pipeable = debouncer.pipeable ?? ((...args) => args)
+    this.#wait = wait
+    this.#type = type
+  }
+
+  /**
+   * @description
+   * create observable
+   * used for debounce/throttle handler
+   */
+  use() {
+    this.#subscription = new Observable<Parameters<T>>((subscriber) => {
+      this.#subscriber = subscriber
     })
+      .pipe(
+        this.#type === 'debounce' ? debounceTime(this.#wait) : throttleTime(this.#wait),
+        concatMap((args) => from(Promise.resolve(this.#pipeable(...args))))
+      )
+      .subscribe((args) => {
+        this.#callback?.(...args)
+      })
+
+    return this
+  }
+
+  /**
+   * @description
+   * flush
+   * complete all debounced handlers
+   * in relax, we will create a new observable for next debounce/throttle handler
+   * so it will make some async problems, pls attention
+   */
+  flush() {
+    this.#subscriber?.complete()
+    this.use()
+  }
+
+  /**
+   * @description
+   * abort
+   * cancel all debounced handlers
+   * in relax, we will create a new observable for next debounce/throttle handler
+   */
+  abort() {
+    this.#subscription?.unsubscribe()
+    this.#subscriber?.error()
+    this.use()
+  }
+
+  /**
+   * @description
+   * trigger value
+   */
+  next(...args: Parameters<T>) {
+    this.#subscriber?.next(args)
+  }
+}
+
+export const debounce = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+  debouncer: Debouncer<T, R> | T,
+  wait: number
+): Debounced<T> => {
+  const _isFunction = isFunction(debouncer)
+  const trigger = new Trigger<T, R>(
+    {
+      callback: _isFunction ? debouncer : debouncer.callback,
+      pipeable: _isFunction ? null : debouncer.pipeable
+    },
+    wait
+  ).use()
 
   return {
-    next: (value: First<Arguments<T>>) => trigger.next(value),
-    complete: () => trigger.complete(),
-    cancel: () => {
-      listened.unsubscribe()
-      trigger.error()
-    }
+    next: (...args: Parameters<T>) => trigger.next(...args),
+    flush: () => trigger.flush(),
+    abort: () => trigger.abort()
   }
 }

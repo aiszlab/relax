@@ -1,4 +1,3 @@
-export type { Arguments } from './arguments'
 export type { Nullable } from './nullable'
 export type { Partialable } from './partialable'
 export type { Voidable } from './voidable'

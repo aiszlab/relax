@@ -34,7 +34,7 @@ export const useControlledState = <T>(
   /// sync value back to `undefined` when it from control to un-control
   useUpdateEffect(() => {
     if (!isUndefined(controlledState)) return
-    _setState(controlledState)
+    _setState(controlledState ?? defaultState!)
   }, [controlledState])
 
   /// use controlled
