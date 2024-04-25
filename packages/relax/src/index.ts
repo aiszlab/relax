@@ -21,6 +21,7 @@ export { useUpdateEffect } from './hooks/use-update-effect'
 export { useCounter } from './hooks/use-counter'
 export { useHover } from './hooks/use-hover'
 export { useFocus } from './hooks/use-focus'
+export { useMemorable } from './hooks/use-memorable'
 
 /**
  * @description
