@@ -22,7 +22,7 @@ export const useHover = <T extends Element = Element>(props?: UseHoverBy<T>): Us
 
   const onPointerLeave = useCallback<Last<UsedHover<T>>['onPointerLeave']>(
     (e) => {
-      chain(props?.onEnter, turnOff)(e)
+      chain(props?.onLeave, turnOff)(e)
     },
     [props?.onLeave]
   )
