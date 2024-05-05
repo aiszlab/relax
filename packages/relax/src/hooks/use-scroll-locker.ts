@@ -50,6 +50,9 @@ class ScrollLocker {
     // if locked, do not lock again
     if (this.#locked.has(element)) return
 
+    // if target is not scrollable, do not lock
+    if (element.scrollHeight <= element.clientHeight) return
+
     this.#locked.set(
       element,
       setStyle(element, {
