@@ -51,7 +51,7 @@ class ScrollLocker {
     if (this.#locked.has(element)) return
 
     // if target is not scrollable, do not lock
-    if (element.scrollHeight <= element.clientHeight) return
+    if (!isOverflow(element)) return
 
     this.#locked.set(
       element,
