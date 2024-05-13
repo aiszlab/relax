@@ -3,7 +3,9 @@ import resolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import pkg from './package.json' assert { type: 'json' }
 
-/** @type {import("rollup").RollupOptions} */
+/**
+ * @type {import("rollup").RollupOptions}
+ */
 const configuration = {
   input: {
     index: './src/index',
@@ -13,7 +15,6 @@ const configuration = {
   output: {
     format: 'es',
     dir: './dist',
-    entryFileNames: '[name].mjs',
     preserveModules: true,
     preserveModulesRoot: './src'
   },
