@@ -26,7 +26,7 @@ const configuration = {
     typescript(),
     babel({
       babelHelpers: 'bundled',
-      presets: ['@babel/preset-env', '@babel/preset-typescript']
+      babelrc: false
     })
   ],
 
