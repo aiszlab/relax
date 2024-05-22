@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import pkg from './package.json' assert { type: 'json' }
 
+const EXTENSIONS = ['.ts']
+
 /**
  * @type {import("rollup").RollupOptions}
  */
@@ -21,12 +23,12 @@ const configuration = {
 
   plugins: [
     resolve({
-      extensions: ['.ts']
+      extensions: EXTENSIONS
     }),
     typescript(),
     babel({
       babelHelpers: 'bundled',
-      babelrc: false
+      extensions: EXTENSIONS
     })
   ],
 

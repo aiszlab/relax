@@ -2,8 +2,6 @@
  * @type {import("@babel/core").ConfigFunction}
  */
 const config = (api) => {
-  console.log('1111')
-
   api.cache.never()
 
   return {
