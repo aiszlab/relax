@@ -8,15 +8,15 @@ const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<
   debouncer: T | Debouncer<T, R>
 ): Debouncer<T, R> => {
   const _debouncer = useMemo(() => {
-    return isFunction(debouncer) ? { callback: debouncer, pipeable: null } : debouncer
+    return isFunction(debouncer) ? { callback: debouncer, pipe: null } : debouncer
   }, [debouncer])
 
   return {
     callback: useEvent((...args) => {
       return _debouncer.callback(...args)
     }),
-    pipeable: useEvent((...args: Parameters<T>) => {
-      return _debouncer.pipeable?.(...args) ?? args
+    pipe: useEvent((...args: Parameters<T>) => {
+      return _debouncer.pipe?.(...args) ?? (args as unknown as R)
     })
   }
 }
@@ -41,13 +41,13 @@ export const useDebounceCallback = <T extends Callable, R extends Array<unknown>
   wait: number = 1000
 ) => {
   const debounced = useRef<Debounced<T> | null>(null)
-  const { callback, pipeable } = useDebouncer(debouncer)
+  const { callback, pipe } = useDebouncer(debouncer)
 
   useEffect(() => {
     const _debounced = debounce<T, R>(
       {
         callback,
-        pipeable
+        pipe
       },
       wait
     )
