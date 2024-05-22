@@ -1,7 +1,7 @@
 import { debounceTime } from 'rxjs'
-import { isFunction } from '../is/is-function'
-import { type Callable } from '../hooks/use-event'
-import { Waitable } from './waitable'
+import { isFunction } from '../../is/is-function'
+import { type Callable } from '../../hooks/use-event'
+import { Waitable } from '../waitable'
 
 export interface Debounced<T extends Callable> {
   /**

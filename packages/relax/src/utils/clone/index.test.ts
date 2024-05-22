@@ -14,9 +14,4 @@ describe('`clone` util', () => {
     const symbol = Symbol('symbol')
     expect(clone(symbol)).toBe(symbol)
   })
-
-  //   test('complex value', () => {
-  //     const object = { prop: 'value' }
-  //     expect(clone(object) === object).toBeFalsy()
-  //   })
 })

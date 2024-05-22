@@ -1,4 +1,13 @@
-import { Observable, from, switchMap, type MonoTypeOperatorFunction, type Subscriber, type Subscription } from 'rxjs'
+import {
+  Observable,
+  from,
+  of,
+  switchMap,
+  type MonoTypeOperatorFunction,
+  type Subscriber,
+  type Subscription
+} from 'rxjs'
+import { isThenable } from '../../is/is-thenable'
 
 interface Props<T extends Array<unknown> = Array<unknown>, R extends Array<unknown> = T> {
   callback: (...args: T) => unknown
@@ -35,7 +44,10 @@ export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
     })
       .pipe(
         this.#timer,
-        switchMap((args) => from(Promise.resolve(this.#pipe(...args))))
+        switchMap((args) => {
+          const piped = this.#pipe(...args)
+          return isThenable(piped) ? from(piped) : of(piped)
+        })
       )
       .subscribe((args) => {
         this.#callback?.(...args)

@@ -1,7 +1,7 @@
-import { Waitable } from './waitable'
-import type { Debounced, Debouncer } from './debounce'
-import { isFunction } from '../is/is-function'
-import { type Callable } from '../hooks/use-event'
+import { Waitable } from '../waitable'
+import type { Debounced, Debouncer } from '../debounce'
+import { isFunction } from '../../is/is-function'
+import { type Callable } from '../../hooks/use-event'
 import { throttleTime } from 'rxjs'
 
 export type Throttled<T extends Callable> = Debounced<T>
