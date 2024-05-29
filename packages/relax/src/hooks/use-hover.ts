@@ -1,4 +1,4 @@
-import { DOMAttributes, useCallback } from 'react'
+import { type DOMAttributes, useCallback } from 'react'
 import { useBoolean } from '../hooks/use-boolean'
 import { chain } from '../utils/chain'
 import type { Last } from '../types'
