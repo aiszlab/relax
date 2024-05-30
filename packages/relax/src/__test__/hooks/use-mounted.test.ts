@@ -3,19 +3,19 @@
  */
 
 import { renderHook } from '@testing-library/react'
-import { useMount } from '../../src/hooks/use-mount'
+import { useMounted } from '../../hooks/use-mounted'
 
-describe('useMount', () => {
-  it('test mount', async () => {
+describe('useMounted', () => {
+  it('test mounted', async () => {
     const fn = jest.fn()
-    const hook = renderHook(() => useMount(fn))
+    const hook = renderHook(() => useMounted(fn))
     expect(fn).toHaveBeenCalledTimes(1)
     hook.rerender()
     expect(fn).toHaveBeenCalledTimes(1)
     hook.unmount()
     expect(fn).toHaveBeenCalledTimes(1)
 
-    renderHook(() => useMount(fn)).unmount()
+    renderHook(() => useMounted(fn)).unmount()
     expect(fn).toHaveBeenCalledTimes(2)
   })
 })
