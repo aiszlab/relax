@@ -1,4 +1,4 @@
-import { debounce } from './index'
+import { debounce } from '../../src/utils/debounce'
 
 describe('`debounce` util', () => {
   test('debounce callback', (done) => {
@@ -9,18 +9,18 @@ describe('`debounce` util', () => {
       return value
     }, 32)
 
-    debounced('a')
-    debounced('b')
-    debounced('c')
+    debounced('0')
+    debounced('1')
+    debounced('2')
 
     expect(callCount).toBe(0)
 
     setTimeout(() => {
       expect(callCount).toBe(1)
 
-      debounced('d')
-      debounced('e')
-      debounced('f')
+      debounced('3')
+      debounced('4')
+      debounced('5')
 
       expect(callCount).toBe(1)
     }, 128)

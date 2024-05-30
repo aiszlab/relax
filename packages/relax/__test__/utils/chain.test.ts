@@ -1,4 +1,4 @@
-import { chain } from './index'
+import { chain } from '../../src/utils/chain'
 
 describe('`chain` util', () => {
   test('chain value', () => {

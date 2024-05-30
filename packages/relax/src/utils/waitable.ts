@@ -7,7 +7,7 @@ import {
   type Subscriber,
   type Subscription
 } from 'rxjs'
-import { isThenable } from '../../is/is-thenable'
+import { isThenable } from '../is/is-thenable'
 
 interface Props<T extends Array<unknown> = Array<unknown>, R extends Array<unknown> = T> {
   callback: (...args: T) => unknown

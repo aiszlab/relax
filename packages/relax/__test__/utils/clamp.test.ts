@@ -1,4 +1,4 @@
-import { clamp } from './index'
+import { clamp } from '../../src/utils/clamp'
 
 describe('`clamp` util', () => {
   test('middle value', () => {

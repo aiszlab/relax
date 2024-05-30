@@ -1,4 +1,4 @@
-import { throttle } from './index'
+import { throttle } from '../../src/utils/throttle'
 
 describe('`throttle` util', () => {
   test('throttle callback', (done) => {
@@ -9,18 +9,18 @@ describe('`throttle` util', () => {
       return value
     }, 32)
 
-    throttled('a')
-    throttled('b')
-    throttled('c')
+    throttled('0')
+    throttled('1')
+    throttled('2')
 
     expect(callCount).toBe(1)
 
     setTimeout(() => {
       expect(callCount).toBe(1)
 
-      throttled('d')
-      throttled('e')
-      throttled('f')
+      throttled('3')
+      throttled('4')
+      throttled('5')
 
       expect(callCount).toBe(2)
     }, 128)

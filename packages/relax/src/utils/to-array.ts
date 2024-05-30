@@ -1,4 +1,4 @@
-import { isVoid } from '../../is/is-void'
+import { isVoid } from '../is/is-void'
 
 /**
  * @description

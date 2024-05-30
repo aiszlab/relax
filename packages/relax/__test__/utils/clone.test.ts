@@ -1,4 +1,4 @@
-import { clone } from './index'
+import { clone } from '../../src/utils/clone'
 
 describe('`clone` util', () => {
   test('primitive value', () => {

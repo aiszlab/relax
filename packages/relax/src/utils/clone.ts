@@ -1,5 +1,5 @@
-import { isArray } from '../../is/is-array'
-import { isPrimitive } from '../../is/is-primitive'
+import { isArray } from '../is/is-array'
+import { isPrimitive } from '../is/is-primitive'
 
 /**
  * @description
