@@ -1,12 +1,15 @@
 import { useCallback, useState, type Dispatch, type SetStateAction } from 'react'
-import type { State } from "../types";
+import type { State } from '../types'
 
-type UsedBoolean = [boolean, {
-  turnOn: () => void
-  turnOff: () => void
-  toggle: () => void
-  setBoolean: Dispatch<SetStateAction<boolean>>
-}]
+type UsedBoolean = [
+  boolean,
+  {
+    turnOn: () => void
+    turnOff: () => void
+    toggle: () => void
+    setBoolean: Dispatch<SetStateAction<boolean>>
+  }
+]
 
 /**
  * @author murukal
@@ -23,10 +26,13 @@ export const useBoolean = (initialState?: State<boolean>): UsedBoolean => {
 
   const toggle = useCallback(() => setIsOn((_isOn) => !_isOn), [])
 
-  return [isOn, {
-    turnOn,
-    turnOff,
-    toggle,
-    setBoolean: setIsOn
-  }]
+  return [
+    isOn,
+    {
+      turnOn,
+      turnOff,
+      toggle,
+      setBoolean: setIsOn
+    }
+  ]
 }

@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { Observable, delay, type Subscription, type Subscriber } from 'rxjs'
+import { useEffect, useMemo, useRef } from 'react'
+import { Observable, delay, type Subscription, type Subscriber, timer } from 'rxjs'
 import { useEvent } from './use-event'
+import { useMounted } from './use-mounted'
 
 /**
  * @author murukal
@@ -8,9 +9,19 @@ import { useEvent } from './use-event'
  * @description
  * timeout effect
  */
-export const useTimeout = (handler: Function, wait: number) => {
-  const timer = useRef<Subscription | null>(null)
+export const useTimeout = (callback: Function, wait: number) => {
   const trigger = useRef<Subscriber<void> | null>(null)
+  const timed = useRef<Subscription | null>(null)
+
+  const callable = useEvent(callback)
+
+  useMounted(() => {
+    new Observable((_) => {
+      trigger.current = _
+    }).subscribe({
+      complete: () => callable()
+    })
+  })
 
   // when user what to flush timeout handler
   // if trigger already registed, just complete trigger
@@ -18,41 +29,38 @@ export const useTimeout = (handler: Function, wait: number) => {
   const flush = useEvent(() => {
     if (trigger.current) {
       trigger.current.complete()
-      timer.current?.unsubscribe()
     } else {
-      handler()
+      callback()
     }
 
+    timed.current?.unsubscribe()
+    timed.current = null
     trigger.current = null
-    timer.current = null
   })
 
   // cancel
   const cancel = useEvent(() => {
     trigger.current?.error()
-    timer.current?.unsubscribe()
-    trigger.current = null
-    timer.current = null
+    timed.current?.unsubscribe()
+    timed.current = null
   })
 
+  // add timer for `wait`
   useEffect(() => {
     // if 0, always mean not need to set timeout
     if (wait <= 0) {
       return
     }
 
-    const _timer = new Observable<void>((_trigger) => {
-      trigger.current = _trigger
-      _trigger.next()
+    const _timed = timer(wait).subscribe(() => {
+      trigger.current?.complete()
     })
-      .pipe(delay(wait))
-      .subscribe(() => {
-        handler()
-      })
-    timer.current = _timer
+    timed.current = _timed
 
-    // unmount callback
-    return cancel
+    return () => {
+      _timed.unsubscribe()
+      timed.current = null
+    }
   }, [wait])
 
   return {
