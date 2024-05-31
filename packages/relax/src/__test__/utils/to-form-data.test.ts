@@ -1,4 +1,4 @@
-import { toFormData } from '../../src/utils/to-form-data'
+import { toFormData } from '../../utils/to-form-data'
 
 describe('`toFormData` util', () => {
   test('invalid data type', () => {

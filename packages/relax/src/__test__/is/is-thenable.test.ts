@@ -1,4 +1,4 @@
-import { isThenable } from '../../src/is/is-thenable'
+import { isThenable } from '../../is/is-thenable'
 
 describe('isThenable', () => {
   test('check null', () => {

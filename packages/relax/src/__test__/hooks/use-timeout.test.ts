@@ -3,7 +3,7 @@
  */
 
 import { renderHook } from '@testing-library/react'
-import { useTimeout } from '../../src/hooks/use-timeout'
+import { useTimeout } from '../../hooks/use-timeout'
 
 describe('useTimeout', () => {
   it('test timeout', async () => {

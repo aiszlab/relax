@@ -1,4 +1,4 @@
-import { debounce } from '../../src/utils/debounce'
+import { debounce } from '../../utils/debounce'
 
 describe('`debounce` util', () => {
   test('debounce callback', (done) => {
