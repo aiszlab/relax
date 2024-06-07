@@ -22,6 +22,9 @@ export { useCounter } from './hooks/use-counter'
 export { useHover } from './hooks/use-hover'
 export { useFocus } from './hooks/use-focus'
 export { useMemorable } from './hooks/use-memorable'
+export { useMutateObserver } from './hooks/use-mutate-observer'
+export { useRaf } from './hooks/use-raf'
+export { useDevicePixelRatio } from './hooks/use-device-pixel-ratio'
 
 /**
  * @description
