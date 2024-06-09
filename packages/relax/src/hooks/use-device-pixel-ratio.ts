@@ -9,7 +9,7 @@ import { isDomUsable } from '../is/is-dom-usable'
 export const useDevicePixelRatio = () => {
   const [devicePixelRatio] = useState(() => {
     if (!isDomUsable()) return 1
-    window.devicePixelRatio
+    return window.devicePixelRatio
   })
 
   return devicePixelRatio
