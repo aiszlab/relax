@@ -6,12 +6,6 @@ import { useDefault } from './use-default'
 type Props = {
   /**
    * @description
-   * initial value
-   */
-  initialState?: State<number>
-
-  /**
-   * @description
    * max: count will not be greater than max
    */
   max?: number
@@ -42,10 +36,12 @@ type UsedCounter = [
  * a number counter with some useful apis
  */
 export const useCounter = (
-  initialState?: State<number>,
-  { max = Infinity, min = -Infinity }: Props = { max: Infinity, min: -Infinity }
+  initialState: State<number> = 0,
+  { max = Infinity, min = -Infinity }: Props = {}
 ): UsedCounter => {
-  const defaultState = useDefault(initialState ?? 0)
+  // memorized first time prop value
+  const defaultState = useDefault(initialState)
+
   const [_count, _setCount] = useState(defaultState)
 
   const add = useCallback(

@@ -5,6 +5,10 @@ import { isUndefined } from '../is/is-undefined'
 import { useUpdateEffect } from './use-update-effect'
 
 interface Props<T> {
+  /**
+   * @description
+   * default value
+   */
   defaultState?: State<T>
 }
 
