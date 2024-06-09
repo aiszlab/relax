@@ -24,6 +24,7 @@ export const useRaf = (
     timely && callback()
 
     timed.current = requestAnimationFrame(() => {
+      isTimed.current = false
       !timely && callback()
     })
   }
