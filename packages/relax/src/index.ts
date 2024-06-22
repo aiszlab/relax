@@ -25,6 +25,7 @@ export { useMemorable } from './hooks/use-memorable'
 export { useMutateObserver } from './hooks/use-mutate-observer'
 export { useRaf } from './hooks/use-raf'
 export { useDevicePixelRatio } from './hooks/use-device-pixel-ratio'
+export { useIdentity } from './hooks/use-identity'
 
 /**
  * @description
