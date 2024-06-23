@@ -5,8 +5,8 @@
 import { renderHook } from '@testing-library/react'
 import { useMounted } from '../../hooks/use-mounted'
 
-describe('useMounted', () => {
-  it('test mounted', async () => {
+describe('useMount', () => {
+  it('mounted', async () => {
     const fn = jest.fn()
     const hook = renderHook(() => useMounted(fn))
     expect(fn).toHaveBeenCalledTimes(1)
@@ -17,5 +17,39 @@ describe('useMounted', () => {
 
     renderHook(() => useMounted(fn)).unmount()
     expect(fn).toHaveBeenCalledTimes(2)
+  })
+
+  it('unmounted', () => {
+    const runner = jest.fn()
+    const cleaner = jest.fn()
+    const hook = renderHook(() =>
+      useMounted(() => {
+        runner()
+        return cleaner
+      })
+    )
+    expect(runner).toHaveBeenCalledTimes(1)
+    expect(cleaner).toHaveBeenCalledTimes(0)
+
+    hook.unmount()
+    expect(runner).toHaveBeenCalledTimes(1)
+    expect(cleaner).toHaveBeenCalledTimes(1)
+  })
+
+  it('async unmounted', () => {
+    const runner = jest.fn()
+    const cleaner = jest.fn()
+    const hook = renderHook(() =>
+      useMounted(async () => {
+        runner()
+        return cleaner
+      })
+    )
+    expect(runner).toHaveBeenCalledTimes(1)
+    expect(cleaner).toHaveBeenCalledTimes(0)
+
+    hook.unmount()
+    expect(runner).toHaveBeenCalledTimes(1)
+    expect(cleaner).toHaveBeenCalledTimes(0)
   })
 })

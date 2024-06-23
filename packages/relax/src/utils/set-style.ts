@@ -1,4 +1,4 @@
-import { Voidable } from '../types'
+import type { Voidable } from '../types'
 
 /**
  * @description
