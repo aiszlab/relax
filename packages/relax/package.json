@@ -28,7 +28,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
-    "@babel/preset-typescript": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.7",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.6",
