@@ -1,4 +1,4 @@
-import { exclude } from '../../utils/exclude'
+import { exclude } from '../../src'
 
 describe('`exclude` util', () => {
   test('primitive type', () => {

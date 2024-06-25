@@ -32,6 +32,12 @@ const configuration = {
     })
   ],
 
+  treeshake: {
+    moduleSideEffects: false
+  },
+
+  strictDeprecations: true,
+
   external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)]
 }
 

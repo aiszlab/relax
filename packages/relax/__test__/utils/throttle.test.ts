@@ -1,4 +1,4 @@
-import { throttle } from '../../utils/throttle'
+import { throttle } from '../../src'
 
 describe('`throttle` util', () => {
   test('throttle callback', (done) => {

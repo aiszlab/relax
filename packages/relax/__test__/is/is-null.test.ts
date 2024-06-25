@@ -1,4 +1,4 @@
-import { isNull } from '../../is/is-null'
+import { isNull } from '../../src'
 
 describe('isNull', () => {
   test('check null', () => {
