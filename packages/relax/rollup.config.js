@@ -9,16 +9,13 @@ const EXTENSIONS = ['.ts']
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: {
-    index: './src/index',
-    'dom/index': './src/dom/index'
-  },
+  input: ['src/index', 'src/dom/index'],
 
   output: {
     format: 'es',
-    dir: './dist',
+    dir: 'dist',
     preserveModules: true,
-    preserveModulesRoot: './src'
+    preserveModulesRoot: 'src'
   },
 
   plugins: [
