@@ -3,7 +3,7 @@
  */
 
 import { renderHook } from '@testing-library/react'
-import { useMount } from '../../hooks/use-mount'
+import { useMount } from '../../'
 
 describe('useMount', () => {
   it('mount', async () => {

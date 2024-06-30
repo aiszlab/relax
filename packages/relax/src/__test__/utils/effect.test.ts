@@ -1,4 +1,4 @@
-import { effect } from '../../utils/effect'
+import { effect } from '../../'
 
 describe('`effect` util', () => {
   test('call effect', () => {

@@ -1,4 +1,4 @@
-import { toArray } from '../../utils/to-array'
+import { toArray } from '../../'
 
 describe('`toArray` util', () => {
   test('already array value', () => {
