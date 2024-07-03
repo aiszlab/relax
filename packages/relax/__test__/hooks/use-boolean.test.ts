@@ -3,7 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react'
-import { useBoolean } from '../../'
+import { useBoolean } from '../../src'
 
 describe('useBoolean', () => {
   it('test on methods', async () => {

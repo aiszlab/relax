@@ -3,7 +3,7 @@
  */
 
 import { renderHook } from '@testing-library/react'
-import { useIdentity } from '../../'
+import { useIdentity } from '../../src'
 
 describe('useMount', () => {
   it('test id', async () => {

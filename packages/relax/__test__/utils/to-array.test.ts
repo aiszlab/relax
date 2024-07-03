@@ -1,4 +1,4 @@
-import { toArray } from '../../'
+import { toArray } from '../../src'
 
 describe('`toArray` util', () => {
   test('already array value', () => {
