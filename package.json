@@ -7,8 +7,5 @@
   "engines": {
     "node": ">=18",
     "pnpm": ">=9"
-  },
-  "devDependencies": {
-    "typescript": "5.5.3"
   }
 }

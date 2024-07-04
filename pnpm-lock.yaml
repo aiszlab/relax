@@ -6,11 +6,7 @@ settings:
 
 importers:
 
-  .:
-    devDependencies:
-      typescript:
-        specifier: 5.5.3
-        version: 5.5.3
+  .: {}
 
   packages/fuzzy:
     dependencies:
@@ -101,9 +97,15 @@ importers:
         specifier: ^7.6.2
         version: 7.6.2
     devDependencies:
+      '@types/node':
+        specifier: ^20.14.9
+        version: 20.14.9
       '@types/npmcli__package-json':
         specifier: ^4.0.4
         version: 4.0.4
+      typescript:
+        specifier: 5.5.3
+        version: 5.5.3
 
 packages:
 

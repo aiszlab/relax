@@ -17,6 +17,8 @@
     "semver": "^7.6.2"
   },
   "devDependencies": {
-    "@types/npmcli__package-json": "^4.0.4"
+    "@types/node": "^20.14.9",
+    "@types/npmcli__package-json": "^4.0.4",
+    "typescript": "5.5.3"
   }
 }
