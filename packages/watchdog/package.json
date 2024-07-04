@@ -1,0 +1,17 @@
+{
+  "name": "@aiszlab/watchdog",
+  "version": "1.0.0",
+  "description": "watchdog for any aiszlab package",
+  "main": "index.js",
+  "scripts": {},
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "author": "",
+  "license": "ISC"
+}
