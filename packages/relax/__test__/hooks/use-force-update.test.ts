@@ -5,6 +5,7 @@
 import { renderHook } from '@testing-library/react'
 import { useForceUpdate } from '../../src'
 import { act } from 'react'
+import { describe, it, expect } from '@jest/globals'
 
 describe('useForceUpdate', () => {
   it('force update', () => {

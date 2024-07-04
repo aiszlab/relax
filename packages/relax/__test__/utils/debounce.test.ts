@@ -1,7 +1,8 @@
 import { debounce } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('`debounce` util', () => {
-  test('debounce callback', (done) => {
+  it('debounce callback', (done) => {
     let callCount = 0
 
     const { next: debounced } = debounce((value: string) => {

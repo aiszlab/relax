@@ -4,6 +4,7 @@
 
 import { renderHook } from '@testing-library/react'
 import { useTimeout } from '../../src'
+import { describe, it, expect, jest } from '@jest/globals'
 
 describe('useTimeout', () => {
   it('test timeout', async () => {

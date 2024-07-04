@@ -3,7 +3,8 @@
  */
 
 import { renderHook, act } from '@testing-library/react'
-import { useTogglable } from '../../'
+import { useTogglable } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('useTogglable', () => {
   it('toggle', async () => {

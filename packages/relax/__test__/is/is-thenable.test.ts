@@ -1,31 +1,32 @@
 import { isThenable } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('isThenable', () => {
-  test('check null', () => {
+  it('check null', () => {
     expect(isThenable(null)).toBeFalsy()
   })
 
-  test('check string', () => {
+  it('check string', () => {
     expect(isThenable('string')).toBeFalsy()
   })
 
-  test('check number', () => {
+  it('check number', () => {
     expect(isThenable(0)).toBeFalsy()
   })
 
-  test('check boolean', () => {
+  it('check boolean', () => {
     expect(isThenable(true)).toBeFalsy()
   })
 
-  test('check array', () => {
+  it('check array', () => {
     expect(isThenable([0])).toBeFalsy()
   })
 
-  test('check object', () => {
+  it('check object', () => {
     expect(isThenable({})).toBeFalsy()
   })
 
-  test('check promise', () => {
+  it('check promise', () => {
     expect(isThenable(Promise.resolve())).toBeTruthy()
   })
 })

@@ -1,11 +1,12 @@
 import { toArray } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('`toArray` util', () => {
-  test('already array value', () => {
+  it('already array value', () => {
     expect(toArray([0])).toStrictEqual([0])
   })
 
-  test('separator usage', () => {
+  it('separator usage', () => {
     expect(toArray('className style key')).toStrictEqual(['className style key'])
     expect(toArray('className style key', { separator: ' ' })).toStrictEqual(['className', 'style', 'key'])
 

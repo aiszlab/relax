@@ -1,7 +1,8 @@
 import { throttle } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('`throttle` util', () => {
-  test('throttle callback', (done) => {
+  it('throttle callback', (done) => {
     let callCount = 0
 
     const { next: throttled } = throttle((value: string) => {

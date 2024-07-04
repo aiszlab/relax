@@ -1,7 +1,8 @@
 import { effect } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('`effect` util', () => {
-  test('call effect', () => {
+  it('call effect', () => {
     expect(effect(async () => () => {})).toBe(void 0)
     expect(typeof effect(() => () => {}) === 'function').toBeTruthy()
   })

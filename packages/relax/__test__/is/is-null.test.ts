@@ -1,31 +1,32 @@
 import { isNull } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('isNull', () => {
-  test('check null', () => {
+  it('check null', () => {
     expect(isNull(null)).toBeTruthy()
   })
 
-  test('check string', () => {
+  it('check string', () => {
     expect(isNull('string')).toBeFalsy()
   })
 
-  test('check number', () => {
+  it('check number', () => {
     expect(isNull(0)).toBeFalsy()
   })
 
-  test('check boolean', () => {
+  it('check boolean', () => {
     expect(isNull(true)).toBeFalsy()
   })
 
-  test('check array', () => {
+  it('check array', () => {
     expect(isNull([0])).toBeFalsy()
   })
 
-  test('check object', () => {
+  it('check object', () => {
     expect(isNull({})).toBeFalsy()
   })
 
-  test('check promise', () => {
+  it('check promise', () => {
     expect(isNull(Promise.resolve())).toBeFalsy()
   })
 })

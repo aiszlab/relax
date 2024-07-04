@@ -1,7 +1,8 @@
 import { clone } from '../../src'
+import { describe, it, expect } from '@jest/globals'
 
 describe('`clone` util', () => {
-  test('primitive value', () => {
+  it('primitive value', () => {
     const number = 3
     expect(clone(number)).toBe(number)
 
