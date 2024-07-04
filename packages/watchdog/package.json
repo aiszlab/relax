@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "watchdog for any aiszlab package",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "bin": {
+    "wang": "./bin/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@npmcli/package-json": "^5.2.0",
+    "commander": "^12.1.0",
+    "semver": "^7.6.2"
+  },
   "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
-  },
-  "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18"
-  },
-  "author": "",
-  "license": "ISC"
+    "@types/npmcli__package-json": "^4.0.4"
+  }
 }
