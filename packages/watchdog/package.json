@@ -3,20 +3,24 @@
   "version": "1.0.0",
   "description": "watchdog for any aiszlab package",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "node ./dist/index.js preinstall"
   },
   "bin": {
-    "wang": "./bin/index.js"
+    "wang": "./dist/index.js"
   },
   "license": "MIT",
   "dependencies": {
     "@npmcli/package-json": "^5.2.0",
     "commander": "^12.1.0",
+    "cross-spawn": "^7.0.3",
     "semver": "^7.6.2"
   },
   "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
     "@types/node": "^20.14.9",
     "@types/npmcli__package-json": "^4.0.4",
     "typescript": "5.5.3"
