@@ -1,12 +1,31 @@
-import { createRequire } from 'module'
 import PackageJson from '@npmcli/package-json'
-import { join } from 'path'
-import spawn from 'cross-spawn'
-import { SemVer } from 'semver'
-
-const require = createRequire(import.meta.url)
+import { satisfies } from 'semver'
 
 const PackageManagers = new Set(['pnpm', 'npm', 'yarn', 'node'])
+
+const whoAmI = (userAgent?: string) => {
+  if (!userAgent) return null
+
+  const [name, version] = userAgent.split(' ')[0].split('/')
+
+  return {
+    name,
+    version
+  }
+}
+
+// dog `wang`!
+const wang = (s: string) => {
+  const lines = s.trim().split('\n')
+  const width = lines.reduce((a, b) => Math.max(a, b.length), 0)
+  const surround = (x: string) => '║   \x1b[0m' + x.padEnd(width) + '\x1b[31m   ║'
+  const bar = '═'.repeat(width)
+  const top = '\x1b[31m╔═══' + bar + '═══╗'
+  const pad = surround('')
+  const bottom = '╚═══' + bar + '═══╝\x1b[0m'
+
+  console.log([top, pad, ...lines.map(surround), pad, bottom].join('\n'))
+}
 
 /**
  * @description
@@ -18,22 +37,32 @@ const PackageManagers = new Set(['pnpm', 'npm', 'yarn', 'node'])
  * we use package.json `engines` settings to resolve
  */
 export const preinstall = async () => {
-  const pkgJson = await PackageJson.load('./package.json')
+  const {
+    content: { engines }
+  } = await PackageJson.load('./')
+  if (!engines) return
 
-  const isAllowed = Array.from(PackageManagers).reduce((_isAllowed, pm) => {
-    if (!pkgJson.content.engines?.['pm']) {
-      return _isAllowed
-    }
+  // check `node` version
+  if (engines.node && !satisfies(process.version, engines.node)) {
+    wang(`Can not use "node@${process.version}" for installation in this project`)
+    process.exit(1)
+  }
 
-    const pmVersion = spawn.sync(pm, ['-v'], {
-      stdio: 'inherit'
-    })
+  // check pm
+  if (Array.from(PackageManagers).every((pm) => !engines[pm])) return
 
-    return _isAllowed && se
-  }, true)
+  const runner = whoAmI(process.env.npm_config_user_agent)
+  if (!runner) {
+    wang('Unknow package manager, pls try install again')
+    process.exit(1)
+  }
 
-  //
+  const allowedRunnerVersion = engines[runner.name]
+  if (!allowedRunnerVersion || !satisfies(runner.version, allowedRunnerVersion)) {
+    wang(`Can not use "${runner.name}@${runner.version}" for installation in this project
 
-  console.log('pmVersion====', pmVersion)
-  console.log(' process.version=====', process.version)
+Pls view allowd package manager@version in package.json engines settings
+`)
+    process.exit(1)
+  }
 }
