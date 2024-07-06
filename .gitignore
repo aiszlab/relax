@@ -4,6 +4,3 @@
 # build output
 dist
 typings
-
-# error logs
-yarn-error.log
