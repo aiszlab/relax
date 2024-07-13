@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { effect } from '../utils/effect'
-import type { ThenableEffectCallback } from '../types'
+import { useEffect } from "react";
+import { effect } from "../utils/effect";
+import type { ThenableEffectCallback } from "../types";
 
 /**
  * @author murukal
@@ -10,6 +10,6 @@ import type { ThenableEffectCallback } from '../types'
  */
 export const useMounted = (callback: ThenableEffectCallback) => {
   useEffect(() => {
-    return effect(callback)
-  }, [])
-}
+    return effect(callback);
+  }, []);
+};

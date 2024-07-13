@@ -4,4 +4,4 @@
  *
  * media 规则 @media not|only mediatype and (mediafeature and|or|not mediafeature)
  */
-export const useMediaQuery = () => {}
+export const useMediaQuery = () => {};

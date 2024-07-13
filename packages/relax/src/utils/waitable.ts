@@ -5,14 +5,14 @@ import {
   switchMap,
   type MonoTypeOperatorFunction,
   type Subscriber,
-  type Subscription
-} from 'rxjs'
-import { isThenable } from '../is/is-thenable'
+  type Subscription,
+} from "rxjs";
+import { isThenable } from "../is/is-thenable";
 
 interface Props<T extends Array<unknown> = Array<unknown>, R extends Array<unknown> = T> {
-  callback: (...args: T) => unknown
-  pipe: (...args: R) => T | Promise<T>
-  timer: MonoTypeOperatorFunction<R>
+  callback: (...args: T) => unknown;
+  pipe: (...args: R) => T | Promise<T>;
+  timer: MonoTypeOperatorFunction<R>;
 }
 
 /**
@@ -21,37 +21,37 @@ interface Props<T extends Array<unknown> = Array<unknown>, R extends Array<unkno
  * for debounce...
  */
 export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
-  #cook$: Subscription | null
-  #waiter$: Subscriber<R> | null
+  #cook$: Subscription | null;
+  #waiter$: Subscriber<R> | null;
 
-  #timer: MonoTypeOperatorFunction<R>
-  #pipe: (...args: R) => T | Promise<T>
-  #callback: (...ars: T) => unknown
+  #timer: MonoTypeOperatorFunction<R>;
+  #pipe: (...args: R) => T | Promise<T>;
+  #callback: (...ars: T) => unknown;
 
   constructor(props: Props<T, R>) {
-    this.#cook$ = null
-    this.#waiter$ = null
-    this.#pipe = props.pipe
-    this.#timer = props.timer
-    this.#callback = props.callback
+    this.#cook$ = null;
+    this.#waiter$ = null;
+    this.#pipe = props.pipe;
+    this.#timer = props.timer;
+    this.#callback = props.callback;
 
-    this.#use()
+    this.#use();
   }
 
   #use() {
     this.#cook$ = new Observable<R>((subscriber) => {
-      this.#waiter$ = subscriber
+      this.#waiter$ = subscriber;
     })
       .pipe(
         this.#timer,
         switchMap((args) => {
-          const piped = this.#pipe(...args)
-          return isThenable(piped) ? from(piped) : of(piped)
-        })
+          const piped = this.#pipe(...args);
+          return isThenable(piped) ? from(piped) : of(piped);
+        }),
       )
       .subscribe((args) => {
-        this.#callback?.(...args)
-      })
+        this.#callback?.(...args);
+      });
   }
 
   /**
@@ -62,8 +62,8 @@ export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
    * so it will make some async problems, pls attention
    */
   flush() {
-    this.#waiter$?.complete()
-    this.#use()
+    this.#waiter$?.complete();
+    this.#use();
   }
 
   /**
@@ -73,9 +73,9 @@ export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
    * in relax, we will create a new observable for next debounce/throttle handler
    */
   abort() {
-    this.#cook$?.unsubscribe()
-    this.#waiter$?.error()
-    this.#use()
+    this.#cook$?.unsubscribe();
+    this.#waiter$?.error();
+    this.#use();
   }
 
   /**
@@ -83,6 +83,6 @@ export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
    * trigger value
    */
   next(...args: R) {
-    this.#waiter$?.next(args)
+    this.#waiter$?.next(args);
   }
 }

@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { useEvent } from './use-event'
+import { useRef } from "react";
+import { useEvent } from "./use-event";
 
 /**
  * @description
@@ -8,24 +8,24 @@ import { useEvent } from './use-event'
 export const useRaf = (
   _callback: Function,
   {
-    timely = false
+    timely = false,
   }: {
-    timely?: boolean
-  } = {}
+    timely?: boolean;
+  } = {},
 ) => {
-  const callback = useEvent(_callback)
-  const timed = useRef<number | null>(null)
-  const isTimed = useRef(false)
+  const callback = useEvent(_callback);
+  const timed = useRef<number | null>(null);
+  const isTimed = useRef(false);
 
   return () => {
-    if (isTimed.current) return
-    isTimed.current = true
+    if (isTimed.current) return;
+    isTimed.current = true;
 
-    timely && callback()
+    timely && callback();
 
     timed.current = requestAnimationFrame(() => {
-      isTimed.current = false
-      !timely && callback()
-    })
-  }
-}
+      isTimed.current = false;
+      !timely && callback();
+    });
+  };
+};

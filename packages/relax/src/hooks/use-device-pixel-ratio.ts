@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { isDomUsable } from '../is/is-dom-usable'
+import { useState } from "react";
+import { isDomUsable } from "../is/is-dom-usable";
 
 /**
  * @description
@@ -8,9 +8,9 @@ import { isDomUsable } from '../is/is-dom-usable'
  */
 export const useDevicePixelRatio = () => {
   const [devicePixelRatio] = useState(() => {
-    if (!isDomUsable()) return 1
-    return window.devicePixelRatio
-  })
+    if (!isDomUsable()) return 1;
+    return window.devicePixelRatio;
+  });
 
-  return devicePixelRatio
-}
+  return devicePixelRatio;
+};

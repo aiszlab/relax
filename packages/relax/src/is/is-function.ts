@@ -3,5 +3,5 @@
  * if is function
  */
 export const isFunction = (value: unknown): value is Function => {
-  return typeof value === 'function'
-}
+  return typeof value === "function";
+};

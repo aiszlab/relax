@@ -1,4 +1,4 @@
-import { scrollTo } from './scroll-to'
-import { contains } from './contains'
+import { scrollTo } from "./scroll-to";
+import { contains } from "./contains";
 
-export { scrollTo, contains }
+export { scrollTo, contains };

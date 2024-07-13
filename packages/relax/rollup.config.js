@@ -1,41 +1,41 @@
-import babel from '@rollup/plugin-babel'
-import resolve from '@rollup/plugin-node-resolve'
-import typescript from '@rollup/plugin-typescript'
-import pkg from './package.json' assert { type: 'json' }
+import babel from "@rollup/plugin-babel";
+import resolve from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
+import pkg from "./package.json" assert { type: "json" };
 
-const EXTENSIONS = ['.ts']
+const EXTENSIONS = [".ts"];
 
 /**
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: ['src/index', 'src/dom/index'],
+  input: ["src/index", "src/dom/index"],
 
   output: {
-    format: 'es',
-    dir: 'dist',
+    format: "es",
+    dir: "dist",
     preserveModules: true,
-    preserveModulesRoot: 'src'
+    preserveModulesRoot: "src",
   },
 
   plugins: [
     resolve({
-      extensions: EXTENSIONS
+      extensions: EXTENSIONS,
     }),
     typescript(),
     babel({
-      babelHelpers: 'bundled',
-      extensions: EXTENSIONS
-    })
+      babelHelpers: "bundled",
+      extensions: EXTENSIONS,
+    }),
   ],
 
   treeshake: {
-    moduleSideEffects: false
+    moduleSideEffects: false,
   },
 
   strictDeprecations: true,
 
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)]
-}
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+};
 
-export default configuration
+export default configuration;

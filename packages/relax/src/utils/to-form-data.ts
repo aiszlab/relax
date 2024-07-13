@@ -1,5 +1,5 @@
-import { isArray } from '../is/is-array'
-import type { Voidable } from '../types'
+import { isArray } from "../is/is-array";
+import type { Voidable } from "../types";
 
 /**
  * @description
@@ -12,12 +12,12 @@ export const toFormData = (data: unknown) => {
     // like prev.append('list[]', 11);
     if (isArray(value)) {
       value.forEach((item) => {
-        prev.append(`${key}[]`, item as string | Blob)
-      })
-      return prev
+        prev.append(`${key}[]`, item as string | Blob);
+      });
+      return prev;
     }
 
-    prev.append(key, value as string | Blob)
-    return prev
-  }, new FormData())
-}
+    prev.append(key, value as string | Blob);
+    return prev;
+  }, new FormData());
+};

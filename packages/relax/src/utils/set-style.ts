@@ -1,17 +1,17 @@
-import type { Voidable } from '../types'
+import type { Voidable } from "../types";
 
 /**
  * @description
  * set inline style util
  */
 export const setStyle = (target: HTMLElement, styles: Voidable<Partial<CSSStyleDeclaration>>) => {
-  if (!styles) return {}
+  if (!styles) return {};
 
   return Object.entries(styles).reduce<Partial<CSSStyleDeclaration>>((prev, [key, value]) => {
     // @ts-ignore
-    prev[key] = target.style[key]
+    prev[key] = target.style[key];
     // @ts-ignore
-    target.style[key] = value
-    return prev
-  }, {})
-}
+    target.style[key] = value;
+    return prev;
+  }, {});
+};

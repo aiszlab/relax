@@ -1,7 +1,7 @@
-import type { EffectCallback } from 'react'
+import type { EffectCallback } from "react";
 
 /**
  * @description
  * thenable effect callback
  */
-export type ThenableEffectCallback = () => ReturnType<EffectCallback> | PromiseLike<ReturnType<EffectCallback>>
+export type ThenableEffectCallback = () => ReturnType<EffectCallback> | PromiseLike<ReturnType<EffectCallback>>;

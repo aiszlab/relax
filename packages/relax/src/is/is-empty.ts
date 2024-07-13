@@ -1,5 +1,5 @@
-import { isVoid } from './is-void'
-import { isArray } from './is-array'
+import { isVoid } from "./is-void";
+import { isArray } from "./is-array";
 
 /**
  * @author murukal
@@ -9,17 +9,17 @@ import { isArray } from './is-array'
  */
 export const isEmpty = (value?: Object | unknown[] | string | number | boolean | null) => {
   // null or undefined
-  if (isVoid(value)) return true
+  if (isVoid(value)) return true;
 
   // object
-  if (typeof value === 'object') {
-    return Object.keys(value).length === 0
+  if (typeof value === "object") {
+    return Object.keys(value).length === 0;
   }
 
   // array
   if (isArray(value)) {
-    return value.length === 0
+    return value.length === 0;
   }
 
-  return !!value
-}
+  return !!value;
+};

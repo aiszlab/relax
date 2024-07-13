@@ -7,9 +7,9 @@ export function isOverflow(element: HTMLElement = document.body) {
     return (
       document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight) &&
       window.innerWidth > document.body.offsetWidth
-    )
+    );
   }
 
   // not body
-  return element.scrollHeight > element.clientHeight
+  return element.scrollHeight > element.clientHeight;
 }

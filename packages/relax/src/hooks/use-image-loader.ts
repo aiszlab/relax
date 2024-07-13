@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
-import { Observable, Subscriber } from 'rxjs'
+import { useState, useEffect, useRef } from "react";
+import { Observable, Subscriber } from "rxjs";
 
-type Status = 'none' | 'loading' | 'error' | 'loaded'
+type Status = "none" | "loading" | "error" | "loaded";
 
 interface Props {
-  src: string
+  src: string;
 }
 
 /**
@@ -14,37 +14,37 @@ interface Props {
  * image loader
  */
 export const useImageLoader = ({ src }: Props) => {
-  const loader = useRef<Subscriber<void>>()
-  const [status, setStatus] = useState<Status>('none')
+  const loader = useRef<Subscriber<void>>();
+  const [status, setStatus] = useState<Status>("none");
 
   useEffect(() => {
     if (!src) {
-      return setStatus('none')
+      return setStatus("none");
     }
 
     // create observable to listen img status
     new Observable<void>((subscriber) => {
-      loader.current = subscriber
-      subscriber.next()
+      loader.current = subscriber;
+      subscriber.next();
     }).subscribe({
-      next: () => setStatus('loading'),
-      complete: () => setStatus('loaded'),
-      error: () => setStatus('error')
-    })
+      next: () => setStatus("loading"),
+      complete: () => setStatus("loaded"),
+      error: () => setStatus("error"),
+    });
 
-    const image = new Image()
-    image.addEventListener('load', () => {
-      loader.current?.complete()
-    })
-    image.addEventListener('error', () => {
-      loader.current?.error(null)
-    })
-    image.src = src
+    const image = new Image();
+    image.addEventListener("load", () => {
+      loader.current?.complete();
+    });
+    image.addEventListener("error", () => {
+      loader.current?.error(null);
+    });
+    image.src = src;
 
     return () => {
-      image.remove()
-    }
-  }, [src])
+      image.remove();
+    };
+  }, [src]);
 
-  return status
-}
+  return status;
+};

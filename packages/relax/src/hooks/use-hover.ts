@@ -1,31 +1,31 @@
-import { type DOMAttributes, useCallback } from 'react'
-import { useBoolean } from '../hooks/use-boolean'
-import { chain } from '../utils/chain'
-import type { Last } from '../types'
+import { type DOMAttributes, useCallback } from "react";
+import { useBoolean } from "../hooks/use-boolean";
+import { chain } from "../utils/chain";
+import type { Last } from "../types";
 
 type UseHoverBy<T> = {
-  onEnter?: DOMAttributes<T>['onPointerEnter']
-  onLeave?: DOMAttributes<T>['onPointerLeave']
-}
+  onEnter?: DOMAttributes<T>["onPointerEnter"];
+  onLeave?: DOMAttributes<T>["onPointerLeave"];
+};
 
-type UsedHover<T> = [boolean, Required<Pick<DOMAttributes<T>, 'onPointerEnter' | 'onPointerLeave'>>]
+type UsedHover<T> = [boolean, Required<Pick<DOMAttributes<T>, "onPointerEnter" | "onPointerLeave">>];
 
 export const useHover = <T extends Element = Element>(props?: UseHoverBy<T>): UsedHover<T> => {
-  const [isHovered, { turnOn, turnOff }] = useBoolean(false)
+  const [isHovered, { turnOn, turnOff }] = useBoolean(false);
 
-  const onPointerEnter = useCallback<Last<UsedHover<T>>['onPointerEnter']>(
+  const onPointerEnter = useCallback<Last<UsedHover<T>>["onPointerEnter"]>(
     (e) => {
-      chain(props?.onEnter, turnOn)(e)
+      chain(props?.onEnter, turnOn)(e);
     },
-    [props?.onEnter]
-  )
+    [props?.onEnter],
+  );
 
-  const onPointerLeave = useCallback<Last<UsedHover<T>>['onPointerLeave']>(
+  const onPointerLeave = useCallback<Last<UsedHover<T>>["onPointerLeave"]>(
     (e) => {
-      chain(props?.onLeave, turnOff)(e)
+      chain(props?.onLeave, turnOff)(e);
     },
-    [props?.onLeave]
-  )
+    [props?.onLeave],
+  );
 
-  return [isHovered, { onPointerEnter, onPointerLeave }]
-}
+  return [isHovered, { onPointerEnter, onPointerLeave }];
+};

@@ -1,6 +1,6 @@
-import { useLayoutEffect } from 'react'
-import { effect } from '../utils/effect'
-import type { ThenableEffectCallback } from '../types'
+import { useLayoutEffect } from "react";
+import { effect } from "../utils/effect";
+import type { ThenableEffectCallback } from "../types";
 
 /**
  * @author murukal
@@ -10,6 +10,6 @@ import type { ThenableEffectCallback } from '../types'
  */
 export const useMount = (callback: ThenableEffectCallback) => {
   useLayoutEffect(() => {
-    return effect(callback)
-  }, [])
-}
+    return effect(callback);
+  }, []);
+};

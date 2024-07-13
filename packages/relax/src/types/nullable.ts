@@ -2,4 +2,4 @@
  * @description
  * null able
  */
-export type Nullable<T> = T | null
+export type Nullable<T> = T | null;

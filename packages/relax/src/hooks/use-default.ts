@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
-import type { State } from '../types'
-import { toFunction } from '../utils/to-function'
+import { useMemo } from "react";
+import type { State } from "../types";
+import { toFunction } from "../utils/to-function";
 
 /**
  * @author murukal
@@ -9,5 +9,5 @@ import { toFunction } from '../utils/to-function'
  * state always be same after first render
  */
 export const useDefault = <T>(initialState: State<T>) => {
-  return useMemo(toFunction<() => T>(initialState), [])
-}
+  return useMemo(toFunction<() => T>(initialState), []);
+};

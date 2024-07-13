@@ -1,5 +1,5 @@
-import { isArray } from '../is/is-array'
-import { isPrimitive } from '../is/is-primitive'
+import { isArray } from "../is/is-array";
+import { isPrimitive } from "../is/is-primitive";
 
 /**
  * @description
@@ -7,13 +7,13 @@ import { isPrimitive } from '../is/is-primitive'
  * this util is planning to resolve it
  */
 export const clone = (value: unknown) => {
-  if (isPrimitive(value)) return value
+  if (isPrimitive(value)) return value;
 
-  if (value instanceof Map) return new Map(value)
+  if (value instanceof Map) return new Map(value);
 
-  if (value instanceof Set) return new Set(value)
+  if (value instanceof Set) return new Set(value);
 
-  if (isArray(value)) return Array.from(value)
+  if (isArray(value)) return Array.from(value);
 
-  return Object(value)
-}
+  return Object(value);
+};
