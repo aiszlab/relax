@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "1.2.58",
+  "version": "1.2.59",
   "description": "react utils collection",
   "type": "module",
   "exports": {
@@ -18,7 +18,7 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "clean:build": "rm -rf dist",
-    "pub": "npm run clean:build && npm run build && npm publish",
+    "prepublishOnly": "npm run clean:build && npm run build",
     "test": "jest"
   },
   "dependencies": {
