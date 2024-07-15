@@ -64,3 +64,4 @@ export { setStyle } from "./utils/set-style";
 export { throttle } from "./utils/throttle";
 export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
+export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
