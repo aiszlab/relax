@@ -26,6 +26,7 @@ export { useMutateObserver } from "./hooks/use-mutate-observer";
 export { useRaf } from "./hooks/use-raf";
 export { useDevicePixelRatio } from "./hooks/use-device-pixel-ratio";
 export { useIdentity } from "./hooks/use-identity";
+export { useMediaQuery } from "./hooks/use-media-query";
 
 /**
  * @description
