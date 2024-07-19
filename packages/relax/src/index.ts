@@ -26,6 +26,7 @@ export { useMutateObserver } from "./hooks/use-mutate-observer";
 export { useRaf } from "./hooks/use-raf";
 export { useDevicePixelRatio } from "./hooks/use-device-pixel-ratio";
 export { useIdentity } from "./hooks/use-identity";
+export { useMediaQuery } from "./hooks/use-media-query";
 
 /**
  * @description
@@ -64,3 +65,5 @@ export { setStyle } from "./utils/set-style";
 export { throttle } from "./utils/throttle";
 export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
+export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
+export { replace } from "./utils/replace";

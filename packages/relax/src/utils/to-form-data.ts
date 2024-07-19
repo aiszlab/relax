@@ -1,5 +1,4 @@
 import { isArray } from "../is/is-array";
-import type { Voidable } from "../types";
 
 /**
  * @description
