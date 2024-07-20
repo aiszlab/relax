@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": ""
+  },
   "devDependencies": {
     "@types/react": "^18",
     "@types/react-dom": "^18"
