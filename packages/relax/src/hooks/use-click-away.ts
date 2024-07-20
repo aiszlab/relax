@@ -16,10 +16,10 @@ export const useClickAway = (
   });
 
   useEffect(() => {
-    document.addEventListener("click", clickAway);
+    window.addEventListener("click", clickAway);
 
     return () => {
-      document.removeEventListener("click", clickAway);
+      window.removeEventListener("click", clickAway);
     };
   }, []);
 };
