@@ -104,12 +104,23 @@ class Tree {
     return this.toggleBy(key, isToggled, toggledKeys);
   }
 
-  private toggleBy(key: Key, isToggled: boolean, toggledKeys: Set<Key>) {
+  private toggleBy(key: Key, isToggled: boolean, _toggledKeys: Set<Key>) {
+    const toggledKeys = new Set(_toggledKeys);
+
+    // toggle current leaf
+    if (isToggled) {
+      toggledKeys.add(key);
+    } else {
+      toggledKeys.delete(key);
+    }
+
     return Array.from(this.#groupedLeaves.get(key) ?? []).reduce((prev, leaf) => {
       // deep fall, add or remove child key
-      // deep rise, add or remove parent key
-      return leaf.rise(isToggled, leaf.fall(isToggled, prev));
-    }, new Set(toggledKeys));
+      return leaf.rise(
+        // deep rise, add or remove parent key
+        leaf.fall(isToggled, prev),
+      );
+    }, toggledKeys);
   }
 }
 
@@ -153,20 +164,21 @@ class Leaf {
     return this;
   }
 
-  public rise(isToggled: boolean, toggledKeys: Set<Key>): Set<Key> {
-    const rised = new Set(toggledKeys);
+  public rise(_toggledKeys: Set<Key>): Set<Key> {
+    const rised = new Set(_toggledKeys);
 
-    if (isToggled) {
-      rised.add(this.#key);
+    if (!this.#parent) return rised;
+
+    const isChildrenToggled = this.#parent.#children.every((child) => rised.has(child.key));
+
+    if (isChildrenToggled) {
+      rised.add(this.#parent.key);
     } else {
-      rised.delete(this.#key);
+      rised.delete(this.#parent.key);
     }
 
-    if (this.#parent) {
-      return this.#parent.rise(isToggled, rised);
-    }
-
-    return rised;
+    // go on parent
+    return this.#parent.rise(rised);
   }
 
   public fall(isToggled: boolean, toggledKeys: Set<Key>): Set<Key> {

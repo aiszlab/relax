@@ -47,4 +47,23 @@ describe("useTogglable", () => {
     expect(result.current.isToggled("child-4")).toBe(true);
     expect(result.current.isToggled("node-1")).toBe(false);
   });
+
+  it("toggle single leaf, not effect root node", async () => {
+    const { result } = renderHook(() =>
+      useTogglable([
+        {
+          key: "node-1",
+          children: [{ key: "leaf-1" }, { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] }],
+        },
+      ]),
+    );
+
+    act(() => {
+      result.current.toggle("child-3");
+    });
+    expect(result.current.toggledKeys.size).toBe(1);
+    expect(result.current.isToggled("leaf-2")).toBe(false);
+    expect(result.current.isToggled("leaf-1")).toBe(false);
+    expect(result.current.isToggled("node-1")).toBe(false);
+  });
 });
