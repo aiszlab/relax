@@ -25,7 +25,7 @@ type TogglableKey = {
  * @description
  * extra options
  */
-type Options = {
+type UseTogglableOptions = {
   /**
    * @description
    * default toggled
@@ -43,6 +43,12 @@ type Options = {
    * on toggle callback
    */
   onToggle?: (keys: Key[]) => void;
+
+  /**
+   * @description
+   * default toggled keys
+   */
+  defaultToggledKeys?: Key[];
 };
 
 /**
@@ -203,38 +209,31 @@ class Leaf {
  * @description
  * toggle able
  */
-export const useTogglable = (togglableKeys: TogglableKey[], { onToggle, ...options }: Options = {}) => {
-  /// re-create tree when togglable keys changed
+export const useTogglable = (
+  togglableKeys: TogglableKey[],
+  { onToggle, defaultToggledKeys = [], isDefaultToggled, toggledKeys }: UseTogglableOptions = {},
+) => {
+  // re-create tree when togglable keys changed
   const tree = useMemo(() => {
     return togglableKeys.reduce((_tree, togglable) => {
       return _tree.grow(togglable);
     }, new Tree());
   }, [togglableKeys]);
 
-  /// use controlled state to record toggled keys
-  const [_toggledKeys, _setToggledKeys] = useControlledState(options.toggledKeys!, {
+  // use controlled state to record toggled keys
+  const [_toggledKeys, _setToggledKeys] = useControlledState(toggledKeys!, {
     defaultState: () => {
-      return options.isDefaultToggled
-        ? Array.from(
-            Array.from(tree.groupedLeaves.values()).reduce<Set<Key>>((prev, leaves) => {
-              leaves.forEach((leaf) => prev.add(leaf.key));
-              return prev;
-            }, new Set()),
-          )
-        : [];
+      return isDefaultToggled ? Array.from(tree.groupedLeaves.keys()) : defaultToggledKeys;
     },
   });
 
-  /// use set for toggled keys to make it read-only
+  // use set for toggled keys to make it read easily
   const readableToggledKeys = useMemo(() => new Set(_toggledKeys), [_toggledKeys]);
 
-  /// check current key is toggled
-  const isToggled = useCallback(
-    (key: Key) => !readableToggledKeys || readableToggledKeys.has(key),
-    [readableToggledKeys],
-  );
+  // check current key is toggled
+  const isToggled = useCallback((key: Key) => readableToggledKeys.has(key), [readableToggledKeys]);
 
-  /// toggle one key
+  // toggle one key
   const toggle = useEvent((key: Key) => {
     // get new toggled keys by toggle current key
     const _toggledKeys = Array.from(tree.toggle(key, readableToggledKeys));
