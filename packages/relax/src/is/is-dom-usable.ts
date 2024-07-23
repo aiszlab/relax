@@ -3,5 +3,5 @@
  * if there is dom
  */
 export const isDomUsable = () => {
-  return typeof window === "undefined" || !window.document?.createElement;
+  return typeof window !== "undefined" && !!window.document?.createElement;
 };
