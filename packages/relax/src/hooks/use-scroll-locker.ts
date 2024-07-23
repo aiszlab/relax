@@ -76,7 +76,7 @@ class ScrollLocker {
  * @description
  * hooks
  */
-export const useScrollLocker = (isLock?: boolean) => {
+export const useScrollLocker = (isLock: boolean = false) => {
   useLayoutEffect(() => {
     const scrollLocker = new ScrollLocker();
 
@@ -89,5 +89,5 @@ export const useScrollLocker = (isLock?: boolean) => {
     return () => {
       scrollLocker.unlock(document.body);
     };
-  }, [!!isLock]);
+  }, [isLock]);
 };

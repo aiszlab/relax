@@ -24,7 +24,7 @@ const configuration = {
     }),
     typescript(),
     babel({
-      babelHelpers: "bundled",
+      babelHelpers: "runtime",
       extensions: EXTENSIONS,
     }),
   ],
@@ -35,7 +35,7 @@ const configuration = {
 
   strictDeprecations: true,
 
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies), /@babel\/runtime/],
 };
 
 export default configuration;

@@ -28,6 +28,7 @@ export { useDevicePixelRatio } from "./hooks/use-device-pixel-ratio";
 export { useIdentity } from "./hooks/use-identity";
 export { useMediaQuery } from "./hooks/use-media-query";
 export { useClickAway } from "./hooks/use-click-away";
+export { useUnmount } from "./hooks/use-unmount";
 
 /**
  * @description
