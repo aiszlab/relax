@@ -1,6 +1,8 @@
 import { useEffect, type MutableRefObject } from "react";
 import { useEvent } from "./use-event";
 import { contains } from "../dom";
+import { toArray } from "../utils/to-array";
+import type { Arrayable } from "../types/arrayable";
 
 /**
  * @description
@@ -8,10 +10,13 @@ import { contains } from "../dom";
  */
 export const useClickAway = (
   onClickAway: (event: MouseEvent) => void,
-  target: MutableRefObject<HTMLElement | null>,
+  target: Arrayable<MutableRefObject<HTMLElement | null>>,
 ) => {
   const clickAway = useEvent((event: MouseEvent) => {
-    if (contains(target.current, event.target as Node)) return;
+    const targets = toArray(target);
+    const isContained = targets.some((_target) => contains(_target.current, event.target as Node));
+    if (isContained) return;
+
     onClickAway(event);
   });
 
