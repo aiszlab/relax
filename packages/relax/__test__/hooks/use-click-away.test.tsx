@@ -13,7 +13,9 @@ const ClickAway = () => {
   const triggerRef = useRef<HTMLDivElement>(null);
   const [isClickedIn, { turnOn, turnOff, toggle }] = useBoolean();
 
-  useClickAway(() => {}, targetRef);
+  useClickAway(() => {
+    turnOff();
+  }, [targetRef, triggerRef]);
 
   return (
     <div>

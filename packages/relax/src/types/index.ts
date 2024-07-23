@@ -6,3 +6,4 @@ export type { ThenableEffectCallback } from "./thenable-effect-callback";
 export type { First } from "./first";
 export type { Last } from "./last";
 export type { State, StateGetter } from "./state";
+export type { Arrayable } from "./arrayable";
