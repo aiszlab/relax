@@ -41,7 +41,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "react": "18",
     "react-dom": "18",
-    "rollup": "^4.18.1",
+    "rollup": "^4.19.0",
     "typescript": "5.5.3"
   },
   "peerDependencies": {
