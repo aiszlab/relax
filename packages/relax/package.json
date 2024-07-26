@@ -22,7 +22,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.8",
+    "@babel/runtime": "^7.25.0",
     "react-is": "^18.2.0",
     "rxjs": "^7.8.1"
   },
