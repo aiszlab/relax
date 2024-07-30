@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from "react";
-import { Observable, delay, type Subscription, type Subscriber, timer } from "rxjs";
+import { useEffect, useRef } from "react";
+import { Observable, type Subscription, type Subscriber, timer } from "rxjs";
 import { useEvent } from "./use-event";
 import { useMounted } from "./use-mounted";
 
