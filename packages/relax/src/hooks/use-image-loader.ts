@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import { Observable, Subscriber } from "rxjs";
+import { useState, useEffect, useRef, type HTMLAttributeReferrerPolicy } from "react";
+import { Observable, type Subscriber } from "rxjs";
 
 type Status = "none" | "loading" | "error" | "loaded";
 
 interface Props {
-  src: string;
+  src?: string;
+  crossOrigin?: string;
+  referrerPolicy?: HTMLAttributeReferrerPolicy;
 }
 
 /**
@@ -13,7 +15,7 @@ interface Props {
  * @description
  * image loader
  */
-export const useImageLoader = ({ src }: Props) => {
+export const useImageLoader = ({ src, crossOrigin, referrerPolicy = "no-referrer" }: Props) => {
   const loader = useRef<Subscriber<void>>();
   const [status, setStatus] = useState<Status>("none");
 
@@ -32,19 +34,27 @@ export const useImageLoader = ({ src }: Props) => {
       error: () => setStatus("error"),
     });
 
-    const image = new Image();
-    image.addEventListener("load", () => {
+    const load = () => {
       loader.current?.complete();
-    });
-    image.addEventListener("error", () => {
+    };
+    const error = () => {
       loader.current?.error(null);
-    });
+    };
+
+    const image = new Image();
+    image.addEventListener("load", load);
+    image.addEventListener("error", error);
+
+    image.crossOrigin = crossOrigin ?? null;
+    image.referrerPolicy = referrerPolicy;
     image.src = src;
 
     return () => {
+      image.removeEventListener("load", load);
+      image.removeEventListener("error", error);
       image.remove();
     };
-  }, [src]);
+  }, [src, crossOrigin, referrerPolicy]);
 
   return status;
 };
