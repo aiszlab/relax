@@ -4,17 +4,15 @@ import { isStateGetter } from "../is/is-state-getter";
 import { isUndefined } from "../is/is-undefined";
 import { useUpdateEffect } from "./use-update-effect";
 
-type UseControlledStateBy<T> = {
+type UseControlledStateBy<R> = {
   /**
    * @description
    * default value
    */
-  defaultState?: State<T>;
+  defaultState?: State<R>;
 };
 
-type UsedControlledState<T, R> = R extends undefined
-  ? [T, Dispatch<SetStateAction<T>>]
-  : [RequiredTo<T>, Dispatch<SetStateAction<RequiredTo<T>>>];
+type UsedControlledState<T> = [T, Dispatch<SetStateAction<T>>];
 
 /**
  * @author murukal
@@ -22,11 +20,16 @@ type UsedControlledState<T, R> = R extends undefined
  * @description
  * controlled state
  */
-export const useControlledState = <T, R extends T>(
-  controlledState: T,
-  { defaultState }: UseControlledStateBy<R> = {},
-): UsedControlledState<T, R> => {
-  /// initialize state
+export const useControlledState = <T, R extends T = T, P extends T | undefined = undefined>(
+  controlledState: P,
+  useBy: T extends undefined | unknown
+    ? UseControlledStateBy<R>
+    : P extends undefined
+    ? Required<UseControlledStateBy<R>>
+    : UseControlledStateBy<R>,
+): UsedControlledState<R extends undefined ? P : R> => {
+  // initialize state
+  // @ts-ignore
   const [_state, _setState] = useState<T>(() => {
     // default use controlled state
     if (!isUndefined(controlledState)) {
@@ -34,15 +37,15 @@ export const useControlledState = <T, R extends T>(
     }
 
     // not controlled use default prop
-    if (isUndefined(defaultState)) return controlledState;
-    if (isStateGetter(defaultState)) return defaultState();
-    return defaultState;
+    if (isUndefined(useBy.defaultState)) return controlledState;
+    if (isStateGetter(useBy.defaultState)) return useBy.defaultState();
+    return useBy.defaultState;
   });
 
   /// sync value back to `undefined` when it from control to un-control
   useUpdateEffect(() => {
     if (!isUndefined(controlledState)) return;
-    _setState(controlledState ?? defaultState!);
+    _setState(controlledState ?? useBy.defaultState!);
   }, [controlledState]);
 
   /// use controlled

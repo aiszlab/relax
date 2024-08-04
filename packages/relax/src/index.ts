@@ -1,3 +1,5 @@
+import { useControlledState } from "./hooks/use-controlled-state";
+
 /**
  * @description
  * hooks
@@ -70,3 +72,9 @@ export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
 export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
 export { replace } from "./utils/replace";
+
+const App = ({ value }: { value: number | undefined }) => {
+  const [state, setter] = useControlledState(undefined, {
+    defaultState: undefined,
+  });
+};
