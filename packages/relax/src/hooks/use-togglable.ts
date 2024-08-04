@@ -221,7 +221,7 @@ export const useTogglable = (
   }, [togglableKeys]);
 
   // use controlled state to record toggled keys
-  const [_toggledKeys, _setToggledKeys] = useControlledState(toggledKeys!, {
+  const [_toggledKeys, _setToggledKeys] = useControlledState(toggledKeys, {
     defaultState: () => {
       return isDefaultToggled ? Array.from(tree.groupedLeaves.keys()) : defaultToggledKeys;
     },
