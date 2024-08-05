@@ -1,3 +1,5 @@
+import { useControlledState } from "./hooks/use-controlled-state";
+
 /**
  * @description
  * hooks
@@ -37,7 +39,6 @@ export { useTimer } from "./hooks/use-timer";
  */
 export { isRefable } from "./is/is-refable";
 export { isUndefined } from "./is/is-undefined";
-export { isStateGetter } from "./is/is-state-getter";
 export { isNull } from "./is/is-null";
 export { isVoid } from "./is/is-void";
 export { isArray } from "./is/is-array";
