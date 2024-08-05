@@ -39,7 +39,6 @@ export { useTimer } from "./hooks/use-timer";
  */
 export { isRefable } from "./is/is-refable";
 export { isUndefined } from "./is/is-undefined";
-export { isStateGetter } from "./is/is-state-getter";
 export { isNull } from "./is/is-null";
 export { isVoid } from "./is/is-void";
 export { isArray } from "./is/is-array";
@@ -72,9 +71,3 @@ export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
 export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
 export { replace } from "./utils/replace";
-
-const App = ({ value }: { value: number | undefined }) => {
-  const [state, setter] = useControlledState(undefined, {
-    defaultState: undefined,
-  });
-};

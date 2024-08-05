@@ -1,8 +1,8 @@
 import { type Dispatch, type SetStateAction, useState } from "react";
-import type { State, RequiredTo } from "../types";
-import { isStateGetter } from "../is/is-state-getter";
+import type { State } from "../types";
 import { isUndefined } from "../is/is-undefined";
 import { useUpdateEffect } from "./use-update-effect";
+import { isFunction } from "../is/is-function";
 
 type UseControlledStateBy<R> = {
   /**
@@ -14,43 +14,43 @@ type UseControlledStateBy<R> = {
 
 type UsedControlledState<T> = [T, Dispatch<SetStateAction<T>>];
 
+type Requirable<T, P> = T extends undefined ? (P extends undefined ? T : Exclude<T, undefined>) : T;
+
 /**
  * @author murukal
  *
  * @description
  * controlled state
  */
-export const useControlledState = <T, R extends T = T, P extends T | undefined = undefined>(
-  controlledState: P,
-  useBy: T extends undefined | unknown
-    ? UseControlledStateBy<R>
-    : P extends undefined
-    ? Required<UseControlledStateBy<R>>
-    : UseControlledStateBy<R>,
-): UsedControlledState<R extends undefined ? P : R> => {
+export const useControlledState = <T, P extends T = T>(
+  controlledState: T,
+  { defaultState }: UseControlledStateBy<P> = {},
+) => {
   // initialize state
-  // @ts-ignore
   const [_state, _setState] = useState<T>(() => {
     // default use controlled state
     if (!isUndefined(controlledState)) {
       return controlledState;
     }
 
-    // not controlled use default prop
-    if (isUndefined(useBy.defaultState)) return controlledState;
-    if (isStateGetter(useBy.defaultState)) return useBy.defaultState();
-    return useBy.defaultState;
+    // not controlled use default state
+    if (isFunction(defaultState)) {
+      return defaultState();
+    }
+    return defaultState ?? controlledState;
   });
 
-  /// sync value back to `undefined` when it from control to un-control
+  // sync value back to `undefined` when it from control to un-control
   useUpdateEffect(() => {
-    if (!isUndefined(controlledState)) return;
-    _setState(controlledState ?? useBy.defaultState!);
+    if (!isUndefined(controlledState)) {
+      return;
+    }
+
+    _setState(defaultState ?? controlledState);
   }, [controlledState]);
 
-  /// use controlled
-  const state = !isUndefined(controlledState) ? controlledState : _state;
+  // use controlled
+  const state = isUndefined(controlledState) ? _state : controlledState;
 
-  // @ts-ignore
-  return [state, _setState];
+  return [state, _setState] as UsedControlledState<Requirable<T, P>>;
 };
