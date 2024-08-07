@@ -32,6 +32,8 @@ export { useMediaQuery } from "./hooks/use-media-query";
 export { useClickAway } from "./hooks/use-click-away";
 export { useUnmount } from "./hooks/use-unmount";
 export { useTimer } from "./hooks/use-timer";
+export { useLocalStorageState } from "./hooks/use-local-storage-state";
+export { useSessionStorageState } from "./hooks/use-session-storage-state";
 
 /**
  * @description

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { isNull } from "../is/is-null";
 
-export type UsedStorage = [string | null, (value: string | null) => void];
+export type UsedStorageState = [string | null, (value: string | null) => void];
 
-export type UseStorageBy = {
+export type UseStorageStateBy = {
   listen?: boolean;
 };
 
-export const useStorage = (
+export const useStorageState = (
   key: string,
   storage: Storage,
-  { listen = true }: UseStorageBy = {},
-): UsedStorage => {
+  { listen = true }: UseStorageStateBy = {},
+): UsedStorageState => {
   const [state, setState] = useState(() => storage.getItem(key));
 
   // effect sync state after key change
