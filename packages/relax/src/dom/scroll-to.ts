@@ -1,4 +1,4 @@
-export type Direction = "horizontal" | "vertical";
+export type Orientation = "horizontal" | "vertical";
 
 class Scroller {
   #scrolled = new Map<HTMLElement, number>();
@@ -14,8 +14,8 @@ class Scroller {
     return this.#scrolled;
   }
 
-  currentAt(direction: Direction): Extract<keyof HTMLElement, "scrollTop" | "scrollLeft"> {
-    return direction === "vertical" ? "scrollTop" : "scrollLeft";
+  currentAt(orientation: Orientation): Extract<keyof HTMLElement, "scrollTop" | "scrollLeft"> {
+    return orientation === "vertical" ? "scrollTop" : "scrollLeft";
   }
 }
 
@@ -28,9 +28,9 @@ interface ScrollBy {
 
   /**
    * @description
-   * direction
+   * orientation
    */
-  direction?: Direction;
+  orientation?: Orientation;
 }
 
 /**
@@ -40,14 +40,14 @@ interface ScrollBy {
 export const scrollTo = (
   target: HTMLElement,
   to: number,
-  { duration = 0, direction = "vertical" }: ScrollBy = {
+  { duration = 0, orientation = "vertical" }: ScrollBy = {
     duration: 0,
-    direction: "vertical",
+    orientation: "vertical",
   },
 ): void => {
   const scroller = new Scroller();
   const scrolled = scroller.scrolled.get(target);
-  const currentAtProperty = scroller.currentAt(direction);
+  const currentAtProperty = scroller.currentAt(orientation);
 
   if (scrolled) {
     cancelAnimationFrame(scrolled);
@@ -80,7 +80,7 @@ export const scrollTo = (
 
       scrollTo(target, to, {
         duration: duration - 10,
-        direction,
+        orientation,
       });
     }),
   );

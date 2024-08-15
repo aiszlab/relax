@@ -34,6 +34,8 @@ export { useUnmount } from "./hooks/use-unmount";
 export { useTimer } from "./hooks/use-timer";
 export { useLocalStorageState } from "./hooks/use-local-storage-state";
 export { useSessionStorageState } from "./hooks/use-session-storage-state";
+export { useIsMounted } from "./hooks/use-is-mounted";
+export { useInfiniteScroll } from "./hooks/use-infinite-scroll";
 
 /**
  * @description
