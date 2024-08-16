@@ -1,20 +1,13 @@
-import { type DependencyList, useEffect, useRef } from "react";
-import { useMounted } from "./use-mounted";
+import { type DependencyList, useEffect } from "react";
 import { effect } from "../utils/effect";
 import type { ThenableEffectCallback } from "../types";
+import { useIsMounted } from "./use-is-mounted";
 
 export const useUpdateEffect = (callback: ThenableEffectCallback, deps?: DependencyList) => {
-  const isMounted = useRef(false);
+  const isMounted = useIsMounted();
 
   useEffect(() => {
-    if (!isMounted.current) return;
+    if (!isMounted()) return;
     return effect(callback);
   }, deps);
-
-  useMounted(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  });
 };

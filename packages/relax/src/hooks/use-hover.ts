@@ -1,31 +1,34 @@
-import { type DOMAttributes, useCallback } from "react";
+import { type MouseEventHandler, type PointerEventHandler, useCallback } from "react";
 import { useBoolean } from "../hooks/use-boolean";
 import { chain } from "../utils/chain";
 import type { Last } from "../types";
+import { useEvent } from "./use-event";
 
 type UseHoverBy<T> = {
-  onEnter?: DOMAttributes<T>["onPointerEnter"];
-  onLeave?: DOMAttributes<T>["onPointerLeave"];
+  onEnter?: PointerEventHandler<T>;
+  onLeave?: PointerEventHandler<T>;
 };
 
-type UsedHover<T> = [boolean, Required<Pick<DOMAttributes<T>, "onPointerEnter" | "onPointerLeave">>];
+type UsedHover<T> = [
+  boolean,
+  {
+    onPointerEnter: PointerEventHandler<T>;
+    onPointerLeave: PointerEventHandler<T>;
+    // onMouseEnter: MouseEventHandler<T>;
+    // onMouseLeave: MouseEventHandler<T>;
+  },
+];
 
 export const useHover = <T extends Element = Element>(props?: UseHoverBy<T>): UsedHover<T> => {
   const [isHovered, { turnOn, turnOff }] = useBoolean(false);
 
-  const onPointerEnter = useCallback<Last<UsedHover<T>>["onPointerEnter"]>(
-    (e) => {
-      chain(props?.onEnter, turnOn)(e);
-    },
-    [props?.onEnter],
-  );
+  const onPointerEnter = useEvent<Last<UsedHover<T>>["onPointerEnter"]>((event) => {
+    chain(props?.onEnter, turnOn)(event);
+  });
 
-  const onPointerLeave = useCallback<Last<UsedHover<T>>["onPointerLeave"]>(
-    (e) => {
-      chain(props?.onLeave, turnOff)(e);
-    },
-    [props?.onLeave],
-  );
+  const onPointerLeave = useEvent<Last<UsedHover<T>>["onPointerLeave"]>((event) => {
+    chain(props?.onLeave, turnOff)(event);
+  });
 
   return [isHovered, { onPointerEnter, onPointerLeave }];
 };

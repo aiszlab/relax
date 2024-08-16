@@ -13,7 +13,7 @@ type UseIsMountedProps = {
  * @description
  * `useIsMounted`
  */
-export const useIsMounted = ({ rerender = false }: UseIsMountedProps) => {
+export const useIsMounted = ({ rerender = false }: UseIsMountedProps = {}) => {
   const [, setIsMounted] = useState(false);
   const isMountedRef = useRef(false);
 
@@ -26,9 +26,10 @@ export const useIsMounted = ({ rerender = false }: UseIsMountedProps) => {
 
     return () => {
       isMountedRef.current = false;
-      setIsMounted(false);
     };
   });
 
-  return isMountedRef.current;
+  // only use callback
+  // avoid parent component or hooks change isMountedRef.current
+  return () => isMountedRef.current;
 };
