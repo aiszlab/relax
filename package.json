@@ -9,6 +9,10 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "preinstall": "npx @aiszlab/watchdog preinstall"
+    "preinstall": "npx @aiszlab/watchdog preinstall",
+    "version": "z cs version"
+  },
+  "devDependencies": {
+    "@aiszlab/jarvis": "^1.0.2"
   }
 }
