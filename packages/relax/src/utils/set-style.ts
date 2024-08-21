@@ -1,4 +1,4 @@
-import type { Voidable } from "../types";
+import type { Voidable } from "@aiszlab/relax/types";
 
 /**
  * @description

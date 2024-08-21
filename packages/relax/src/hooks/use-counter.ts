@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 import { clamp } from "../utils/clamp";
-import type { State } from "../types";
+import type { State } from "@aiszlab/relax/types";
 import { useDefault } from "./use-default";
 
 type Props = {

@@ -1,10 +1,13 @@
-import { Voidable } from "../types";
+import type { Voidable } from "@aiszlab/relax/types";
 
 /**
  * @description
  * create tagged template literals
  */
-export const taggedTemplateLiterals = (template: string, variables?: Record<string, Voidable<string | number>>) => {
+export const taggedTemplateLiterals = (
+  template: string,
+  variables?: Record<string, Voidable<string | number>>,
+) => {
   if (!variables) return template;
 
   const entries = Object.entries(variables);

@@ -1,5 +1,5 @@
 import { useCallback, useState, type Dispatch, type SetStateAction } from "react";
-import type { State } from "../types";
+import type { State } from "@aiszlab/relax/types";
 
 type UsedBoolean = [
   boolean,

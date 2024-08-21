@@ -1,5 +1,5 @@
 import { type Dispatch, type SetStateAction, useState } from "react";
-import type { State } from "../types";
+import type { State } from "@aiszlab/relax/types";
 import { isUndefined } from "../is/is-undefined";
 import { useUpdateEffect } from "./use-update-effect";
 import { isFunction } from "../is/is-function";

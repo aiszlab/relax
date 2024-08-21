@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.2.74
+
+### Patch Changes
+
+- use package relative path for utils import
+
 ## 1.2.73
 
 ### Patch Changes

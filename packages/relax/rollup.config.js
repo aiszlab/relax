@@ -35,7 +35,12 @@ const configuration = {
 
   strictDeprecations: true,
 
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies), /@babel\/runtime/],
+  external: [
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+    /@babel\/runtime/,
+    /@aiszlab\/relax/,
+  ],
 };
 
 export default configuration;

@@ -1,7 +1,7 @@
 import { type MouseEventHandler, type PointerEventHandler, useCallback } from "react";
 import { useBoolean } from "../hooks/use-boolean";
 import { chain } from "../utils/chain";
-import type { Last } from "../types";
+import type { Last } from "@aiszlab/relax/types";
 import { useEvent } from "./use-event";
 
 type UseHoverBy<T> = {

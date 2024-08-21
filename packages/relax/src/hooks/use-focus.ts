@@ -1,7 +1,7 @@
 import { useCallback, type DOMAttributes } from "react";
 import { useBoolean } from "./use-boolean";
 import { chain } from "../utils/chain";
-import type { Last } from "../types";
+import type { Last } from "@aiszlab/relax/types";
 
 /**
  * @description

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { State } from "../types";
+import type { State } from "@aiszlab/relax/types";
 
 /**
  * @description

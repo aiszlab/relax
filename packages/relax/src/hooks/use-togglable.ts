@@ -1,5 +1,5 @@
 import { type Key, useCallback, useMemo } from "react";
-import type { Nullable, Partialable } from "../types";
+import type { Nullable, Partialable } from "@aiszlab/relax/types";
 import { useControlledState } from "./use-controlled-state";
 import { useEvent } from "./use-event";
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { effect } from "../utils/effect";
-import type { ThenableEffectCallback } from "../types";
+import type { ThenableEffectCallback } from "@aiszlab/relax/types";
 
 /**
  * @author murukal

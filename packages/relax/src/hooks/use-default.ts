@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { State } from "../types";
+import type { State } from "@aiszlab/relax/types";
 import { toFunction } from "../utils/to-function";
 
 /**
