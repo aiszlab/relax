@@ -19,7 +19,8 @@
     "build": "rollup -c",
     "clean:build": "rm -rf dist",
     "prepublishOnly": "npm run clean:build && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "publish:npm": "npm publish"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",

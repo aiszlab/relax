@@ -31,10 +31,6 @@ jobs:
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm run -r build
-
-      - name: Set publishing config
-        run: pnpm config set '//registry.npmjs.org/:_authToken' '${NODE_AUTH_TOKEN}'
+      - run: pnpm run -r publish:npm
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-      - run: pnpm -r publish --no-git-checks --access public
