@@ -54,6 +54,8 @@ export { isOverflow } from "./is/is-overflow";
 export { isStyleElement } from "./is/is-style-element";
 export { isFunction } from "./is/is-function";
 export { isThenable } from "./is/is-thenable";
+export { isHTMLElement } from "./is/is-html-element";
+export { isHTMLInputElement } from "./is/is-html-input-element";
 
 /**
  * @description

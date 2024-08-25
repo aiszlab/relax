@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.2.75
+
+### Patch Changes
+
+- feature: add dom element checker apis
+
 ## 1.2.74
 
 ### Patch Changes
