@@ -1,14 +1,11 @@
 import type { Voidable } from "../types";
 
-export type Node = {
-  nodeType?: number;
-};
-
 /**
  * @description
  * is html element
  */
-export const isHTMLElement = (value: Voidable<Node>): value is HTMLElement => {
+export const isHTMLElement = (value: Voidable<EventTarget>): value is HTMLElement => {
   if (!value) return false;
+  // @ts-ignore
   return value.nodeType === 1;
 };
