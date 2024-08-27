@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.2.76
+
+### Patch Changes
+
+- FIX: declare
+
 ## 1.2.75
 
 ### Patch Changes
