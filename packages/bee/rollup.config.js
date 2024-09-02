@@ -5,19 +5,17 @@ import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
 const pkg = require("./package.json");
-const EXTENSIONS = [".ts"];
+const EXTENSIONS = [".ts", ".tsx"];
 
 /**
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: ["src/index", "src/dom/index"],
+  input: "src/index",
 
   output: {
     format: "es",
     dir: "dist",
-    preserveModules: true,
-    preserveModulesRoot: "src",
   },
 
   plugins: [
@@ -39,9 +37,7 @@ const configuration = {
 
   // use regexp to external dependencies
   // like `@aiszlab/relax`, we may use `@aiszlab/relax/dom` as submodule
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].map(
-    (dependency) => new RegExp(`^${dependency}`),
-  ),
+  external: [...Object.keys(pkg.dependencies)].map((dependency) => new RegExp(`^${dependency}`)),
 };
 
 export default configuration;

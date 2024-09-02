@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {},
   "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0"
   },
   "peerDependencies": {
     "react": "^18",
