@@ -16,6 +16,8 @@ const configuration = {
   output: {
     format: "es",
     dir: "dist",
+    preserveModules: true,
+    preserveModulesRoot: "src",
   },
 
   plugins: [
