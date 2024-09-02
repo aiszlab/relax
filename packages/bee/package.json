@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "publish:npm": "npm publish"
   },
   "author": "murukal",
   "license": "MIT",
