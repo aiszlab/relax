@@ -1,9 +1,9 @@
 {
   "name": "@aiszlab/wasp",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "type": "module",
   "bin": {
-    "wa": "./bin/index.js"
+    "wasp": "./bin/index.js"
   },
   "scripts": {
     "dev": "tsc -w",
