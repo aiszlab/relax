@@ -1,8 +1,15 @@
-import { createServer } from "vite";
-import { createRequire } from "node:module";
+import { createServer, defineConfig, mergeConfig } from "vite";
+import React from "@vitejs/plugin-react";
 
-const require = createRequire(import.meta.url);
+export const development = async () => {
+  const server = await createServer(
+    mergeConfig(
+      {},
+      defineConfig({
+        plugins: [React()],
+      }),
+    ),
+  );
 
-export const development = () => {
-  const server = createServer();
+  await server.listen();
 };
