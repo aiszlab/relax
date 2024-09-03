@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.3.1
+
+### Patch Changes
+
+- chore: version sync
+
 ## 1.2.76
 
 ### Patch Changes
