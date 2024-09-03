@@ -39,7 +39,9 @@ const configuration = {
 
   // use regexp to external dependencies
   // like `@aiszlab/relax`, we may use `@aiszlab/relax/dom` as submodule
-  external: [...Object.keys(pkg.dependencies)].map((dependency) => new RegExp(`^${dependency}`)),
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].map(
+    (dependency) => new RegExp(`^${dependency}`),
+  ),
 };
 
 export default configuration;

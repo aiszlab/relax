@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/bee",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "react app",
   "main": "./dist/index.js",
   "type": "module",
@@ -9,13 +9,11 @@
     "build": "rollup -c",
     "publish:npm": "npm publish"
   },
-  "author": "murukal",
+  "author": "tutu@fantufantu.com",
   "license": "MIT",
   "dependencies": {
     "@aiszlab/relax": "*",
     "@babel/runtime": "^7.25.6",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.26.1",
     "redux": "^5.0.1"
@@ -30,7 +28,13 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rollup": "^4.21.2"
+  },
+  "peerDependencies": {
+    "react": "18",
+    "react-dom": "18"
   },
   "files": [
     "dist/"
