@@ -1,9 +1,9 @@
 # @aiszlab/bee
 
-## 1.3.1
+## 1.3.2
 
 ### Patch Changes
 
-- chore: version sync
+- version sync
 - Updated dependencies
-  - @aiszlab/relax@1.3.1
+  - @aiszlab/relax@1.3.2
