@@ -11,7 +11,7 @@ const EXTENSIONS = [".ts", ".tsx"];
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: "src/index",
+  input: ["src/index", "src/router", "src/storage"],
 
   output: {
     format: "es",

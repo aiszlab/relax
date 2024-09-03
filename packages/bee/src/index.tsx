@@ -1,12 +1,11 @@
-import React, { createElement, lazy, StrictMode, type FC, type ReactNode } from "react";
+import React, { createElement, lazy, StrictMode, Suspense, type FC } from "react";
 import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
 import { type RouteObject } from "react-router-dom";
-import Loadable from "./loadable";
 import { type Store, type UnknownAction } from "redux";
 
-const Router = lazy(() => import("./route/router"));
-const Storage = lazy(() => import("./storage"));
+const Router = lazy(() => import("./libs/router"));
+const Storage = lazy(() => import("./libs/storage"));
 
 interface Props {
   selectors: string | HTMLElement;
@@ -21,21 +20,23 @@ const bootstrap = async ({ selectors, render, routes = false, store = false }: P
     throw new Error("Root container not found, by `document.querySelector(selectors)`");
   }
 
-  let children: ReactNode = null;
+  let children = createElement(render);
 
   // with router
   if (routes) {
-    children = <Loadable render={Router} fallback={null} routes={routes} />;
-  } else {
-    children = createElement(render);
+    children = (
+      <Suspense fallback={null}>
+        <Router routes={routes}>{children}</Router>
+      </Suspense>
+    );
   }
 
   // with storage
   if (store) {
     children = (
-      <Loadable render={Storage} fallback={null} store={store}>
-        {children}
-      </Loadable>
+      <Suspense fallback={null}>
+        <Storage store={store}>{children}</Storage>
+      </Suspense>
     );
   }
 

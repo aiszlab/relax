@@ -1,17 +1,19 @@
 import { createServer, defineConfig, mergeConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const PORT = 9527;
+
 export const development = async () => {
-  const server = await createServer(
-    mergeConfig(
-      {},
-      defineConfig({
-        plugins: [react()],
-      }),
-    ),
-  );
+  const server = await (
+    await createServer(
+      mergeConfig(
+        {},
+        defineConfig({
+          plugins: [react()],
+        }),
+      ),
+    )
+  ).listen(PORT);
 
-  await server.listen(8800);
-
-  console.log("启动成功");
+  server.printUrls();
 };
