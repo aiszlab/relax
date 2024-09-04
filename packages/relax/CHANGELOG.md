@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.3.5
+
+### Patch Changes
+
+- ee5cd7d: - `wasp` add tailwindcss support
+
 ## 1.3.4
 
 ### Patch Changes
