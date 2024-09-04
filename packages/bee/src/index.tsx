@@ -9,7 +9,7 @@ const Storage = lazy(() => import("./libs/storage"));
 
 interface Props {
   selectors: string | HTMLElement;
-  render: FC;
+  render?: FC;
   routes?: RouteObject[] | false;
   store?: Store<unknown, UnknownAction, unknown> | false;
 }
@@ -20,7 +20,7 @@ const bootstrap = async ({ selectors, render, routes = false, store = false }: P
     throw new Error("Root container not found, by `document.querySelector(selectors)`");
   }
 
-  let children = createElement(render);
+  let children = render && createElement(render);
 
   // with router
   if (routes) {
