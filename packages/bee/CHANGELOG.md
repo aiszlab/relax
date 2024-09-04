@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.6
+
+### Patch Changes
+
+- postcss add autoprefixer
+- Updated dependencies
+  - @aiszlab/relax@1.3.6
+
 ## 1.3.5
 
 ### Patch Changes
