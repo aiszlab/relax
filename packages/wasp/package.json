@@ -25,7 +25,8 @@
     "typescript": "5.5.4"
   },
   "files": [
-    "bin/"
+    "bin/",
+    "types/"
   ],
   "author": "tutu@fantufantu.com",
   "license": "MIT",
