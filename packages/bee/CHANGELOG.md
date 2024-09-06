@@ -1,5 +1,14 @@
 # @aiszlab/bee
 
+## 1.3.7
+
+### Patch Changes
+
+- - `relax` add `clsx` util
+  - `bee` use optional render
+- Updated dependencies
+  - @aiszlab/relax@1.3.7
+
 ## 1.3.6
 
 ### Patch Changes
