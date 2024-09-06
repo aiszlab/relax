@@ -3,9 +3,9 @@ import { isNumber } from "../is/is-number";
 import { isString } from "../is/is-string";
 import { isVoid } from "../is/is-void";
 
-type Value = string | number | Record<string, boolean> | Value[] | null;
+type Value = string | number | Record<string, boolean> | Value[] | null | undefined;
 
-const toClassNames = (value?: Value): string[] => {
+const toClassNames = (value: Value): string[] => {
   if (isVoid(value)) return [];
 
   if (isString(value) || isNumber(value)) return [value.toString()];
