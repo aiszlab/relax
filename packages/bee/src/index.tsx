@@ -1,4 +1,4 @@
-import React, { createElement, lazy, StrictMode, Suspense, type FC } from "react";
+import React, { createElement, lazy, type ReactNode, StrictMode, Suspense, type FC } from "react";
 import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
 import { type RouteObject } from "react-router-dom";
@@ -20,7 +20,7 @@ const bootstrap = async ({ selectors, render, routes = false, store = false }: P
     throw new Error("Root container not found, by `document.querySelector(selectors)`");
   }
 
-  let children = render && createElement(render);
+  let children: ReactNode = (render && createElement(render)) ?? null;
 
   // with router
   if (routes) {
