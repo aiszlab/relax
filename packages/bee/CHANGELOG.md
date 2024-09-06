@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.8
+
+### Patch Changes
+
+- clsx prop could be void
+- Updated dependencies
+  - @aiszlab/relax@1.3.8
+
 ## 1.3.7
 
 ### Patch Changes
