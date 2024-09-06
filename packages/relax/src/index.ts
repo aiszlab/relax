@@ -77,3 +77,4 @@ export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
 export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
 export { replace } from "./utils/replace";
+export { clsx } from "./utils/clsx";
