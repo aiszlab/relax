@@ -31,6 +31,10 @@ function useControlledState<T>(
   useControlledStateBy: RequiredIn<UseControlledStateBy<T>, "defaultState">,
 ): UsedControlledState<T>;
 function useControlledState<T>(
+  controlledState: T,
+  useControlledStateBy: UseControlledStateBy<T>,
+): UsedControlledState<T>;
+function useControlledState<T>(
   controlledState?: T,
   { defaultState }: UseControlledStateBy<T> = {},
 ) {
