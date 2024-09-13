@@ -1,20 +1,18 @@
 import { type Dispatch, type SetStateAction, useState } from "react";
-import type { State } from "@aiszlab/relax/types";
+import type { Partialable, RequiredIn, State } from "@aiszlab/relax/types";
 import { isUndefined } from "../is/is-undefined";
 import { useUpdateEffect } from "./use-update-effect";
 import { isFunction } from "../is/is-function";
 
-type UseControlledStateBy<R> = {
+type UseControlledStateBy<S> = {
   /**
    * @description
    * default value
    */
-  defaultState?: State<R>;
+  defaultState?: State<S>;
 };
 
 type UsedControlledState<T> = [T, Dispatch<SetStateAction<T>>];
-
-type Requirable<T, P> = T extends undefined ? (P extends undefined ? T : Exclude<T, undefined>) : T;
 
 /**
  * @author murukal
@@ -22,12 +20,22 @@ type Requirable<T, P> = T extends undefined ? (P extends undefined ? T : Exclude
  * @description
  * controlled state
  */
-export const useControlledState = <T, P extends T = T>(
+function useControlledState<T>(): UsedControlledState<Partialable<T>>;
+function useControlledState<T>(controlledState: T): UsedControlledState<T>;
+function useControlledState<T>(
   controlledState: T,
-  { defaultState }: UseControlledStateBy<P> = {},
-) => {
+  useControlledStateBy: UseControlledStateBy<undefined>,
+): UsedControlledState<T>;
+function useControlledState<T>(
+  controlledState: Partialable<T>,
+  useControlledStateBy: RequiredIn<UseControlledStateBy<T>, "defaultState">,
+): UsedControlledState<T>;
+function useControlledState<T>(
+  controlledState?: T,
+  { defaultState }: UseControlledStateBy<T> = {},
+) {
   // initialize state
-  const [_state, _setState] = useState<T>(() => {
+  const [_state, _setState] = useState(() => {
     // default use controlled state
     if (!isUndefined(controlledState)) {
       return controlledState;
@@ -52,5 +60,7 @@ export const useControlledState = <T, P extends T = T>(
   // use controlled
   const state = isUndefined(controlledState) ? _state : controlledState;
 
-  return [state, _setState] as UsedControlledState<Requirable<T, P>>;
-};
+  return [state, _setState];
+}
+
+export { useControlledState };

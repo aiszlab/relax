@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useDefault } from "./use-default";
 
 interface Cache<Value, Condition> {
   condition: Condition;
@@ -10,14 +11,26 @@ export const useMemorable = <Value, Condition = unknown[]>(
   condition: Condition,
   shouldUpdate: (prev: Condition, next: Condition) => boolean,
 ) => {
-  const cacheRef = useRef<Cache<Value, Condition> | null>(null);
+  const isMounted = useRef(false);
+  const cacheRef = useRef<Cache<Value, Condition>>({
+    value: useDefault(getter),
+    condition,
+  });
 
-  if (cacheRef.current === null || shouldUpdate(cacheRef.current.condition, condition)) {
+  useEffect(() => {
+    // value has got in the first render, skip this render time
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    if (!shouldUpdate(cacheRef.current.condition, condition)) return;
+
     cacheRef.current = {
       value: getter(),
       condition,
     };
-  }
+  });
 
   return cacheRef.current.value;
 };
