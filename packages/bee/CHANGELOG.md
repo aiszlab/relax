@@ -1,5 +1,15 @@
 # @aiszlab/bee
 
+## 1.3.9
+
+### Patch Changes
+
+- - `useControlledState` types declartion improve
+  - add `useIsControlled` hook
+  - improve `useMemorable` performance
+- Updated dependencies
+  - @aiszlab/relax@1.3.9
+
 ## 1.3.8
 
 ### Patch Changes

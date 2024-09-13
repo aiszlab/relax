@@ -1,5 +1,13 @@
 # @aiszlab/wasp
 
+## 1.3.9
+
+### Patch Changes
+
+- - `useControlledState` types declartion improve
+  - add `useIsControlled` hook
+  - improve `useMemorable` performance
+
 ## 1.3.8
 
 ### Patch Changes
