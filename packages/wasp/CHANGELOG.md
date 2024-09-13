@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.3.10
+
+### Patch Changes
+
+- add useControlledState backup ts
+
 ## 1.3.9
 
 ### Patch Changes
