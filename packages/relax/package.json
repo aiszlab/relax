@@ -5,11 +5,17 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "node": "./dist/index.cjs",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
     },
     "./dom": {
       "types": "./dist/dom/index.d.ts",
-      "default": "./dist/dom/index.js"
+      "node": "./dist/dom/index.cjs",
+      "require": "./dist/dom/index.cjs",
+      "import": "./dist/dom/index.mjs",
+      "default": "./dist/dom/index.mjs"
     },
     "./types": "./dist/types/index.d.ts"
   },

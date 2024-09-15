@@ -8,17 +8,31 @@ const pkg = require("./package.json");
 const EXTENSIONS = [".ts"];
 
 /**
+ * @type {import("rollup").OutputOptions[]}
+ */
+const OUTPUS = [
+  {
+    format: "esm",
+    entryFileNames: "[name].mjs",
+  },
+  {
+    format: "commonjs",
+    entryFileNames: "[name].cjs",
+  },
+];
+
+/**
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
   input: ["src/index", "src/dom/index"],
 
-  output: {
-    format: "es",
+  output: OUTPUS.map((_output) => ({
+    ..._output,
     dir: "dist",
     preserveModules: true,
     preserveModulesRoot: "src",
-  },
+  })),
 
   plugins: [
     resolve({
