@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.3.12
+
+### Patch Changes
+
+- add cjs & esm output
+
 ## 1.3.11
 
 ### Patch Changes

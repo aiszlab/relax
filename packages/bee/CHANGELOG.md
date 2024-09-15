@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.12
+
+### Patch Changes
+
+- add cjs & esm output
+- Updated dependencies
+  - @aiszlab/relax@1.3.12
+
 ## 1.3.11
 
 ### Patch Changes
