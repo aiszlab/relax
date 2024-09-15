@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.11
+
+### Patch Changes
+
+- relax use cjs pkg
+- Updated dependencies
+  - @aiszlab/relax@1.3.11
+
 ## 1.3.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.3.11
+
+### Patch Changes
+
+- relax use cjs pkg
+
 ## 1.3.10
 
 ### Patch Changes

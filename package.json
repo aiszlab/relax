@@ -10,7 +10,8 @@
   },
   "scripts": {
     "preinstall": "npx @aiszlab/watchdog preinstall",
-    "version": "z cs version"
+    "version": "z cs version",
+    "changesets": "z cs"
   },
   "devDependencies": {
     "@aiszlab/jarvis": "^1.0.2"
