@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.3.13
+
+### Patch Changes
+
+- 461dc3e: support vite config
+
 ## 1.3.12
 
 ### Patch Changes

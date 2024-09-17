@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.13
+
+### Patch Changes
+
+- 461dc3e: support vite config
+- Updated dependencies [461dc3e]
+  - @aiszlab/relax@1.3.13
+
 ## 1.3.12
 
 ### Patch Changes
