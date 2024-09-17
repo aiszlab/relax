@@ -6,7 +6,11 @@
     "wasp": "bin/index.js"
   },
   "exports": {
-    "./env": "./types/env.d.ts"
+    "./env": "./types/env.d.ts",
+    "./vite": {
+      "default": "./bin/vite.js",
+      "types": "./bin/vite.d.ts"
+    }
   },
   "scripts": {
     "dev": "tsc -w",
