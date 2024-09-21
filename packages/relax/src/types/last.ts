@@ -1,1 +1,1 @@
-export type Last<T> = T extends [...Array<unknown>, infer D] ? D : undefined;
+export type Last<T, R = undefined> = T extends [...Array<unknown>, infer D] ? D : R;

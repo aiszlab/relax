@@ -3,24 +3,30 @@ import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
 import { type RouteObject } from "react-router-dom";
 import { type Store, type UnknownAction } from "redux";
+import Application, { type Props as ApplicationProps } from "./application";
 
 const Router = lazy(() => import("./libs/router"));
 const Storage = lazy(() => import("./libs/storage"));
 
 interface Props {
   selectors: string | HTMLElement;
-  render?: FC;
+  render?: FC<ApplicationProps>;
   routes?: RouteObject[] | false;
   store?: Store<unknown, UnknownAction, unknown> | false;
 }
 
-const bootstrap = async ({ selectors, render, routes = false, store = false }: Props) => {
+const bootstrap = async ({
+  selectors,
+  render = Application,
+  routes = false,
+  store = false,
+}: Props) => {
   const container = isHTMLElement(selectors) ? selectors : document.querySelector(selectors);
   if (!container) {
     throw new Error("Root container not found, by `document.querySelector(selectors)`");
   }
 
-  let children: ReactNode = (render && createElement(render)) ?? null;
+  let children: ReactNode = null;
 
   // with router
   if (routes) {
@@ -30,6 +36,9 @@ const bootstrap = async ({ selectors, render, routes = false, store = false }: P
       </Suspense>
     );
   }
+
+  // with application
+  children = createElement(render, null, children);
 
   // with storage
   if (store) {
@@ -44,3 +53,4 @@ const bootstrap = async ({ selectors, render, routes = false, store = false }: P
 };
 
 export { bootstrap };
+export type { ApplicationProps };
