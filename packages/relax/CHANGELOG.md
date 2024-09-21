@@ -1,5 +1,13 @@
 # @aiszlab/relax
 
+## 1.3.14
+
+### Patch Changes
+
+- - `bee` render application way
+  - `relax` add `first` api
+  - `relax` add `last` api
+
 ## 1.3.13
 
 ### Patch Changes
