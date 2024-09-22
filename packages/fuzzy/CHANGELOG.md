@@ -1,5 +1,11 @@
 # @aiszlab/fuzzy
 
+## 1.3.15
+
+### Patch Changes
+
+- 278d00b: - refactor `useRefs` hook
+
 ## 1.3.14
 
 ### Patch Changes

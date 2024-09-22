@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.15
+
+### Patch Changes
+
+- 278d00b: - refactor `useRefs` hook
+- Updated dependencies [278d00b]
+  - @aiszlab/relax@1.3.15
+
 ## 1.3.14
 
 ### Patch Changes
