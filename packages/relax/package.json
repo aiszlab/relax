@@ -17,6 +17,13 @@
       "import": "./dist/dom/index.mjs",
       "default": "./dist/dom/index.mjs"
     },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "node": "./dist/react/index.cjs",
+      "require": "./dist/react/index.cjs",
+      "import": "./dist/react/index.mjs",
+      "default": "./dist/react/index.mjs"
+    },
     "./types": "./dist/types/index.d.ts"
   },
   "scripts": {
