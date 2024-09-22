@@ -3,10 +3,10 @@ import { mountRef, type Refable } from "@aiszlab/relax/react";
 import { useEvent } from "./use-event";
 
 export const useRefs = <T>(...refs: Voidable<Refable<Nullable<T>>>[]) => {
-  return useEvent((_reference: T) => {
+  return useEvent((reference: T) => {
     refs.forEach((ref) => {
       if (!ref) return;
-      mountRef(ref, _reference);
+      mountRef(ref, reference);
     });
   });
 };
