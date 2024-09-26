@@ -79,3 +79,4 @@ export { replace } from "./utils/replace";
 export { clsx } from "./utils/clsx";
 export { first } from "./utils/first";
 export { last } from "./utils/last";
+export { merge } from "./utils/merge";
