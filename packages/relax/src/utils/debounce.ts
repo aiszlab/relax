@@ -32,9 +32,9 @@ export const debounce = <T extends Callable, R extends Array<unknown> = Paramete
   debouncer: Debouncer<T, R> | T,
   wait: number,
 ): Debounced<T> => {
-  const isCallable = isFunction(debouncer);
-  const callback = isCallable ? debouncer : debouncer.callback;
-  const pipe = isCallable ? (...args: Parameters<T>) => args as unknown as R : debouncer.pipe;
+  const _isFunction = isFunction(debouncer);
+  const callback = _isFunction ? debouncer : debouncer.callback;
+  const pipe = _isFunction ? (...args: Parameters<T>) => args as unknown as R : debouncer.pipe;
 
   const waiter = new Waitable({
     callback,

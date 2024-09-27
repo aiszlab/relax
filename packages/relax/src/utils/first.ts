@@ -5,6 +5,7 @@ import { toArray } from "./to-array";
  * @description
  * first element of array
  */
-export const first = <T = unknown>(value: T) => {
-  return toArray(value).at(0) as First<T, T>;
+export const first = <T = unknown>(value: T): First<T, T> => {
+  // @ts-ignore
+  return toArray(value, { separator: "" }).at(0);
 };

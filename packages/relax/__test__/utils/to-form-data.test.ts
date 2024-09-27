@@ -35,4 +35,13 @@ describe("`toFormData` util", () => {
     const formData = toFormData(value);
     expect(Array.from(formData.keys()).length).toBe(Object.keys(value).length);
   });
+
+  it("nested array value", () => {
+    const value = {
+      list: [1, 2, 3],
+      total: 3,
+    };
+    const formData = toFormData(value);
+    expect(Array.from(formData.keys()).length).toBe(4);
+  });
 });

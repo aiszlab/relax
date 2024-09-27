@@ -25,4 +25,23 @@ describe("`clone` util", () => {
     expect(_cloned[2]).not.toBe(array[2]);
     expect(_cloned[2]).toEqual(array[2]);
   });
+
+  it("map value", () => {
+    const map = new Map([
+      ["key1", "value1"],
+      ["key2", "value2"],
+    ]);
+
+    const _cloned = clone(map);
+    expect(_cloned).not.toBe(map);
+    expect(_cloned).toEqual(map);
+  });
+
+  it("set value", () => {
+    const set = new Set([1, 2, 3]);
+    const _cloned = clone(set);
+
+    expect(_cloned).not.toBe(set);
+    expect(_cloned).toEqual(set);
+  });
 });

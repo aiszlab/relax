@@ -61,7 +61,8 @@ export { isObject } from "./is/is-object";
  * utils
  */
 export { effect } from "./utils/effect";
-export { unique, uniqueBy } from "./utils/unique";
+export { unique } from "./utils/unique";
+export { uniqueBy } from "./utils/unique-by";
 export { range } from "./utils/range";
 export { clamp } from "./utils/clamp";
 export { chain } from "./utils/chain";

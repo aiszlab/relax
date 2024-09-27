@@ -1,34 +1,138 @@
 import { debounce } from "../../src";
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect, jest } from "@jest/globals";
 
 describe("`debounce` util", () => {
-  it("debounce callback", (done) => {
-    let callCount = 0;
+  it("debounce callback", () => {
+    jest.useFakeTimers();
+    const fn = jest.fn();
 
     const { next: debounced } = debounce((value: string) => {
-      callCount = callCount + 1;
+      fn();
       return value;
     }, 32);
 
     debounced("0");
     debounced("1");
     debounced("2");
+    expect(fn).toBeCalledTimes(0);
 
-    expect(callCount).toBe(0);
+    jest.runOnlyPendingTimers();
+    expect(fn).toBeCalledTimes(1);
 
-    setTimeout(() => {
-      expect(callCount).toBe(1);
+    debounced("3");
+    debounced("4");
+    debounced("5");
 
-      debounced("3");
-      debounced("4");
-      debounced("5");
-
-      expect(callCount).toBe(1);
-    }, 128);
-
-    setTimeout(() => {
-      expect(callCount).toBe(2);
-      done();
-    }, 256);
+    expect(fn).toBeCalledTimes(1);
+    jest.runOnlyPendingTimers();
+    expect(fn).toBeCalledTimes(2);
   });
+
+  it("debounce pipe", () => {
+    jest.useFakeTimers();
+
+    const _pipe = jest.fn();
+    const _callback = jest.fn();
+
+    const { next: debounced } = debounce(
+      {
+        callback: (value: string) => {
+          _callback();
+          return value;
+        },
+        pipe: (value: string) => {
+          _pipe();
+          return [value] as const;
+        },
+      },
+      32,
+    );
+
+    debounced("0");
+    debounced("1");
+    debounced("2");
+
+    expect(_pipe).toBeCalledTimes(0);
+    expect(_callback).toBeCalledTimes(0);
+    jest.runOnlyPendingTimers();
+    expect(_pipe).toBeCalledTimes(1);
+    expect(_callback).toBeCalledTimes(1);
+
+    debounced("3");
+    debounced("4");
+    debounced("5");
+
+    expect(_pipe).toBeCalledTimes(1);
+    expect(_callback).toBeCalledTimes(1);
+    jest.runOnlyPendingTimers();
+    expect(_pipe).toBeCalledTimes(2);
+    expect(_callback).toBeCalledTimes(2);
+  });
+
+  it("debounce flush", () => {
+    jest.useFakeTimers();
+    const fn = jest.fn();
+
+    const { flush, next } = debounce((value: string) => {
+      fn();
+      return value;
+    }, 32);
+
+    next("0");
+    next("1");
+    next("2");
+    expect(fn).toBeCalledTimes(0);
+    flush();
+    expect(fn).toBeCalledTimes(1);
+  });
+
+  it("debounce abort", () => {
+    jest.useFakeTimers();
+    const fn = jest.fn();
+    const { abort, next, flush } = debounce((value: string) => {
+      fn();
+      return value;
+    }, 32);
+
+    next("0");
+    next("1");
+    next("2");
+
+    expect(fn).toBeCalledTimes(0);
+    abort();
+    expect(fn).toBeCalledTimes(0);
+
+    jest.runOnlyPendingTimers();
+    expect(fn).toBeCalledTimes(0);
+
+    next("3");
+    expect(fn).toBeCalledTimes(0);
+    flush();
+    expect(fn).toBeCalledTimes(1);
+  });
+
+  // it("debounce promise pipe", (done) => {
+  //   const _callback = jest.fn<(value: number) => void>();
+
+  //   const { next } = debounce(
+  //     {
+  //       pipe: (value: number) => {
+  //         return Promise.resolve([value + 1] as const);
+  //       },
+  //       callback: (value: number) => {
+  //         _callback(value);
+  //       },
+  //     },
+  //     32,
+  //   );
+
+  //   next(1);
+  //   next(2);
+
+  //   setTimeout(() => {
+  //     expect(_callback).toBeCalledTimes(1);
+  //     expect(_callback).lastCalledWith(2);
+  //     done();
+  //   }, 100);
+  // });
 });

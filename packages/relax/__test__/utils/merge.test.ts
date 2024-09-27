@@ -28,4 +28,14 @@ describe("`merge` util", () => {
     const result = merge([1, 2], [3, 4]);
     expect(result).toEqual([3, 4]);
   });
+
+  it("should return array when merge array with object", () => {
+    const result = merge([1, 2], { 0: "test", "1": 10, 2: true });
+    expect(result).toEqual(["test", 10]);
+  });
+
+  it("skip null or undefined values", () => {
+    const result = merge({ a: 1 }, null, { b: 2 }, undefined);
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
 });
