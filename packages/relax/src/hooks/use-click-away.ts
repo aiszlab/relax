@@ -1,7 +1,7 @@
 import { useEffect, type MutableRefObject } from "react";
 import { useEvent } from "./use-event";
 import { toArray } from "../utils/to-array";
-import { contains, type Containable } from "@aiszlab/relax/dom";
+import { contains, type Containable } from "../dom";
 import type { Nullable, Arrayable } from "@aiszlab/relax/types";
 
 /**

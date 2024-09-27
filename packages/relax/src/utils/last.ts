@@ -1,4 +1,4 @@
-import { type Last } from "../types";
+import { type Last } from "@aiszlab/relax/types";
 import { toArray } from "./to-array";
 
 /**

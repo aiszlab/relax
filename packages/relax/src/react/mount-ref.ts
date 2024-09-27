@@ -1,5 +1,5 @@
 import type { MutableRefObject, RefCallback } from "react";
-import { isFunction } from "../is/is-function";
+import { isFunction } from "../../src";
 
 export type Refable<T> = RefCallback<T> | MutableRefObject<T> | string;
 

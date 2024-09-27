@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useMounted } from "./use-mounted";
 
 /**
  * @description
@@ -7,7 +8,7 @@ import { useEffect, useState } from "react";
 export const useNetwork = () => {
   const [isOnline, setIsOnline] = useState<boolean>(() => navigator.onLine);
 
-  useEffect(() => {
+  useMounted(() => {
     const onOnline = () => {
       setIsOnline(true);
     };
@@ -23,7 +24,7 @@ export const useNetwork = () => {
       window.removeEventListener("online", onOnline);
       window.removeEventListener("offline", onOffline);
     };
-  }, []);
+  });
 
   return isOnline;
 };

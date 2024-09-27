@@ -22,5 +22,5 @@ export const isEmpty = (value?: Object | unknown[] | string | number | boolean |
     return Object.keys(value).length === 0;
   }
 
-  return !!value;
+  return !value;
 };

@@ -1,5 +1,5 @@
 import { type Key, useCallback, useRef } from "react";
-import { type Orientation, scrollTo as _scrollTo } from "@aiszlab/relax/dom";
+import { type Orientation, scrollTo as _scrollTo } from "../dom";
 
 interface UseScrollableProps {
   orientation?: Orientation;

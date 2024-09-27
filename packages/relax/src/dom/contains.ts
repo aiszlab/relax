@@ -15,14 +15,14 @@ export type Containable = {
   contains?: (node: Nullable<Node>) => boolean;
 };
 
-export const contains = (root: Voidable<Containable>, node: Voidable<Node>) => {
+export const contains = (root: Voidable<Containable>, node: Voidable<Node> = null) => {
   if (!root) {
     return false;
   }
 
   // Use native if support
-  if (root.contains) {
-    return root.contains(node ?? null);
+  if (!!root.contains) {
+    return root.contains(node);
   }
 
   // `document.contains` not support with IE11

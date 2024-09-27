@@ -15,4 +15,14 @@ describe("`clone` util", () => {
     const symbol = Symbol("symbol");
     expect(clone(symbol)).toBe(symbol);
   });
+
+  it("array value", () => {
+    const array = [1, 2, { value: "3" }];
+    const _cloned = clone(array);
+
+    expect(_cloned).not.toBe(array);
+    expect(_cloned).toEqual(array);
+    expect(_cloned[2]).not.toBe(array[2]);
+    expect(_cloned[2]).toEqual(array[2]);
+  });
 });

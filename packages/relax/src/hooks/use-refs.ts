@@ -1,5 +1,5 @@
 import type { Nullable, Voidable } from "@aiszlab/relax/types";
-import { mountRef, type Refable } from "@aiszlab/relax/react";
+import { mountRef, type Refable } from "../react";
 import { useEvent } from "./use-event";
 
 export const useRefs = <T>(...refs: Voidable<Refable<Nullable<T>>>[]) => {
