@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.3.16
+
+### Patch Changes
+
+- add `relax`.`merge` util
+
 ## 1.3.15
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.16
+
+### Patch Changes
+
+- add `relax`.`merge` util
+- Updated dependencies
+  - @aiszlab/relax@1.3.16
+
 ## 1.3.15
 
 ### Patch Changes
