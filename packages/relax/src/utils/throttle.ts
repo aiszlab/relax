@@ -6,19 +6,19 @@ import { throttleTime } from "rxjs";
 
 export type Throttled<T extends Callable> = Debounced<T>;
 
-export type Throttler<T extends Callable, R extends Array<unknown> = Parameters<T>> = Debouncer<T, R>;
+export type Throttler<T extends Callable, R = unknown> = Debouncer<T, R>;
 
-export const throttle = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+export const throttle = <T extends Callable, R = unknown>(
   throttler: Throttler<T, R> | T,
   wait: number,
 ): Throttled<T> => {
-  const isCallable = isFunction(throttler);
-  const callback = isCallable ? throttler : throttler.callback;
-  const pipe = isCallable ? (...args: Parameters<T>) => args as unknown as R : throttler.pipe;
+  const _isFunction = isFunction(throttler);
+  const callback = _isFunction ? throttler : throttler.callback;
 
-  const waiter = new Waitable({
+  // @ts-ignore
+  const waiter = new Waitable<Parameters<T>, R>({
     callback,
-    pipe,
+    pipe: _isFunction ? void 0 : throttler.pipe,
     timer: throttleTime(wait),
   });
 

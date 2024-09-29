@@ -4,6 +4,7 @@ import { describe, it, expect, jest } from "@jest/globals";
 describe("`debounce` util", () => {
   it("debounce callback", () => {
     jest.useFakeTimers();
+
     const fn = jest.fn();
 
     const { next: debounced } = debounce((value: string) => {
@@ -42,7 +43,7 @@ describe("`debounce` util", () => {
         },
         pipe: (value: string) => {
           _pipe();
-          return [value] as const;
+          return value;
         },
       },
       32,
@@ -111,28 +112,27 @@ describe("`debounce` util", () => {
     expect(fn).toBeCalledTimes(1);
   });
 
-  // it("debounce promise pipe", (done) => {
-  //   const _callback = jest.fn<(value: number) => void>();
+  it("debounce promise pipe", (done) => {
+    jest.useRealTimers();
 
-  //   const { next } = debounce(
-  //     {
-  //       pipe: (value: number) => {
-  //         return Promise.resolve([value + 1] as const);
-  //       },
-  //       callback: (value: number) => {
-  //         _callback(value);
-  //       },
-  //     },
-  //     32,
-  //   );
+    const callback = jest.fn<(value: number) => void>();
+    const pipe = (value: number) => Promise.resolve(value);
 
-  //   next(1);
-  //   next(2);
+    const { next } = debounce(
+      {
+        pipe,
+        callback,
+      },
+      32,
+    );
 
-  //   setTimeout(() => {
-  //     expect(_callback).toBeCalledTimes(1);
-  //     expect(_callback).lastCalledWith(2);
-  //     done();
-  //   }, 100);
-  // });
+    next(1);
+    next(2);
+
+    setTimeout(() => {
+      expect(callback).toBeCalledTimes(1);
+      expect(callback).lastCalledWith(2);
+      done();
+    }, 100);
+  });
 });

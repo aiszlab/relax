@@ -40,7 +40,7 @@ describe("`throttle` util", () => {
         },
         pipe: (value: string) => {
           _pipe();
-          return [value] as const;
+          return value;
         },
       },
       32,

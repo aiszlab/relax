@@ -9,48 +9,68 @@ import {
 } from "rxjs";
 import { isThenable } from "../is/is-thenable";
 
-interface Props<T extends Array<unknown> = Array<unknown>, R extends Array<unknown> = T> {
+interface PropsWithoutPipe<T extends Array<unknown> = Array<unknown>> {
   callback: (...args: T) => unknown;
-  pipe: (...args: R) => T | Promise<T>;
-  timer: MonoTypeOperatorFunction<R>;
+  pipe: undefined;
+  timer: MonoTypeOperatorFunction<T>;
 }
+
+interface PropsWithPipe<T extends Array<unknown> = Array<unknown>, R = unknown> {
+  callback: (value: R) => unknown;
+  pipe: (...args: T) => R | Promise<R>;
+  timer: MonoTypeOperatorFunction<T>;
+}
+
+type Props<T extends Array<unknown> = Array<unknown>, R = unknown> =
+  | PropsWithoutPipe<T>
+  | PropsWithPipe<T, R>;
 
 /**
  * @description
  * waitable instance
  * for debounce...
  */
-export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
+export class Waitable<T extends Array<unknown>, R = unknown> {
   #cook$: Subscription | null;
-  #waiter$: Subscriber<R> | null;
+  #waiter$: Subscriber<T> | null;
 
-  #timer: MonoTypeOperatorFunction<R>;
-  #pipe: (...args: R) => T | Promise<T>;
-  #callback: (...ars: T) => unknown;
+  #timer: MonoTypeOperatorFunction<T>;
+  #pipe?: (...args: T) => R | Promise<R>;
+  #callback: ((...args: T) => unknown) | ((...args: [R]) => unknown);
 
   constructor(props: Props<T, R>) {
     this.#cook$ = null;
     this.#waiter$ = null;
-    this.#pipe = props.pipe;
     this.#timer = props.timer;
+    this.#pipe = props.pipe;
     this.#callback = props.callback;
 
     this.#use();
   }
 
   #use() {
-    this.#cook$ = new Observable<R>((subscriber) => {
+    this.#cook$ = new Observable<T>((subscriber) => {
       this.#waiter$ = subscriber;
     })
       .pipe(
         this.#timer,
         switchMap((args) => {
+          if (!this.#pipe) {
+            return of(args);
+          }
+
           const piped = this.#pipe(...args);
           return isThenable(piped) ? from(piped) : of(piped);
         }),
       )
       .subscribe((args) => {
-        this.#callback?.(...args);
+        if (!this.#pipe) {
+          // @ts-ignore
+          this.#callback(...args);
+        } else {
+          // @ts-ignore
+          this.#callback(args);
+        }
       });
   }
 
@@ -82,7 +102,7 @@ export class Waitable<T extends Array<unknown>, R extends Array<unknown> = T> {
    * @description
    * trigger value
    */
-  next(...args: R) {
+  next(...args: T) {
     this.#waiter$?.next(args);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "1.3.16",
+  "version": "1.3.17",
   "description": "react utils collection",
   "exports": {
     ".": {
@@ -23,6 +23,13 @@
       "require": "./dist/react/index.cjs",
       "import": "./dist/react/index.mjs",
       "default": "./dist/react/index.mjs"
+    },
+    "./path": {
+      "types": "./dist/path/index.d.ts",
+      "node": "./dist/path/index.cjs",
+      "require": "./dist/path/index.cjs",
+      "import": "./dist/path/index.mjs",
+      "default": "./dist/path/index.mjs"
     },
     "./types": "./dist/types/index.d.ts"
   },

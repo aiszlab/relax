@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect, useLayoutEffect } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
 export type Callable = (...args: any) => any;
 

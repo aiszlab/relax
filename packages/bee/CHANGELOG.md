@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.3.17
+
+### Patch Changes
+
+- refactor
+- Updated dependencies
+  - @aiszlab/relax@1.3.17
+
 ## 1.3.16
 
 ### Patch Changes

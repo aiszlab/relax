@@ -1,5 +1,11 @@
 # @aiszlab/fuzzy
 
+## 1.3.17
+
+### Patch Changes
+
+- refactor
+
 ## 1.3.16
 
 ### Patch Changes

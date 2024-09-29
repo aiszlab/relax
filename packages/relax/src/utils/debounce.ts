@@ -23,22 +23,22 @@ export interface Debounced<T extends Callable> {
   abort: () => void;
 }
 
-export type Debouncer<T extends Callable, R extends Array<unknown> = Parameters<T>> = {
-  callback: (...args: R) => ReturnType<T>;
+export type Debouncer<T extends Callable, R = unknown> = {
+  callback: (args: R) => ReturnType<T>;
   pipe: (...args: Parameters<T>) => R | Promise<R>;
 };
 
-export const debounce = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+export const debounce = <T extends Callable, R = unknown>(
   debouncer: Debouncer<T, R> | T,
   wait: number,
 ): Debounced<T> => {
   const _isFunction = isFunction(debouncer);
   const callback = _isFunction ? debouncer : debouncer.callback;
-  const pipe = _isFunction ? (...args: Parameters<T>) => args as unknown as R : debouncer.pipe;
 
-  const waiter = new Waitable({
+  // @ts-ignore
+  const waiter = new Waitable<Parameters<T>, R>({
     callback,
-    pipe,
+    pipe: _isFunction ? void 0 : debouncer.pipe,
     timer: debounceTime(wait),
   });
 
