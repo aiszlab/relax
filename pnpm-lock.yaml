@@ -85,6 +85,9 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.25.2)(@types/babel__core@7.20.5)(rollup@4.22.5)
@@ -100,6 +103,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@22.5.2)
       rollup:
         specifier: ^4.22.5
         version: 4.22.5
@@ -125,6 +131,9 @@ importers:
       '@babel/preset-env':
         specifier: ^7.25.4
         version: 7.25.4(@babel/core@7.25.2)
+      '@babel/preset-react':
+        specifier: ^7.24.7
+        version: 7.24.7(@babel/core@7.25.2)
       '@babel/preset-typescript':
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
