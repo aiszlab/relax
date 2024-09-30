@@ -1,18 +1,29 @@
 import { useRef } from "react";
 import { useEvent } from "./use-event";
 
+type UsingRaf = [
+  _callback: Function,
+
+  {
+    /**
+     * @description
+     * run callback immediately
+     * if `timely` is true, run callback immediately
+     * otherwise, wait for next frame
+     */
+    timely?: boolean;
+  }?,
+];
+
+type UsedRaf = () => void;
+
+type UseRaf = (...args: UsingRaf) => UsedRaf;
+
 /**
  * @description
  * raf
  */
-export const useRaf = (
-  _callback: Function,
-  {
-    timely = false,
-  }: {
-    timely?: boolean;
-  } = {},
-) => {
+export const useRaf: UseRaf = (_callback, { timely } = {}) => {
   const callback = useEvent(_callback);
   const timed = useRef<number | null>(null);
   const isTimed = useRef(false);

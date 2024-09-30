@@ -3,8 +3,8 @@
  * hash
  */
 export const hash = async (
-  algorithm: AlgorithmIdentifier = "SHA-1",
   input: string = crypto.randomUUID(),
+  algorithm: AlgorithmIdentifier = "SHA-1",
 ) => {
   const buffer = await crypto.subtle.digest(algorithm, new TextEncoder().encode(input));
   const _buffer = Array.from(new Uint8Array(buffer));
