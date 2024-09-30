@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.0
+
+### Minor Changes
+
+- link local workspace packages
+
 ## 1.3.18
 
 ### Patch Changes

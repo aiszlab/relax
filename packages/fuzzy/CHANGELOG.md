@@ -1,5 +1,16 @@
 # @aiszlab/fuzzy
 
+## 1.4.0
+
+### Minor Changes
+
+- link local workspace packages
+
+### Patch Changes
+
+- Updated dependencies
+  - @aiszlab/relax@1.4.0
+
 ## 1.3.18
 
 ### Patch Changes
