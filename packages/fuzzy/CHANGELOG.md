@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.3.18
+
+### Patch Changes
+
+- refactor `relax` `fuzzy`
+- Updated dependencies
+  - @aiszlab/relax@1.3.18
+
 ## 1.3.17
 
 ### Patch Changes

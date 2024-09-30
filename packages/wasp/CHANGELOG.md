@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.3.18
+
+### Patch Changes
+
+- refactor `relax` `fuzzy`
+
 ## 1.3.17
 
 ### Patch Changes
