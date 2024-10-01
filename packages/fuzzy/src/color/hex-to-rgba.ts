@@ -5,9 +5,9 @@ import { toArray } from "@aiszlab/relax";
  * @description
  * hex color convert to rgba color
  */
-export const hexToRgba = (input: string) => {
+export const hexToRgba = (input: string, alpha?: number) => {
   if (!isHex(input)) {
-    throw new Error("fuzzy.color: hex color is invalid!");
+    return input;
   }
 
   // exclude '#': charCode = 35
@@ -32,7 +32,7 @@ export const hexToRgba = (input: string) => {
   const r = parseInt(hex.slice(0, 2), 16);
   const g = parseInt(hex.slice(2, 4), 16);
   const b = parseInt(hex.slice(4, 6), 16);
-  const alpha = (parseInt(hex.slice(-2), 16) / 255).toFixed(2);
+  const _alpha = alpha ?? (parseInt(hex.slice(-2), 16) / 255).toFixed(2);
 
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  return `rgba(${r}, ${g}, ${b}, ${_alpha})`;
 };
