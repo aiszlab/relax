@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.4.2
+
+### Patch Changes
+
+- (fuzzy): add color alpha params
+- Updated dependencies
+  - @aiszlab/relax@1.4.2
+
 ## 1.4.1
 
 ### Patch Changes
