@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.4.1
+
+### Patch Changes
+
+- fix exports path
+- Updated dependencies
+  - @aiszlab/relax@1.4.1
+
 ## 1.4.0
 
 ### Minor Changes

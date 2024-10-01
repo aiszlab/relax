@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.1
+
+### Patch Changes
+
+- fix exports path
+
 ## 1.4.0
 
 ### Minor Changes
