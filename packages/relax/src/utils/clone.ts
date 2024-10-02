@@ -1,5 +1,8 @@
 import { isArray } from "../is/is-array";
+import { isFunction } from "../is/is-function";
+import { isMap } from "../is/is-map";
 import { isPrimitive } from "../is/is-primitive";
+import { isSet } from "../is/is-set";
 
 /**
  * @description
@@ -9,24 +12,24 @@ import { isPrimitive } from "../is/is-primitive";
 export const clone = <T>(value: T): T => {
   if (isPrimitive(value)) return value;
 
-  if (value instanceof Map) {
-    // @ts-ignore
-    return new Map(Array.from(value.entries()).map(([_key, _value]) => [_key, clone(_value)]));
+  // function is not clonable
+  if (isFunction(value)) return value;
+
+  // map clone
+  if (isMap(value)) {
+    return new Map(Array.from(value.entries()).map(([_key, _value]) => [_key, clone(_value)])) as T;
   }
 
-  if (value instanceof Set) {
-    // @ts-ignore
-    return new Set(Array.from(value.values()).map((_value) => clone(_value)));
+  if (isSet(value)) {
+    return new Set(Array.from(value.values()).map((_value) => clone(_value))) as T;
   }
 
   if (isArray(value)) {
-    // @ts-ignore
-    return value.map((_value) => clone(_value));
+    return value.map((_value) => clone(_value)) as T;
   }
 
   // @ts-ignore
-  return Object.entries(value).reduce((cloned, [_key, _value]) => {
-    // @ts-ignore
+  return Object.entries(value).reduce<Record<string, unknown>>((cloned, [_key, _value]) => {
     cloned[_key] = clone(_value);
     return cloned;
   }, {});
