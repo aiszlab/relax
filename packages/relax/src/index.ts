@@ -83,3 +83,5 @@ export { clsx } from "./utils/clsx";
 export { first } from "./utils/first";
 export { last } from "./utils/last";
 export { merge } from "./utils/merge";
+export { max } from "./utils/max";
+export { min } from "./utils/min";
