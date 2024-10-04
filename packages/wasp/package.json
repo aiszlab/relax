@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/wasp",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "type": "module",
   "bin": {
     "wasp": "bin/index.js"

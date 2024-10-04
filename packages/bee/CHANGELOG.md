@@ -1,5 +1,15 @@
 # @aiszlab/bee
 
+## 1.4.3
+
+### Patch Changes
+
+- refactor apis
+- 0ba9822: `clone`: func is not clonable
+- Updated dependencies
+- Updated dependencies [0ba9822]
+  - @aiszlab/relax@1.4.3
+
 ## 1.4.2
 
 ### Patch Changes
