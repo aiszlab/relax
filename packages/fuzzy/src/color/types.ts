@@ -1,10 +1,10 @@
 /**
  * @description
- * color
+ * RGBA
  */
-export type Color = {
-  red: number;
-  green: number;
-  blue: number;
-  alpha?: number;
+export type Rgba = {
+  r: number;
+  g: number;
+  b: number;
+  a?: number;
 };
