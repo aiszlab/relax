@@ -7,17 +7,25 @@ import { useDefault } from "../hooks/use-default";
 const useThrottler = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
   throttler: T | Throttler<T, R>,
 ): Throttler<T, R> => {
-  const { callback, pipe } = useMemo(() => {
+  const _throttler = useMemo(() => {
     return isFunction(throttler) ? { callback: throttler, pipe: null } : throttler;
   }, [throttler]);
 
+  const callback = useEvent((piped: R) => {
+    if (_throttler.pipe) {
+      return _throttler.callback(piped);
+    }
+    return _throttler.callback(...piped);
+  });
+
+  const pipe = useEvent((...args: Parameters<T>) => {
+    if (!_throttler.pipe) return args as unknown as R;
+    return _throttler.pipe(...args);
+  });
+
   return {
-    callback: useEvent((...args) => {
-      return callback(...args);
-    }),
-    pipe: useEvent((...args: Parameters<T>) => {
-      return pipe?.(...args) ?? (args as unknown as R);
-    }),
+    callback,
+    pipe,
   };
 };
 
