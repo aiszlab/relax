@@ -11,13 +11,21 @@ const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<
     return isFunction(debouncer) ? { callback: debouncer, pipe: null } : debouncer;
   }, [debouncer]);
 
+  const callback = useEvent((piped: R) => {
+    if (_debouncer.pipe) {
+      return _debouncer.callback(piped);
+    }
+    return _debouncer.callback(...piped);
+  });
+
+  const pipe = useEvent((...args: Parameters<T>) => {
+    if (!_debouncer.pipe) return args as unknown as R;
+    return _debouncer.pipe(...args);
+  });
+
   return {
-    callback: useEvent((...args) => {
-      return _debouncer.callback(...args);
-    }),
-    pipe: useEvent((...args: Parameters<T>) => {
-      return _debouncer.pipe?.(...args) ?? (args as unknown as R);
-    }),
+    callback,
+    pipe,
   };
 };
 
@@ -51,6 +59,7 @@ export const useDebounceCallback = <T extends Callable, R extends Array<unknown>
       },
       wait,
     );
+
     debounced.current = _debounced;
 
     // dispose
