@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.4.4
+
+### Patch Changes
+
+- fix `useDebounceCallback` pipe convert func
+- Updated dependencies
+  - @aiszlab/relax@1.4.4
+
 ## 1.4.3
 
 ### Patch Changes

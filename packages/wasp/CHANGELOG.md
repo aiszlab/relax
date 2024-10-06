@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.4
+
+### Patch Changes
+
+- fix `useDebounceCallback` pipe convert func
+
 ## 1.4.3
 
 ### Patch Changes
