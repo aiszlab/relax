@@ -44,4 +44,9 @@ describe("`clone` util", () => {
     expect(_cloned).not.toBe(set);
     expect(_cloned).toEqual(set);
   });
+
+  it("function is not clonable", () => {
+    const fn = () => {};
+    expect(clone(fn)).toBe(fn);
+  });
 });
