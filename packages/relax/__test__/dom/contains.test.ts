@@ -36,8 +36,8 @@ describe("dom/contains", () => {
     const child = document.createElement("span");
     parent.appendChild(child);
     root.appendChild(parent);
-    // @ts-ignore
-    root.contains = null;
+
+    Object.assign(root, { contains: null });
 
     expect(contains(root, child)).toBe(true);
   });
@@ -45,8 +45,7 @@ describe("dom/contains", () => {
   it("should return false if custom contains check false", () => {
     const root = document.createElement("div");
     const child = document.createElement("span");
-    // @ts-ignore
-    root.contains = null;
+    Object.assign(root, { contains: null });
 
     expect(contains(root, child)).toBe(false);
   });
