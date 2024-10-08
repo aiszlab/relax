@@ -1,11 +1,13 @@
-type MaxBy<T> = [values: T[], pipe: (value: T) => number];
-
 /**
  * @description
  * max
  */
-export const max = <T>(...args: MaxBy<T>): T => {
-  const [values, pipe] = args;
+function max(values: number[]): number;
+function max<T>(values: T[], pipe: (value: T) => number): T;
+function max<T>(values: T[], pipe?: (value: T) => number) {
+  if (!pipe) {
+    return Math.max(...(values as number[])) as T;
+  }
 
   const _values = values.reduce<Map<number, T>>((prev, _value) => {
     const _key = pipe(_value);
@@ -18,4 +20,6 @@ export const max = <T>(...args: MaxBy<T>): T => {
   const _max = Math.max(..._values.keys());
 
   return _values.get(_max)!;
-};
+}
+
+export { max };
