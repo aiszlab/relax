@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useMounted } from "./use-mounted";
 
-type UseIsMountedBy = {
+type UsingIsMounted = {
   /**
    * @description
    * after mount, react will rerender current component
@@ -13,7 +13,7 @@ type UseIsMountedBy = {
  * @description
  * `useIsMounted`
  */
-export const useIsMounted = ({ rerender = false }: UseIsMountedBy = {}) => {
+export const useIsMounted = ({ rerender = false }: UsingIsMounted = {}) => {
   const [, setIsMounted] = useState(false);
   const isMountedRef = useRef(false);
 

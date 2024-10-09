@@ -2,7 +2,7 @@ import { type RefObject, useEffect, useRef } from "react";
 import { useEvent } from "./use-event";
 import { debounce } from "../utils/debounce";
 
-type UseInfiniteScrollProps = {
+type UsingInfiniteScroll = {
   /**
    * @description
    * hasMore
@@ -32,7 +32,7 @@ export const useInfiniteScroll = ({
   hasMore = true,
   distance = 0,
   onLoadMore,
-}: UseInfiniteScrollProps): UsedInfiniteScroll => {
+}: UsingInfiniteScroll): UsedInfiniteScroll => {
   const loadable = useRef<HTMLElement>(null);
   const scrollable = useRef<HTMLElement>(null);
 

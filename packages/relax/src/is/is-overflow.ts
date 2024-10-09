@@ -10,6 +10,5 @@ export function isOverflow(element: HTMLElement = document.body) {
     );
   }
 
-  // not body
   return element.scrollHeight > element.clientHeight;
 }
