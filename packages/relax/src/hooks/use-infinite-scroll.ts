@@ -1,6 +1,7 @@
 import { type RefObject, useEffect, useRef } from "react";
 import { useEvent } from "./use-event";
 import { debounce } from "../utils/debounce";
+import { first } from "../utils/first";
 
 type UsingInfiniteScroll = {
   /**
@@ -22,7 +23,10 @@ type UsingInfiniteScroll = {
   onLoadMore?: () => void;
 };
 
-type UsedInfiniteScroll = [loadable: RefObject<HTMLElement>, scrollable: RefObject<HTMLElement>];
+type UsedInfiniteScroll = [
+  sentinelRef: RefObject<HTMLElement>,
+  viewportRef: RefObject<HTMLElement>,
+];
 
 /**
  * @description
@@ -32,58 +36,61 @@ export const useInfiniteScroll = ({
   hasMore = true,
   distance = 0,
   onLoadMore,
-}: UsingInfiniteScroll): UsedInfiniteScroll => {
-  const loadable = useRef<HTMLElement>(null);
-  const scrollable = useRef<HTMLElement>(null);
+}: UsingInfiniteScroll = {}): UsedInfiniteScroll => {
+  const sentinelRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLElement>(null);
 
   const loadMore = useEvent(() => {
     onLoadMore?.();
   });
 
   useEffect(() => {
-    const loader = loadable.current;
-    const scroller = scrollable.current;
+    const _sentinel = sentinelRef.current;
+    const _viewport = viewportRef.current ?? globalThis.window.document.body;
 
+    // no more data, never listen
     if (!hasMore) return;
-    if (!scroller) return;
 
-    // use loader if loader is assigned
-    if (!!loader) {
-      const options = {
-        root: scroller,
-        rootMargin: `0px 0px ${distance}px 0px`,
-        threshold: 0.1,
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        const [entry] = entries;
-        if (!entry.isIntersecting) return;
-
+    // when _sentinel is not provided
+    // use `scroll` event to listen `viewport`
+    // it is not recommended, has performance issue!!!
+    if (!_sentinel) {
+      const { next, abort } = debounce(() => {
+        if (_viewport.scrollHeight - _viewport.scrollTop > _viewport.clientHeight + distance) {
+          return;
+        }
         loadMore();
-      }, options);
+      }, 200);
 
-      observer.observe(loader);
+      _viewport.addEventListener("scroll", next);
 
       return () => {
-        observer.disconnect();
+        abort();
+        _viewport.removeEventListener("scroll", next);
       };
     }
 
-    // listen scroll event, when loader is not assigned
-    const { next, abort } = debounce(() => {
-      if (scroller.scrollHeight - scroller.scrollTop > scroller.clientHeight + distance) {
-        return;
-      }
-      loadMore();
-    }, 100);
-
-    scroller.addEventListener("scroll", next);
+    // use `IntersectionObserver` to check current node is in viewport
+    const _listener = new IntersectionObserver(
+      (entries) => {
+        const _element = first(entries);
+        if (!_element) return;
+        if (!_element.isIntersecting) return;
+        loadMore();
+      },
+      {
+        root: _viewport,
+        rootMargin: `0px 0px ${distance}px 0px`,
+        threshold: 0.1,
+      },
+    );
+    _listener.observe(_sentinel);
 
     return () => {
-      scroller.removeEventListener("scroll", next);
-      abort();
+      _listener.unobserve(_sentinel);
+      _listener.disconnect();
     };
   }, [hasMore]);
 
-  return [loadable, scrollable];
+  return [sentinelRef, viewportRef];
 };
