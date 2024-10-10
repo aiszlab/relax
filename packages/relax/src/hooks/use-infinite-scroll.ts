@@ -42,7 +42,7 @@ export const useInfiniteScroll = <
   const sentinelRef = useRef<S | null>(null);
   const viewportRef = useRef<V | null>(null);
 
-  // `useEvent` keey loadMore always the same
+  // `useEvent` keep loadMore always the same
   const loadMore = useEvent(() => {
     onLoadMore?.();
   });
@@ -84,7 +84,6 @@ export const useInfiniteScroll = <
       {
         root: _viewport,
         rootMargin: `0px 0px ${distance}px 0px`,
-        threshold: 0.1,
       },
     );
     _listener.observe(_sentinel);
