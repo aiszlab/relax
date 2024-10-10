@@ -23,9 +23,9 @@ type UsingInfiniteScroll = {
   onLoadMore?: () => void;
 };
 
-type UsedInfiniteScroll = [
-  sentinelRef: RefObject<HTMLElement>,
-  viewportRef: RefObject<HTMLElement>,
+type UsedInfiniteScroll<S, V> = [
+  sentinelRef: RefObject<S | null>,
+  viewportRef: RefObject<V | null>,
 ];
 
 /**
@@ -35,7 +35,10 @@ type UsedInfiniteScroll = [
 export const useInfiniteScroll = <
   S extends HTMLElement = HTMLElement,
   V extends HTMLElement = HTMLElement,
->({ hasMore = true, distance = 0, onLoadMore }: UsingInfiniteScroll = {}): UsedInfiniteScroll => {
+>({ hasMore = true, distance = 0, onLoadMore }: UsingInfiniteScroll = {}): UsedInfiniteScroll<
+  S,
+  V
+> => {
   const sentinelRef = useRef<S | null>(null);
   const viewportRef = useRef<V | null>(null);
 
