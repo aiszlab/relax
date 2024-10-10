@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.5
+
+### Patch Changes
+
+- release
+
 ## 1.4.4
 
 ### Patch Changes

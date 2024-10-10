@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.4.5
+
+### Patch Changes
+
+- release
+- Updated dependencies
+  - @aiszlab/relax@1.4.5
+
 ## 1.4.4
 
 ### Patch Changes
