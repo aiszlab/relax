@@ -32,14 +32,14 @@ type UsedInfiniteScroll = [
  * @description
  * use infinite scroll
  */
-export const useInfiniteScroll = ({
-  hasMore = true,
-  distance = 0,
-  onLoadMore,
-}: UsingInfiniteScroll = {}): UsedInfiniteScroll => {
-  const sentinelRef = useRef<HTMLElement>(null);
-  const viewportRef = useRef<HTMLElement>(null);
+export const useInfiniteScroll = <
+  S extends HTMLElement = HTMLElement,
+  V extends HTMLElement = HTMLElement,
+>({ hasMore = true, distance = 0, onLoadMore }: UsingInfiniteScroll = {}): UsedInfiniteScroll => {
+  const sentinelRef = useRef<S>(null);
+  const viewportRef = useRef<V>(null);
 
+  // `useEvent` keey loadMore always the same
   const loadMore = useEvent(() => {
     onLoadMore?.();
   });
