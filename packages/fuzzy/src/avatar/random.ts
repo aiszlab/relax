@@ -31,7 +31,7 @@ export const random = async ({ color, margin = 0.1, size = 32 }: Options = {}) =
   const _hash = await hash();
   const _size = Math.floor((size - size * margin * 2) / 5);
   const _margin = Math.floor((size - 5 * _size) / 2);
-  const _color = color || randomColor();
+  const _color = color ?? randomColor();
 
   const rectangles = Array.from({ length: 15 }).reduce<Rectangle[]>((prev, _, at) => {
     const isRender = !!(parseInt(_hash.charAt(at), 16) % 2);
