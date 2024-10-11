@@ -23,10 +23,7 @@ type UsingInfiniteScroll = {
   onLoadMore?: () => void;
 };
 
-type UsedInfiniteScroll<S, V> = [
-  sentinelRef: RefObject<S | null>,
-  viewportRef: RefObject<V | null>,
-];
+type UsedInfiniteScroll<S, V> = [sentinelRef: RefObject<S>, viewportRef: RefObject<V>];
 
 /**
  * @description
@@ -39,8 +36,8 @@ export const useInfiniteScroll = <
   S,
   V
 > => {
-  const sentinelRef = useRef<S | null>(null);
-  const viewportRef = useRef<V | null>(null);
+  const sentinelRef = useRef<S>(null);
+  const viewportRef = useRef<V>(null);
 
   // `useEvent` keep loadMore always the same
   const loadMore = useEvent(() => {
