@@ -9,21 +9,21 @@ import {
 } from "rxjs";
 import { isThenable } from "../is/is-thenable";
 
-interface PropsWithoutPipe<T extends Array<unknown> = Array<unknown>> {
+interface WaitingWithoutPipe<T extends Array<unknown> = Array<unknown>> {
   callback: (...args: T) => unknown;
   pipe: undefined;
   timer: MonoTypeOperatorFunction<T>;
 }
 
-interface PropsWithPipe<T extends Array<unknown> = Array<unknown>, R = unknown> {
+interface WaitingWithPipe<T extends Array<unknown> = Array<unknown>, R = unknown> {
   callback: (value: R) => unknown;
   pipe: (...args: T) => R | Promise<R>;
   timer: MonoTypeOperatorFunction<T>;
 }
 
-type Props<T extends Array<unknown> = Array<unknown>, R = unknown> =
-  | PropsWithoutPipe<T>
-  | PropsWithPipe<T, R>;
+export type Waiting<T extends Array<unknown> = Array<unknown>, R = unknown> =
+  | WaitingWithoutPipe<T>
+  | WaitingWithPipe<T, R>;
 
 /**
  * @description
@@ -38,13 +38,12 @@ export class Waitable<T extends Array<unknown>, R = unknown> {
   #pipe?: (...args: T) => R | Promise<R>;
   #callback: ((...args: T) => unknown) | ((...args: [R]) => unknown);
 
-  constructor(props: Props<T, R>) {
+  constructor({ callback, pipe, timer }: Waiting<T, R>) {
     this.#cook$ = null;
     this.#waiter$ = null;
-    this.#timer = props.timer;
-    this.#pipe = props.pipe;
-    this.#callback = props.callback;
-
+    this.#timer = timer;
+    this.#pipe = pipe;
+    this.#callback = callback;
     this.#use();
   }
 
@@ -65,11 +64,9 @@ export class Waitable<T extends Array<unknown>, R = unknown> {
       )
       .subscribe((args) => {
         if (!this.#pipe) {
-          // @ts-ignore
-          this.#callback(...args);
+          this.#callback(...(args as R[]));
         } else {
-          // @ts-ignore
-          this.#callback(args);
+          this.#callback(args as R);
         }
       });
   }

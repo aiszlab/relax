@@ -1,9 +1,9 @@
 import { debounceTime } from "rxjs";
 import { isFunction } from "../is/is-function";
-import { type Callable } from "../hooks/use-event";
-import { Waitable } from "./waitable";
+import { Waitable, type Waiting } from "./waitable";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
-export interface Debounced<T extends Callable> {
+export interface Debounced<T extends AnyFunction> {
   /**
    * @description
    * value trigger
@@ -23,24 +23,23 @@ export interface Debounced<T extends Callable> {
   abort: () => void;
 }
 
-export type Debouncer<T extends Callable, R = unknown> = {
+export type Debouncer<T extends AnyFunction, R> = {
   callback: (args: R) => ReturnType<T>;
   pipe: (...args: Parameters<T>) => R | Promise<R>;
 };
 
-export const debounce = <T extends Callable, R = unknown>(
+export const debounce = <T extends AnyFunction, R>(
   debouncer: Debouncer<T, R> | T,
   wait: number,
 ): Debounced<T> => {
   const _isFunction = isFunction(debouncer);
   const callback = _isFunction ? debouncer : debouncer.callback;
 
-  // @ts-ignore
   const waiter = new Waitable<Parameters<T>, R>({
     callback,
     pipe: _isFunction ? void 0 : debouncer.pipe,
     timer: debounceTime(wait),
-  });
+  } as Waiting<Parameters<T>, R>);
 
   return {
     next: (...args: Parameters<T>) => waiter.next(...args),

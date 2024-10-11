@@ -5,7 +5,6 @@ import { toArray } from "./to-array";
  * @description
  * last element of array
  */
-export const last = <T = unknown>(value: T): Last<T, T> => {
-  // @ts-ignore
-  return toArray(value, { separator: "" }).at(-1);
+export const last = <T = unknown>(value: T) => {
+  return toArray(value, { separator: "" }).at(-1) as Last<T, T>;
 };

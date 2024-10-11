@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Observable, type Subscription, type Subscriber, timer } from "rxjs";
 import { useEvent } from "./use-event";
 import { useMounted } from "./use-mounted";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
 /**
  * @author murukal
@@ -9,7 +10,7 @@ import { useMounted } from "./use-mounted";
  * @description
  * timeout effect
  */
-export const useTimeout = (callback: Function, wait: number) => {
+export const useTimeout = (callback: AnyFunction, wait: number) => {
   const trigger = useRef<Subscriber<void> | null>(null);
   const timed = useRef<Subscription | null>(null);
 

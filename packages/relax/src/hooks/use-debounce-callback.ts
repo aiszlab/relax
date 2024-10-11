@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { debounce, type Debounced, type Debouncer } from "../utils/debounce";
-import { type Callable, useEvent } from "./use-event";
+import { useEvent } from "./use-event";
 import { isFunction } from "../is/is-function";
 import { useDefault } from "../hooks/use-default";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
-const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+const useDebouncer = <T extends AnyFunction, R>(
   debouncer: T | Debouncer<T, R>,
 ): Debouncer<T, R> => {
   const _debouncer = useMemo(() => {
@@ -15,7 +16,7 @@ const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<
     if (_debouncer.pipe) {
       return _debouncer.callback(piped);
     }
-    return _debouncer.callback(...piped);
+    return _debouncer.callback(...(piped as Parameters<T>)) as ReturnType<T>;
   });
 
   const pipe = useEvent((...args: Parameters<T>) => {
@@ -44,10 +45,15 @@ const useDebouncer = <T extends Callable, R extends Array<unknown> = Parameters<
  * @example
  * 1000
  */
-export const useDebounceCallback = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+function useDebounceCallback<T extends AnyFunction>(callback: T, wait: number): Debounced<T>;
+function useDebounceCallback<T extends AnyFunction, R = unknown>(
+  debouncer: Debouncer<T, R>,
+  wait: number,
+): Debounced<T>;
+function useDebounceCallback<T extends AnyFunction, R>(
   debouncer: T | Debouncer<T, R>,
   wait: number = 1000,
-) => {
+) {
   const debounced = useRef<Debounced<T> | null>(null);
   const { callback, pipe } = useDebouncer(debouncer);
 
@@ -70,8 +76,10 @@ export const useDebounceCallback = <T extends Callable, R extends Array<unknown>
   }, [wait]);
 
   return useDefault<Debounced<T>>(() => ({
-    next: (...args: Parameters<T>) => debounced.current?.next(...args),
+    next: (...args) => debounced.current?.next(...args),
     flush: () => debounced.current?.flush(),
     abort: () => debounced.current?.abort(),
   }));
-};
+}
+
+export { useDebounceCallback };

@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { useEvent } from "./use-event";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
 type UsingRaf = [
-  _callback: Function,
+  callback: AnyFunction,
 
   {
     /**

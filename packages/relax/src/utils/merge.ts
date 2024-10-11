@@ -57,11 +57,9 @@ const _merge = (previous: _Value, next: _Value) => {
  * use unique values to avoid duplicate
  */
 const merge = <T>(...values: [T, ...unknown[]]): T => {
-  // @ts-ignore
   return unique(values).reduce((_merged, _value) => {
-    // @ts-ignore
-    return _merge(_merged, _value ?? {});
-  }, null);
+    return _merge(_merged as _Value, (_value ?? {}) as _Value);
+  }, null) as T;
 };
 
 export { merge };

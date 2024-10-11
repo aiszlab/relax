@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { throttle, type Throttler, type Throttled } from "../utils/throttle";
-import { type Callable, useEvent } from "./use-event";
+import { useEvent } from "./use-event";
 import { isFunction } from "../is/is-function";
 import { useDefault } from "../hooks/use-default";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
-const useThrottler = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+const useThrottler = <T extends AnyFunction, R>(
   throttler: T | Throttler<T, R>,
 ): Throttler<T, R> => {
   const _throttler = useMemo(() => {
@@ -15,7 +16,7 @@ const useThrottler = <T extends Callable, R extends Array<unknown> = Parameters<
     if (_throttler.pipe) {
       return _throttler.callback(piped);
     }
-    return _throttler.callback(...piped);
+    return _throttler.callback(...(piped as Parameters<T>)) as ReturnType<T>;
   });
 
   const pipe = useEvent((...args: Parameters<T>) => {
@@ -44,10 +45,15 @@ const useThrottler = <T extends Callable, R extends Array<unknown> = Parameters<
  * @example
  * 1000
  */
-export const useThrottleCallback = <T extends Callable, R extends Array<unknown> = Parameters<T>>(
+function useThrottleCallback<T extends AnyFunction>(callback: T, wait: number): Throttled<T>;
+function useThrottleCallback<T extends AnyFunction, R>(
+  throttler: Throttler<T, R>,
+  wait: number,
+): Throttled<T>;
+function useThrottleCallback<T extends AnyFunction, R>(
   throttler: T | Throttler<T, R>,
   wait: number = 1000,
-) => {
+) {
   const throttled = useRef<Throttled<T> | null>(null);
   const { callback, pipe } = useThrottler(throttler);
 
@@ -69,8 +75,10 @@ export const useThrottleCallback = <T extends Callable, R extends Array<unknown>
   }, [wait]);
 
   return useDefault<Throttled<T>>(() => ({
-    next: (...args: Parameters<T>) => throttled.current?.next(...args),
+    next: (...args) => throttled.current?.next(...args),
     flush: () => throttled.current?.flush(),
     abort: () => throttled.current?.abort(),
   }));
-};
+}
+
+export { useThrottleCallback };

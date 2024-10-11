@@ -28,9 +28,11 @@ export const clone = <T>(value: T): T => {
     return value.map((_value) => clone(_value)) as T;
   }
 
-  // @ts-ignore
-  return Object.entries(value).reduce<Record<string, unknown>>((cloned, [_key, _value]) => {
-    cloned[_key] = clone(_value);
-    return cloned;
-  }, {});
+  return Object.entries(value as Record<string, unknown>).reduce<Record<string, unknown>>(
+    (cloned, [_key, _value]) => {
+      cloned[_key] = clone(_value);
+      return cloned;
+    },
+    {},
+  ) as T;
 };

@@ -1,14 +1,15 @@
 import { useRef, useCallback, useEffect } from "react";
+import type { AnyFunction } from "@aiszlab/relax/types";
 
-export type Callable = (...args: any) => any;
-
-export const useEvent = <T extends Callable | Function>(callback: T): T => {
+export const useEvent = <T extends AnyFunction>(callback: T) => {
   const ref = useRef<T>(callback);
 
   useEffect(() => {
     ref.current = callback;
   });
 
-  // @ts-ignore
-  return useCallback((...args: Parameters<T>) => ref.current(...args), []);
+  return useCallback(
+    ((...args: Parameters<AnyFunction>) => ref.current(...args)) as unknown as T,
+    [],
+  );
 };
