@@ -1,32 +1,37 @@
-import { isArray } from "../is/is-array";
+import { isString } from "../is/is-string";
+import { toArray } from "./to-array";
 
-type ReplaceArrayOptions<R> = {
-  index: number;
-  replaceValue: R;
-};
-
-type ReplaceStringOptions = {
-  searchValue: string;
-  replaceValue: string;
-};
-
-type ReplaceOptions<T> = T extends string
-  ? ReplaceStringOptions
-  : T extends Array<infer R>
-  ? ReplaceArrayOptions<R>
-  : never;
+type StringReplacing = [searchValue: string, incoming: string];
+type ArrayReplacing<T> = [incoming: Array<T> | T, start: number, end?: number];
 
 /**
  * @description
- * comman replace
- * usable for `string`, `array`
+ * string replace.
+ * it is an easy way to replace string.
+ * wrapper for `String.prototype.replace`.
  */
-export const replace = <T extends string | R[], R>(value: T, options: ReplaceOptions<T>): T => {
-  if (isArray(value as unknown)) {
-    const { index, replaceValue } = options as ReplaceArrayOptions<R>;
-    return [...value.slice(0, index), replaceValue, ...value.slice(index + 1)] as T;
+function replace(value: string, ...args: StringReplacing): string;
+
+/**
+ * @description
+ * replace array.
+ * `value`, `incoming` should be array.
+ * [start, end)
+ */
+function replace<T>(value: Array<T>, ...args: ArrayReplacing<T>): Array<T>;
+
+function replace<T>(value: string | Array<T>, ...args: unknown[]) {
+  if (isString(value)) {
+    return value.replace(...(args as StringReplacing));
   }
 
-  const { replaceValue, searchValue } = options as ReplaceStringOptions;
-  return (value as string).replace(searchValue, replaceValue) as T;
-};
+  const { 0: incoming, 1: start, 2: end } = args as ArrayReplacing<unknown>;
+  const _incomings = toArray(incoming);
+
+  const leading = value.slice(0, start);
+  const trailing = value.slice(end ?? start + _incomings.length);
+
+  return [...leading, ..._incomings, ...trailing];
+}
+
+export { replace };
