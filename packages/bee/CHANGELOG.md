@@ -89,9 +89,9 @@
 
 ### Patch Changes
 
-- - `bee` render application way
-  - `relax` add `first` api
-  - `relax` add `last` api
+- `bee` render application way
+- `relax` add `first` api
+- `relax` add `last` api
 - Updated dependencies
   - @aiszlab/relax@1.3.14
 
@@ -131,9 +131,9 @@
 
 ### Patch Changes
 
-- - `useControlledState` types declartion improve
-  - add `useIsControlled` hook
-  - improve `useMemorable` performance
+- `useControlledState` types declartion improve
+- add `useIsControlled` hook
+- improve `useMemorable` performance
 - Updated dependencies
   - @aiszlab/relax@1.3.9
 
@@ -149,8 +149,8 @@
 
 ### Patch Changes
 
-- - `relax` add `clsx` util
-  - `bee` use optional render
+- `relax` add `clsx` util
+- `bee` use optional render
 - Updated dependencies
   - @aiszlab/relax@1.3.7
 
