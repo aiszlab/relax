@@ -1,13 +1,15 @@
-import { useCallback, type DOMAttributes } from "react";
+import { type DOMAttributes } from "react";
 import { useBoolean } from "./use-boolean";
 import { chain } from "../utils/chain";
 import type { Last } from "@aiszlab/relax/types";
+import { useEvent } from "./use-event";
+import { useDefault } from "./use-default";
 
 /**
  * @description
  * hooks for focus
  */
-type Props<T> = Pick<DOMAttributes<T>, "onFocus" | "onBlur"> & {
+type UsingFocus<T> = Pick<DOMAttributes<T>, "onFocus" | "onBlur"> & {
   onFocusChange?: (isFocused: boolean) => void;
 };
 
@@ -17,22 +19,25 @@ type Props<T> = Pick<DOMAttributes<T>, "onFocus" | "onBlur"> & {
  */
 type UsedFocus<T> = [boolean, Required<Pick<DOMAttributes<T>, "onFocus" | "onBlur">>];
 
-export const useFocus = <T extends Element = Element>(props?: Props<T>): UsedFocus<T> => {
+export const useFocus = <T extends Element = Element>({
+  onBlur: _onBlur,
+  onFocus: _onFocus,
+  onFocusChange,
+}: UsingFocus<T> = {}): UsedFocus<T> => {
   const [isFocused, { turnOn, turnOff }] = useBoolean(false);
 
-  const onFocus = useCallback<Last<UsedFocus<T>>["onFocus"]>(
-    (e) => {
-      chain(props?.onFocus, turnOn, () => props?.onFocusChange?.(true))(e);
-    },
-    [props?.onFocus, props?.onFocusChange],
-  );
+  const onFocus = useEvent<Last<UsedFocus<T>>["onFocus"]>((event) => {
+    chain(_onFocus, turnOn, () => onFocusChange?.(true))(event);
+  });
 
-  const onBlur = useCallback<Last<UsedFocus<T>>["onBlur"]>(
-    (e) => {
-      chain(props?.onBlur, turnOff, () => props?.onFocusChange?.(false))(e);
-    },
-    [props?.onBlur, props?.onFocusChange],
-  );
+  const onBlur = useEvent<Last<UsedFocus<T>>["onBlur"]>((event) => {
+    chain(_onBlur, turnOff, () => onFocusChange?.(false))(event);
+  });
 
-  return [isFocused, { onFocus, onBlur }];
+  const focusProps = useDefault<Last<UsedFocus<T>>>(() => ({
+    onBlur,
+    onFocus,
+  }));
+
+  return [isFocused, focusProps];
 };
