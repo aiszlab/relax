@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.4.6
+
+### Patch Changes
+
+- refactor apis logic
+- Updated dependencies
+  - @aiszlab/relax@1.4.6
+
 ## 1.4.5
 
 ### Patch Changes
