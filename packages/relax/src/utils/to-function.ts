@@ -3,7 +3,7 @@ import type { AnyFunction } from "../types";
 
 type Functionable<T> = T extends AnyFunction ? T : T extends Function ? T : () => T;
 
-export const toFunction = <T>(value: unknown) => {
+export const toFunction = <T>(value: unknown): Functionable<T> => {
   if (isFunction(value)) {
     return value as Functionable<T>;
   }
