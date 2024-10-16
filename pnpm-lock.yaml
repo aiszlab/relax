@@ -50,7 +50,7 @@ importers:
         version: 15.3.0(rollup@4.24.0)
       '@rollup/plugin-typescript':
         specifier: ^12.1.0
-        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.2)
+        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.3)
       '@types/react':
         specifier: ^18.3.11
         version: 18.3.11
@@ -96,7 +96,7 @@ importers:
         version: 15.3.0(rollup@4.24.0)
       '@rollup/plugin-typescript':
         specifier: ^12.1.0
-        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.2)
+        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.3)
       '@types/react':
         specifier: ^18.3.11
         version: 18.3.11
@@ -148,7 +148,7 @@ importers:
         version: 15.3.0(rollup@4.24.0)
       '@rollup/plugin-typescript':
         specifier: ^12.1.0
-        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.2)
+        version: 12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.3)
       '@testing-library/react':
         specifier: ^16.0.1
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -180,8 +180,8 @@ importers:
         specifier: ^4.24.0
         version: 4.24.0
       typescript:
-        specifier: 5.6.2
-        version: 5.6.2
+        specifier: 5.6.3
+        version: 5.6.3
 
   packages/wasp:
     dependencies:
@@ -202,8 +202,8 @@ importers:
         version: 5.4.8(@types/node@22.7.4)
     devDependencies:
       typescript:
-        specifier: 5.6.2
-        version: 5.6.2
+        specifier: 5.6.3
+        version: 5.6.3
 
 packages:
 
@@ -2985,8 +2985,8 @@ packages:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
 
-  typescript@5.6.2:
-    resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
+  typescript@5.6.3:
+    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -4655,11 +4655,11 @@ snapshots:
     optionalDependencies:
       rollup: 4.24.0
 
-  '@rollup/plugin-typescript@12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.2)':
+  '@rollup/plugin-typescript@12.1.0(rollup@4.24.0)(tslib@2.7.0)(typescript@5.6.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       resolve: 1.22.8
-      typescript: 5.6.2
+      typescript: 5.6.3
     optionalDependencies:
       rollup: 4.24.0
       tslib: 2.7.0
@@ -6475,7 +6475,7 @@ snapshots:
 
   type-fest@0.21.3: {}
 
-  typescript@5.6.2: {}
+  typescript@5.6.3: {}
 
   undici-types@6.19.8: {}
 
