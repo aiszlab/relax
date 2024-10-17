@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.6
+
+### Patch Changes
+
+- refactor apis logic
+
 ## 1.4.5
 
 ### Patch Changes

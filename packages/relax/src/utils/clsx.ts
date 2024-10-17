@@ -1,22 +1,30 @@
 import { isArray } from "../is/is-array";
+import { isBoolean } from "../is/is-boolean";
 import { isNumber } from "../is/is-number";
 import { isString } from "../is/is-string";
 import { isVoid } from "../is/is-void";
 
-type Value = string | number | Record<string, boolean> | Value[] | null | undefined;
+type ClassNames =
+  | string
+  | number
+  | Record<string, boolean>
+  | ClassNames[]
+  | null
+  | undefined
+  | boolean;
 
-const toClassNames = (value: Value): string[] => {
-  if (isVoid(value)) return [];
+const toClassNames = (_classNames: ClassNames): string[] => {
+  if (isVoid(_classNames) || isBoolean(_classNames)) return [];
 
-  if (isString(value) || isNumber(value)) return [value.toString()];
+  if (isString(_classNames) || isNumber(_classNames)) return [_classNames.toString()];
 
-  if (isArray(value)) {
-    return value.reduce<string[]>((classNames, item) => {
+  if (isArray(_classNames)) {
+    return _classNames.reduce<string[]>((classNames, item) => {
       return classNames.concat(toClassNames(item));
     }, []);
   }
 
-  return Object.entries(value).reduce<string[]>((classNames, [className, isValid]) => {
+  return Object.entries(_classNames).reduce<string[]>((classNames, [className, isValid]) => {
     if (isValid) {
       classNames.push(className);
     }
@@ -24,4 +32,4 @@ const toClassNames = (value: Value): string[] => {
   }, []);
 };
 
-export const clsx = (...args: Value[]): string => toClassNames(args).join(" ");
+export const clsx = (..._classNames: ClassNames[]): string => toClassNames(_classNames).join(" ");

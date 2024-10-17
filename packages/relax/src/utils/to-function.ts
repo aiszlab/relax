@@ -1,11 +1,12 @@
 import { isFunction } from "../is/is-function";
+import type { AnyFunction } from "../types";
 
-export const toFunction = <T extends Function>(value: unknown): T => {
-  const _isFunction = isFunction(value);
+type Functionable<T> = T extends AnyFunction ? T : T extends Function ? T : () => T;
 
-  if (_isFunction) {
-    return value as T;
+export const toFunction = <T>(value: unknown): Functionable<T> => {
+  if (isFunction(value)) {
+    return value as Functionable<T>;
   }
 
-  return (() => value) as unknown as T;
+  return (() => value) as unknown as Functionable<T>;
 };
