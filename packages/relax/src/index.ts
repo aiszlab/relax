@@ -85,3 +85,4 @@ export { last } from "./utils/last";
 export { merge } from "./utils/merge";
 export { max } from "./utils/max";
 export { min } from "./utils/min";
+export { load } from "./utils/load";

@@ -25,7 +25,7 @@ const OUTPUS = [
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: ["src/avatar/index", "src/color/index", "src/crypto/index", "src/path/index"],
+  input: ["src/avatar", "src/color", "src/crypto", "src/path", "src/gtag"],
 
   output: OUTPUS.map((_output) => ({
     ..._output,
