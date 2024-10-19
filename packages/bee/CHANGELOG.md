@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.4.7
+
+### Patch Changes
+
+- `fuzzy` convert color switch into override function
+- Updated dependencies
+  - @aiszlab/relax@1.4.7
+
 ## 1.4.6
 
 ### Patch Changes

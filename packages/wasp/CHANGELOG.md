@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.4.7
+
+### Patch Changes
+
+- `fuzzy` convert color switch into override function
+
 ## 1.4.6
 
 ### Patch Changes
