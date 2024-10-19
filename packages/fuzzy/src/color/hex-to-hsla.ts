@@ -1,11 +1,14 @@
-import { fromHex } from "./from-hex";
+import { hexToRgba } from "./hex-to-rgba";
 
 /**
  * @description
  * hex color convert to hsla color
  */
-export const hexToHsla = (input: string, alpha?: number) => {
-  const { r: _r, g: _g, b: _b, a: _alpha } = fromHex(input);
+function hexToHsla(input: string, alpha?: number): [number, number, number, number];
+function hexToHsla(input: string, alpha: number | undefined, styled: true): string;
+
+function hexToHsla(input: string, alpha: number | undefined, styled?: true) {
+  const { 0: _r, 1: _g, 2: _b, 3: _alpha } = hexToRgba(input, alpha);
 
   const r = _r / 255;
   const g = _g / 255;
@@ -42,5 +45,13 @@ export const hexToHsla = (input: string, alpha?: number) => {
     s = delta / (2 - max - min);
   }
 
-  return [h, s * 100, l * 100, alpha ?? _alpha ?? 1];
-};
+  const _hsla = [h, s * 100, l * 100, _alpha];
+
+  if (!!styled) {
+    return `hsla(${_hsla.join(",")})`;
+  }
+
+  return _hsla;
+}
+
+export { hexToHsla };

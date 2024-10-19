@@ -1,10 +1,48 @@
-import { fromHex } from "./from-hex";
+import { toArray } from "@aiszlab/relax";
+import { isHex } from "./is-hex";
 
 /**
  * @description
  * hex color convert to rgba color
  */
-export const hexToRgba = (input: string, alpha?: number) => {
-  const { r, g, b, a: _alpha } = fromHex(input);
-  return `rgba(${r}, ${g}, ${b}, ${alpha ?? _alpha ?? 1})`;
-};
+function hexToRgba(input: string, alpha?: number): [number, number, number, number];
+function hexToRgba(input: string, alpha: number | undefined, styled: true): string;
+function hexToRgba(input: string, alpha: number | undefined, styled?: true) {
+  if (!isHex(input)) {
+    throw new Error("Invalid hex color");
+  }
+
+  // exclude '#': charCode = 35
+  const _hex = toArray(input.slice(input.charCodeAt(0) === 35 ? 1 : 0), { separator: "" });
+
+  // using shortcut hex
+  // like "#fff", to "#ffffff"
+  if ([3, 5].includes(_hex.length)) {
+    const shortcuts = _hex.splice(0, 3);
+
+    _hex.unshift(
+      ...shortcuts.reduce<string[]>((prev, _item) => {
+        prev.push(_item, _item);
+        return prev;
+      }, []),
+    );
+  }
+
+  const hex = _hex.join("");
+  const _alpha = hex.slice(6, 8) || "ff";
+
+  const _rgba = [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+    alpha ?? Number((parseInt(_alpha, 16) / 255).toFixed(2)),
+  ] as const;
+
+  if (!!styled) {
+    return `rgba(${_rgba.join(",")})`;
+  }
+
+  return _rgba;
+}
+
+export { hexToRgba };
