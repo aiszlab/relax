@@ -5,9 +5,9 @@ import { hexToRgba } from "./hex-to-rgba";
  * hex color convert to hsla color
  */
 function hexToHsla(input: string, alpha?: number): [number, number, number, number];
-function hexToHsla(input: string, alpha: number | undefined, styled: true): string;
+function hexToHsla(input: string, alpha: number | undefined, use: "style"): string;
 
-function hexToHsla(input: string, alpha: number | undefined, styled?: true) {
+function hexToHsla(input: string, alpha: number | undefined, use?: "style") {
   const { 0: _r, 1: _g, 2: _b, 3: _alpha } = hexToRgba(input, alpha);
 
   const r = _r / 255;
@@ -47,7 +47,7 @@ function hexToHsla(input: string, alpha: number | undefined, styled?: true) {
 
   const _hsla = [h, s * 100, l * 100, _alpha];
 
-  if (!!styled) {
+  if (use === "style") {
     return `hsla(${_hsla.join(",")})`;
   }
 

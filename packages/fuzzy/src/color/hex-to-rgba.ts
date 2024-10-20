@@ -6,8 +6,8 @@ import { isHex } from "./is-hex";
  * hex color convert to rgba color
  */
 function hexToRgba(input: string, alpha?: number): [number, number, number, number];
-function hexToRgba(input: string, alpha: number | undefined, styled: true): string;
-function hexToRgba(input: string, alpha: number | undefined, styled?: true) {
+function hexToRgba(input: string, alpha: number | undefined, use: "style"): string;
+function hexToRgba(input: string, alpha: number | undefined, use?: "style") {
   if (!isHex(input)) {
     throw new Error("Invalid hex color");
   }
@@ -38,7 +38,7 @@ function hexToRgba(input: string, alpha: number | undefined, styled?: true) {
     alpha ?? Number((parseInt(_alpha, 16) / 255).toFixed(2)),
   ] as const;
 
-  if (!!styled) {
+  if (use === "style") {
     return `rgba(${_rgba.join(",")})`;
   }
 
