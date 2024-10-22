@@ -25,7 +25,7 @@ const OUTPUS = [
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: ["src/index", "src/router", "src/storage"],
+  input: ["src/index", "src/router"],
 
   output: OUTPUS.map((_output) => ({
     ..._output,
