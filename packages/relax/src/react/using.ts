@@ -6,6 +6,11 @@ import { toFunction } from "../utils/to-function";
 type SetState<T> = (state: T | ((previous: T) => T)) => void;
 type Initializer<T> = (setState: SetState<T>) => T;
 
+type UseStore<T> = {
+  (): T;
+  get state(): T;
+};
+
 /**
  * @description
  * use closure make memoize
@@ -45,10 +50,23 @@ const initialize = <T>(initializer: Initializer<T>) => {
   };
 };
 
-const using = <T>(initializer: Initializer<T>): (() => T) => {
+const using = <T>(initializer: Initializer<T>): UseStore<T> => {
   const { subscribe, initialState, state } = initialize(initializer);
-  // return as hooks
-  return () => useSyncExternalStore(subscribe, state, initialState);
+
+  // create like hooks
+  const useStore = () => useSyncExternalStore(subscribe, state, initialState);
+
+  Object.defineProperty(useStore, "state", {
+    get() {
+      return state();
+    },
+    set() {
+      console.warn("`useStore`.`state` is readonly property!");
+      return Reflect.get(useStore, "state");
+    },
+  });
+
+  return useStore as UseStore<T>;
 };
 
 export { using };
