@@ -2,25 +2,17 @@ import React, { createElement, lazy, type ReactNode, StrictMode, Suspense, type 
 import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
 import { type RouteObject } from "react-router-dom";
-import { type Store, type UnknownAction } from "redux";
 import Application, { type Props as ApplicationProps } from "./application";
 
 const Router = lazy(() => import("./libs/router"));
-const Storage = lazy(() => import("./libs/storage"));
 
 interface Props {
   selectors: string | HTMLElement;
   render?: FC<ApplicationProps>;
   routes?: RouteObject[] | false;
-  store?: Store<unknown, UnknownAction, unknown> | false;
 }
 
-const bootstrap = async ({
-  selectors,
-  render = Application,
-  routes = false,
-  store = false,
-}: Props) => {
+const bootstrap = async ({ selectors, render = Application, routes = false }: Props) => {
   const container = isHTMLElement(selectors) ? selectors : document.querySelector(selectors);
   if (!container) {
     throw new Error("Root container not found, by `document.querySelector(selectors)`");
@@ -39,16 +31,6 @@ const bootstrap = async ({
 
   // with application
   children = createElement(render, null, children);
-
-  // with storage
-  if (store) {
-    children = (
-      <Suspense fallback={null}>
-        <Storage store={store}>{children}</Storage>
-      </Suspense>
-    );
-  }
-
   createRoot(container).render(<StrictMode>{children}</StrictMode>);
 };
 

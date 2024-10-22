@@ -14,7 +14,7 @@ export { useDefault } from "./hooks/use-default";
 export { useScrollLocker } from "./hooks/use-scroll-locker";
 export { useForceUpdate } from "./hooks/use-force-update";
 export { useScrollable } from "./hooks/use-scrollable";
-export { useRefs } from "./hooks/use-refs";
+export { useComposeRef } from "./hooks/use-composed-ref";
 export { useTogglable } from "./hooks/use-togglable";
 export { useEvent } from "./hooks/use-event";
 export { useUpdateEffect } from "./hooks/use-update-effect";
