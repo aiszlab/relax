@@ -1,5 +1,11 @@
 # @aiszlab/bee
 
+## 1.5.0
+
+### Minor Changes
+
+- 20cc704: refactor
+
 ## 1.4.7
 
 ### Patch Changes
