@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from "react";
-import type { Nullable, State } from "../types";
+import type { Nullable } from "../types";
 import { chain } from "../utils/chain";
 import { toFunction } from "../utils/to-function";
 
-export type Initializer<T> = (setState: (_state: State<T>) => void) => T;
+type SetState<T> = (state: T | ((previous: T) => T)) => void;
+type Initializer<T> = (setState: SetState<T>) => T;
 
 /**
  * @description
@@ -19,7 +20,7 @@ const initialize = <T>(initializer: Initializer<T>) => {
     {
       set: (target, key, value: T) => {
         Reflect.set(target, key, value);
-        chain(...listeners);
+        chain(...listeners)();
         return Reflect.get(target, key);
       },
     },
@@ -30,8 +31,8 @@ const initialize = <T>(initializer: Initializer<T>) => {
     return () => listeners.delete(listener);
   };
 
-  const setState = (_state: State<T>) => {
-    store.state = toFunction(_state)();
+  const setState: SetState<T> = (previous) => {
+    store.state = toFunction(previous)(store.state ?? initialState);
   };
 
   // initialize state
@@ -44,9 +45,10 @@ const initialize = <T>(initializer: Initializer<T>) => {
   };
 };
 
-const using = <T>(initializer: Initializer<T>) => {
+const using = <T>(initializer: Initializer<T>): (() => T) => {
   const { subscribe, initialState, state } = initialize(initializer);
-  return useSyncExternalStore(subscribe, state, initialState);
+  // return as hooks
+  return () => useSyncExternalStore(subscribe, state, initialState);
 };
 
 export { using };
