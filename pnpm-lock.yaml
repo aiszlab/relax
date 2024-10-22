@@ -18,8 +18,8 @@ importers:
         specifier: '*'
         version: link:../relax
       '@babel/runtime':
-        specifier: ^7.25.6
-        version: 7.25.6
+        specifier: ^7.25.7
+        version: 7.25.7
       react-router-dom:
         specifier: ^6.26.2
         version: 6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -67,8 +67,8 @@ importers:
         specifier: '*'
         version: link:../relax
       '@babel/runtime':
-        specifier: ^7.25.6
-        version: 7.25.6
+        specifier: ^7.25.7
+        version: 7.25.7
     devDependencies:
       '@babel/plugin-transform-runtime':
         specifier: ^7.25.4
@@ -107,8 +107,8 @@ importers:
   packages/relax:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.25.6
-        version: 7.25.6
+        specifier: ^7.25.7
+        version: 7.25.7
       react-is:
         specifier: ^18.3.1
         version: 18.3.1
@@ -923,10 +923,6 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
-
-  '@babel/runtime@7.25.6':
-    resolution: {integrity: sha512-VBj9MYyDb9tuLq7yzqjgzt6Q+IBQLrGZfdjOekyEirZPHxXWoTSGUTMrpsfi58Up73d13NfYLv8HT9vmznjzhQ==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.25.7':
     resolution: {integrity: sha512-FjoyLe754PMiYsFaN5C94ttGiOmBNYTf6pLr4xXHAT5uctHb092PBszndLDR5XA/jghQvn4n7JMHl7dmTgbm9w==}
@@ -4092,10 +4088,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/runtime@7.25.6':
-    dependencies:
-      regenerator-runtime: 0.14.1
-
   '@babel/runtime@7.25.7':
     dependencies:
       regenerator-runtime: 0.14.1
@@ -4705,7 +4697,7 @@ snapshots:
 
   '@testing-library/react@16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.25.7
       '@testing-library/dom': 10.4.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -6172,7 +6164,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.25.7
 
   regexpu-core@6.1.1:
     dependencies:
