@@ -1,14 +1,14 @@
-import { type DragEvent } from "react";
+import { type MouseEvent } from "react";
 import { useUpdateState } from "./use-update-state";
 import { useEvent } from "./use-event";
 
 export type UsingDrag = {
   /** Optional callback invoked upon drag end. */
-  onDragEnd?: (event: DragEvent<HTMLDivElement>, state: DragState) => void;
+  onDragEnd?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
   /** Optional callback invoked upon drag movement. */
-  onDragMove?: (event: DragEvent<HTMLDivElement>, state: DragState) => void;
+  onDragMove?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
   /** Optional callback invoked upon drag start. */
-  onDragStart?: (event: DragEvent<HTMLDivElement>, state: DragState) => void;
+  onDragStart?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
 };
 
 export type DragState = {
@@ -26,29 +26,47 @@ export type DragState = {
 
   /**
    * @description
+   * moved x
+   */
+  movementX: number;
+
+  /**
+   * @description
+   * moved y
+   */
+  movementY: number;
+
+  /**
+   * @description
    * offset X
    */
-  offsetX?: number;
+  offsetX: number;
 
   /**
    * @description
    * offset Y
    */
-  offsetY?: number;
+  offsetY: number;
 
   /**
    * @description
    * Whether a drag is currently in progress.
    */
   isDragging: boolean;
+
+  /**
+   * @description
+   * isDragged
+   */
+  isDragged: boolean;
 };
 
 export type UsedDrag = [
   DragState,
   {
-    onDragEnd: (event: DragEvent<HTMLDivElement>) => void;
-    onDragMove: (event: DragEvent<HTMLDivElement>) => void;
-    onDragStart: (event: DragEvent<HTMLDivElement>) => void;
+    onDragEnd: (event: MouseEvent<HTMLDivElement>) => void;
+    onDragMove: (event: MouseEvent<HTMLDivElement>) => void;
+    onDragStart: (event: MouseEvent<HTMLDivElement>) => void;
   },
 ];
 
@@ -56,30 +74,36 @@ export type UsedDrag = [
  * @description
  * Hook for dragging
  */
-export default function useDrag({
+const useDrag = ({
   onDragEnd: _onDragEnd,
   onDragMove: _onDragMove,
   onDragStart: _onDragStart,
-}: UsingDrag | undefined = {}): UsedDrag {
+}: UsingDrag | undefined = {}): UsedDrag => {
   const [dragState, setDragState] = useUpdateState<DragState>({
     x: 0,
     y: 0,
+    movementX: 0,
+    movementY: 0,
     offsetX: 0,
     offsetY: 0,
     isDragging: false,
+    isDragged: false,
   });
 
-  const onDragStart = useEvent((event: DragEvent<HTMLDivElement>) => {
+  const onDragStart = useEvent((event: MouseEvent<HTMLDivElement>) => {
     event.persist();
 
     setDragState(
       () => {
         return {
           isDragging: true,
-          offsetX: 0,
-          offsetY: 0,
+          isDragged: true,
           x: event.clientX,
           y: event.clientY,
+          movementX: 0,
+          movementY: 0,
+          offsetX: event.nativeEvent.layerX,
+          offsetY: event.nativeEvent.layerY,
         };
       },
       _onDragStart &&
@@ -89,19 +113,24 @@ export default function useDrag({
     );
   });
 
-  const onDragMove = useEvent((event: DragEvent<HTMLDivElement>) => {
+  const onDragMove = useEvent((event: MouseEvent<HTMLDivElement>) => {
     event.persist();
 
     setDragState(
       (_state) => {
         if (!_state.isDragging) return _state;
 
-        const { x, y } = _state;
+        const { x, y, offsetX, offsetY } = _state;
 
         return {
-          ..._state,
-          dx: event.clientX - x,
-          dy: event.clientY - y,
+          isDragging: true,
+          isDragged: true,
+          x,
+          y,
+          offsetX,
+          offsetY,
+          movementX: event.clientX - x,
+          movementY: event.clientY - y,
         };
       },
       _onDragMove &&
@@ -112,11 +141,20 @@ export default function useDrag({
     );
   });
 
-  const onDragEnd = useEvent((event: DragEvent<HTMLDivElement>) => {
+  const onDragEnd = useEvent((event: MouseEvent<HTMLDivElement>) => {
     event.persist();
 
     setDragState(
-      (_state) => ({ ..._state, isDragging: false }),
+      (_state) => ({
+        isDragging: false,
+        isDragged: true,
+        x: event.clientX - _state.offsetX,
+        y: event.clientY - _state.offsetY,
+        movementX: 0,
+        movementY: 0,
+        offsetX: 0,
+        offsetY: 0,
+      }),
       _onDragEnd &&
         ((_state) => {
           _onDragEnd(event, { ..._state });
@@ -132,4 +170,6 @@ export default function useDrag({
       onDragStart,
     },
   ];
-}
+};
+
+export { useDrag };

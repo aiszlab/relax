@@ -37,6 +37,7 @@ export { useInfiniteScroll } from "./hooks/use-infinite-scroll";
 export { useReactive } from "./hooks/use-reactive";
 export { useParentSize } from "./hooks/use-parent-size";
 export { useScreenSize } from "./hooks/use-screen-size";
+export { useDrag } from "./hooks/use-drag";
 
 /**
  * @description
