@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/bee",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "react app",
   "type": "module",
   "exports": {
