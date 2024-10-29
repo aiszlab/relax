@@ -22,7 +22,6 @@ export const useRaf = <T extends AnyFunction<any[], void>>(
   { timely }: UsingRaf = {},
 ): T => {
   const timed = useRef<number | null>(null);
-  const isTimed = useRef(false);
 
   useUnmount(() => {
     if (!timed.current) return;
@@ -30,8 +29,7 @@ export const useRaf = <T extends AnyFunction<any[], void>>(
   });
 
   const callback = useEvent((...args) => {
-    if (isTimed.current) return;
-    isTimed.current = true;
+    if (timed.current) return;
 
     if (timely) {
       _callback(...args);
@@ -39,7 +37,7 @@ export const useRaf = <T extends AnyFunction<any[], void>>(
     }
 
     timed.current = requestAnimationFrame(() => {
-      isTimed.current = false;
+      timed.current = null;
       _callback(...args);
     });
   });
