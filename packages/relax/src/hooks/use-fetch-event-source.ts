@@ -3,13 +3,17 @@ import { useMounted } from "./use-mounted";
 
 /**
  * @description
- * event source
+ * fetch event source
  */
-const useEventSource = () => {
+const useEventSource = (url: string) => {
   const eventSourceRef = useRef<EventSource | null>();
 
   useMounted(() => {
-    eventSourceRef.current = new EventSource("");
+    const _eventSource = (eventSourceRef.current = new EventSource(url));
+
+    return () => {
+      _eventSource.close();
+    };
   });
 };
 
