@@ -48,9 +48,6 @@ export interface FetchEventSourceInit extends RequestInit {
    * automatically when the document becomes visible again.
    */
   openWhenHidden?: boolean;
-
-  /** The Fetch function to use. Defaults to window.fetch */
-  fetch?: typeof fetch;
 }
 
 export function fetchEventSource(
@@ -63,7 +60,6 @@ export function fetchEventSource(
     onclose,
     onerror,
     openWhenHidden,
-    fetch: inputFetch,
     ...rest
   }: FetchEventSourceInit,
 ) {
@@ -100,8 +96,8 @@ export function fetchEventSource(
       resolve(); // don't waste time constructing/logging errors
     });
 
-    const fetch = inputFetch ?? window.fetch;
     const onopen = inputOnOpen ?? defaultOnOpen;
+
     async function create() {
       curRequestController = new AbortController();
       try {
