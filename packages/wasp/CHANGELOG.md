@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 1.5.5
+
+### Patch Changes
+
+- `relax` add `fetchEventSource` api
+
 ## 1.5.0
 
 ### Minor Changes

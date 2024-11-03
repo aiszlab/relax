@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.5.5
+
+### Patch Changes
+
+- `relax` add `fetchEventSource` api
+- Updated dependencies
+  - @aiszlab/relax@1.5.5
+
 ## 1.5.0
 
 ### Minor Changes
