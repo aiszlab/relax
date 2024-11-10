@@ -1,5 +1,6 @@
 export type { Nullable } from "./nullable";
 export type { Partialable } from "./partialable";
+export type { PartialTuple } from "./partial-tuple";
 export type { Voidable } from "./voidable";
 export type { RequiredIn } from "./required-in";
 export type { ThenableEffectCallback } from "./thenable-effect-callback";

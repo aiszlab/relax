@@ -15,7 +15,7 @@ importers:
   packages/bee:
     dependencies:
       '@aiszlab/relax':
-        specifier: ^1.5.6
+        specifier: '*'
         version: link:../relax
       '@babel/runtime':
         specifier: ^7.26.0
@@ -64,7 +64,7 @@ importers:
   packages/fuzzy:
     dependencies:
       '@aiszlab/relax':
-        specifier: ^1.5.6
+        specifier: '*'
         version: link:../relax
       '@babel/runtime':
         specifier: ^7.26.0
