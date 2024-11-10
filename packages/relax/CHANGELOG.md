@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.5.7
+
+### Patch Changes
+
+- add `PartialTuple` ts type
+
 ## 1.5.5
 
 ### Patch Changes

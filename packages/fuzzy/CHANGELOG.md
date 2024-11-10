@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.5.7
+
+### Patch Changes
+
+- add `PartialTuple` ts type
+- Updated dependencies
+  - @aiszlab/relax@1.5.7
+
 ## 1.5.5
 
 ### Patch Changes
