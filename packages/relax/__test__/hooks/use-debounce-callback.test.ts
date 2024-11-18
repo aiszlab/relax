@@ -28,7 +28,7 @@ describe("`useDebounceCallback`", () => {
   it("args should be changed by pipe", () => {
     jest.useFakeTimers();
 
-    const _cb = jest.fn<(args: [number, number]) => void>();
+    const _cb = jest.fn<(args: readonly [number, number]) => void>();
 
     const hook = renderHook(() =>
       useDebounceCallback(
