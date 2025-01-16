@@ -29,7 +29,7 @@
   "dependencies": {
     "@aiszlab/relax": "*",
     "@babel/runtime": "^7.26.0",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^7.1.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.25.9",
