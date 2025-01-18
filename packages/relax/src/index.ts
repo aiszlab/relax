@@ -39,6 +39,7 @@ export { useParentSize } from "./hooks/use-parent-size";
 export { useScreenSize } from "./hooks/use-screen-size";
 export { useDrag } from "./hooks/use-drag";
 export { useEventSource } from "./hooks/use-event-source";
+export { useResize } from "./hooks/use-resize";
 
 /**
  * @description

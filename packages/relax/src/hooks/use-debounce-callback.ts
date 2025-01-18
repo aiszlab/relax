@@ -45,10 +45,10 @@ const useDebouncer = <T extends AnyFunction, R>(
  * @example
  * 1000
  */
-function useDebounceCallback<T extends AnyFunction>(callback: T, wait: number): Debounced<T>;
+function useDebounceCallback<T extends AnyFunction>(callback: T, wait?: number): Debounced<T>;
 function useDebounceCallback<T extends AnyFunction, R = unknown>(
   debouncer: Debouncer<T, R>,
-  wait: number,
+  wait?: number,
 ): Debounced<T>;
 function useDebounceCallback<T extends AnyFunction, R>(
   debouncer: T | Debouncer<T, R>,

@@ -45,10 +45,10 @@ const useThrottler = <T extends AnyFunction, R>(
  * @example
  * 1000
  */
-function useThrottleCallback<T extends AnyFunction>(callback: T, wait: number): Throttled<T>;
+function useThrottleCallback<T extends AnyFunction>(callback: T, wait?: number): Throttled<T>;
 function useThrottleCallback<T extends AnyFunction, R>(
   throttler: Throttler<T, R>,
-  wait: number,
+  wait?: number,
 ): Throttled<T>;
 function useThrottleCallback<T extends AnyFunction, R>(
   throttler: T | Throttler<T, R>,
