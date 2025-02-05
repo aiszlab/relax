@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.5.8
+
+### Patch Changes
+
+- update mountRef to accept voidable refable parameter
+- Updated dependencies
+  - @aiszlab/relax@1.5.8
+
 ## 1.5.7
 
 ### Patch Changes
