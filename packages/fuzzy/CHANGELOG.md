@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 1.5.9
+
+### Patch Changes
+
+- feat: enhance useDrag and useDraggable hooks for improved event handling and type safety
+- Updated dependencies
+  - @aiszlab/relax@1.5.9
+
 ## 1.5.8
 
 ### Patch Changes
