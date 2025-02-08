@@ -1,14 +1,20 @@
-import { type MouseEvent } from "react";
 import { useUpdateState } from "./use-update-state";
 import { useEvent } from "./use-event";
 
+interface Position {
+  x: number;
+  y: number;
+  offsetX: number;
+  offsetY: number;
+}
+
 export type UsingDrag = {
   /** Optional callback invoked upon drag end. */
-  onDragEnd?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
+  onDragEnd?: (event: UIEvent, state: DragState) => void;
   /** Optional callback invoked upon drag movement. */
-  onDragMove?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
+  onDragMove?: (event: UIEvent, state: DragState) => void;
   /** Optional callback invoked upon drag start. */
-  onDragStart?: (event: MouseEvent<HTMLDivElement>, state: DragState) => void;
+  onDragStart?: (event: UIEvent, state: DragState) => void;
 };
 
 export type DragState = {
@@ -64,11 +70,41 @@ export type DragState = {
 export type UsedDrag = [
   DragState,
   {
-    onDragEnd: (event: MouseEvent<HTMLDivElement>) => void;
-    onDragMove: (event: MouseEvent<HTMLDivElement>) => void;
-    onDragStart: (event: MouseEvent<HTMLDivElement>) => void;
+    onDragEnd: (event: UIEvent) => void;
+    onDragMove: (event: UIEvent) => void;
+    onDragStart: (event: UIEvent) => void;
   },
 ];
+
+/**
+ * @description convert any event to position
+ */
+const toPosition = (event: UIEvent): Position => {
+  if (event instanceof MouseEvent) {
+    return {
+      x: event.pageX,
+      y: event.pageY,
+      offsetX: event.offsetX,
+      offsetY: event.offsetY,
+    };
+  }
+
+  if (event instanceof TouchEvent && event.touches.length === 1) {
+    return {
+      x: event.touches.item(0)?.pageX ?? 0,
+      y: event.touches.item(0)?.pageY ?? 0,
+      offsetX: 0,
+      offsetY: 0,
+    };
+  }
+
+  return {
+    x: 0,
+    y: 0,
+    offsetX: 0,
+    offsetY: 0,
+  };
+};
 
 /**
  * @description
@@ -90,20 +126,20 @@ const useDrag = ({
     isDragged: false,
   });
 
-  const onDragStart = useEvent((event: MouseEvent<HTMLDivElement>) => {
-    event.persist();
+  const onDragStart = useEvent((event: UIEvent) => {
+    const { x, y, offsetX, offsetY } = toPosition(event);
 
     setDragState(
       () => {
         return {
           isDragging: true,
           isDragged: true,
-          x: event.clientX,
-          y: event.clientY,
+          x,
+          y,
           movementX: 0,
           movementY: 0,
-          offsetX: event.nativeEvent.layerX,
-          offsetY: event.nativeEvent.layerY,
+          offsetX,
+          offsetY,
         };
       },
       _onDragStart &&
@@ -113,8 +149,8 @@ const useDrag = ({
     );
   });
 
-  const onDragMove = useEvent((event: MouseEvent<HTMLDivElement>) => {
-    event.persist();
+  const onDragMove = useEvent((event: UIEvent) => {
+    const position = toPosition(event);
 
     setDragState(
       (_state) => {
@@ -129,8 +165,8 @@ const useDrag = ({
           y,
           offsetX,
           offsetY,
-          movementX: event.clientX - x,
-          movementY: event.clientY - y,
+          movementX: position.x - x,
+          movementY: position.y - y,
         };
       },
       _onDragMove &&
@@ -141,15 +177,15 @@ const useDrag = ({
     );
   });
 
-  const onDragEnd = useEvent((event: MouseEvent<HTMLDivElement>) => {
-    event.persist();
+  const onDragEnd = useEvent((event: UIEvent) => {
+    const { x, y } = toPosition(event);
 
     setDragState(
       (_state) => ({
         isDragging: false,
         isDragged: true,
-        x: event.clientX - _state.offsetX,
-        y: event.clientY - _state.offsetY,
+        x: x - _state.offsetX,
+        y: y - _state.offsetY,
         movementX: 0,
         movementY: 0,
         offsetX: 0,

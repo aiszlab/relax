@@ -40,6 +40,7 @@ export { useScreenSize } from "./hooks/use-screen-size";
 export { useDrag } from "./hooks/use-drag";
 export { useEventSource } from "./hooks/use-event-source";
 export { useResize } from "./hooks/use-resize";
+export { useDraggable } from "./hooks/use-draggable";
 
 /**
  * @description

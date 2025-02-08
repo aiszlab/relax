@@ -13,11 +13,11 @@ type UsedUpdateState<S> = [S, StateSetter<S>];
 function useUpdateState<S = undefined>(): UsedUpdateState<S | undefined>;
 function useUpdateState<S>(initialState: S): UsedUpdateState<S>;
 function useUpdateState<S>(initialState?: S) {
-  const [state, setState] = useState(initialState);
+  const [state, _setState] = useState(initialState);
   const callbackRef = useRef<Callback<S | undefined> | null>(null);
 
-  const setter = useCallback<StateSetter<S | undefined>>((state, callback) => {
-    setState(state);
+  const setState = useCallback<StateSetter<S | undefined>>((state, callback) => {
+    _setState(state);
     callbackRef.current = callback ?? null;
   }, []);
 
@@ -30,7 +30,7 @@ function useUpdateState<S>(initialState?: S) {
     callbackRef.current = null;
   }, [state]);
 
-  return [state, setter];
+  return [state, setState];
 }
 
 export { useUpdateState };
