@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useDrag, type UsingDrag } from "./use-drag";
 import { useMounted } from "./use-mounted";
 
-export const useDraggable = <T extends HTMLElement = HTMLElement>(using: UsingDrag) => {
+export const useDraggable = <T extends HTMLElement = HTMLElement>(using?: UsingDrag) => {
   const [dragState, { onDragStart, onDragEnd, onDragMove }] = useDrag(using);
   const draggableRef = useRef<T>(null);
   const { isDragging } = dragState;

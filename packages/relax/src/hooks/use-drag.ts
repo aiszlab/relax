@@ -114,7 +114,7 @@ const useDrag = ({
   onDragEnd: _onDragEnd,
   onDragMove: _onDragMove,
   onDragStart: _onDragStart,
-}: UsingDrag | undefined = {}): UsedDrag => {
+}: UsingDrag = {}): UsedDrag => {
   const [dragState, setDragState] = useUpdateState<DragState>({
     x: 0,
     y: 0,
