@@ -10,11 +10,11 @@ interface Position {
 
 export type UsingDrag = {
   /** Optional callback invoked upon drag end. */
-  onDragEnd?: (event: UIEvent, state: DragState) => void;
+  onDragEnd?: (state: DragState) => void;
   /** Optional callback invoked upon drag movement. */
-  onDragMove?: (event: UIEvent, state: DragState) => void;
+  onDragMove?: (state: DragState) => void;
   /** Optional callback invoked upon drag start. */
-  onDragStart?: (event: UIEvent, state: DragState) => void;
+  onDragStart?: (state: DragState) => void;
 };
 
 export type DragState = {
@@ -144,7 +144,7 @@ const useDrag = ({
       },
       _onDragStart &&
         ((_state) => {
-          _onDragStart(event, { ..._state });
+          _onDragStart({ ..._state });
         }),
     );
   });
@@ -172,7 +172,7 @@ const useDrag = ({
       _onDragMove &&
         ((_state) => {
           if (!_state.isDragging) return;
-          _onDragMove(event, { ..._state });
+          _onDragMove({ ..._state });
         }),
     );
   });
@@ -193,7 +193,7 @@ const useDrag = ({
       }),
       _onDragEnd &&
         ((_state) => {
-          _onDragEnd(event, { ..._state });
+          _onDragEnd({ ..._state });
         }),
     );
   });
