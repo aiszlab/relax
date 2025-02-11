@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 1.5.10
+
+### Patch Changes
+
+- feat: simplify drag event callbacks by removing event parameter and update useDraggable to accept UsingDrag
+- Updated dependencies
+  - @aiszlab/relax@1.5.10
+
 ## 1.5.9
 
 ### Patch Changes
