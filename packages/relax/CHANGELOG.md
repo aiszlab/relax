@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 1.5.11
+
+### Patch Changes
+
+- feat: integrate Tailwind CSS with Vite configuration and update package dependencies
+
 ## 1.5.10
 
 ### Patch Changes
