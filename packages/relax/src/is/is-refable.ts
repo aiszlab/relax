@@ -1,10 +1,14 @@
-import { type ReactNode, isValidElement } from "react";
+import { type ReactElement, type ReactNode, isValidElement } from "react";
 import { isMemo, isFragment } from "react-is";
+import type { Refable } from "../react/mount-ref";
+import type { Nullable } from "../types";
 
 /**
  * @description
  */
-export const isRefable = (node: ReactNode): boolean => {
+export const isRefable = <T>(
+  node: ReactNode,
+): node is ReactElement & { ref: Nullable<Refable<T>> } => {
   if (!isValidElement(node)) {
     return false;
   }
@@ -13,14 +17,14 @@ export const isRefable = (node: ReactNode): boolean => {
     return false;
   }
 
-  return _RefableElement(node);
+  return isElementRefable(node);
 };
 
 /**
  * @description
- * refable element
+ * check element refable
  */
-const _RefableElement = (element: any) => {
+const isElementRefable = (element: any) => {
   const type = isMemo(element) ? element.type.type : element.type;
 
   // Function component node
