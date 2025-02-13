@@ -8,10 +8,14 @@
   "exports": {
     "./env": "./types/env.d.ts",
     "./vite": {
-      "default": "./bin/vite.js",
-      "types": "./bin/vite.d.ts"
+      "types": "./bin/vite.d.ts",
+      "default": "./bin/vite.js"
     },
-    "./tailwind": "./plugins/tailwind.css"
+    "./tailwindcss": {
+      "style": "./plugins/tailwind.css",
+      "types": "./bin/tailwindcss.d.ts",
+      "default": "./bin/tailwindcss.js"
+    }
   },
   "scripts": {
     "dev": "tsc -w",
