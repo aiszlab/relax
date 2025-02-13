@@ -1,5 +1,12 @@
 # @aiszlab/wasp
 
+## 1.5.12
+
+### Patch Changes
+
+- 2baff46: feat: enhance isRefable function to support generics and improve type safety
+- a04f232: feat: add Tailwind CSS and Vite integration with command line interface
+
 ## 1.5.11
 
 ### Patch Changes

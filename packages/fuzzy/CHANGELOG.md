@@ -1,5 +1,15 @@
 # @aiszlab/fuzzy
 
+## 1.5.12
+
+### Patch Changes
+
+- 2baff46: feat: enhance isRefable function to support generics and improve type safety
+- a04f232: feat: add Tailwind CSS and Vite integration with command line interface
+- Updated dependencies [2baff46]
+- Updated dependencies [a04f232]
+  - @aiszlab/relax@1.5.12
+
 ## 1.5.11
 
 ### Patch Changes
