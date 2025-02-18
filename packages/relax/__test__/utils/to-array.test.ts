@@ -8,9 +8,9 @@ describe("`toArray` util", () => {
 
   it("separator usage", () => {
     expect(toArray("className style key")).toStrictEqual(["className style key"]);
-    expect(toArray("className style key", { separator: " " })).toStrictEqual(["className", "style", "key"]);
+    expect(toArray("className style key", " ")).toStrictEqual(["className", "style", "key"]);
 
-    expect(toArray("", { separator: "" })).toStrictEqual([]);
-    expect(toArray("className", { separator: "" })).toStrictEqual(["c", "l", "a", "s", "s", "N", "a", "m", "e"]);
+    expect(toArray("", "")).toStrictEqual([]);
+    expect(toArray("className", "")).toStrictEqual(["c", "l", "a", "s", "s", "N", "a", "m", "e"]);
   });
 });

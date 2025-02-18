@@ -1,13 +1,18 @@
 import { hexToRgba } from "./hex-to-rgba";
 
+type Hsla = readonly [number, number, number, number] & {
+  /**
+   * @override toString
+   * @description stringfy rgba color, like "hsla(12, 66, 8, 1)"
+   */
+  toString: () => string;
+};
+
 /**
  * @description
  * hex color convert to hsla color
  */
-function hexToHsla(input: string, alpha?: number): [number, number, number, number];
-function hexToHsla(input: string, alpha: number | undefined, use: "style"): string;
-
-function hexToHsla(input: string, alpha: number | undefined, use?: "style") {
+function hexToHsla(input: string, alpha?: number): Hsla {
   const { 0: _r, 1: _g, 2: _b, 3: _alpha } = hexToRgba(input, alpha);
 
   const r = _r / 255;
@@ -45,11 +50,11 @@ function hexToHsla(input: string, alpha: number | undefined, use?: "style") {
     s = delta / (2 - max - min);
   }
 
-  const _hsla = [h, s * 100, l * 100, _alpha];
+  const _hsla = [h, s * 100, l * 100, _alpha] as const;
 
-  if (use === "style") {
-    return `hsla(${_hsla.join(",")})`;
-  }
+  _hsla.toString = function () {
+    return `hsla(${this.join(",")})`;
+  };
 
   return _hsla;
 }
