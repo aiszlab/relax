@@ -6,7 +6,7 @@ type Rgba = readonly [number, number, number, number] & {
    * @override toString
    * @description stringify rgba color, like "rgba(255, 255, 255, 1)"
    */
-  toString: () => string;
+  toString(): string;
 };
 
 /**

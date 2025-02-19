@@ -5,7 +5,7 @@ type Hsla = readonly [number, number, number, number] & {
    * @override toString
    * @description stringify rgba color, like "hsla(12, 66, 8, 1)"
    */
-  toString: () => string;
+  toString(): string;
 };
 
 /**

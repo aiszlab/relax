@@ -1,7 +1,7 @@
 import React, { createElement, lazy, type ReactNode, StrictMode, Suspense, type FC } from "react";
 import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
-import { type RouteObject } from "react-router-dom";
+import { type RouteObject } from "react-router";
 import Application, { type Props as ApplicationProps } from "./application";
 
 const Router = lazy(() => import("./libs/router"));
