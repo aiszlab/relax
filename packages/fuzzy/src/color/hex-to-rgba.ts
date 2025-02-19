@@ -4,7 +4,7 @@ import { isHex } from "./is-hex";
 type Rgba = readonly [number, number, number, number] & {
   /**
    * @override toString
-   * @description stringfy rgba color, like "rgba(255, 255, 255, 1)"
+   * @description stringify rgba color, like "rgba(255, 255, 255, 1)"
    */
   toString: () => string;
 };

@@ -3,7 +3,7 @@ import { hexToRgba } from "./hex-to-rgba";
 type Hsla = readonly [number, number, number, number] & {
   /**
    * @override toString
-   * @description stringfy rgba color, like "hsla(12, 66, 8, 1)"
+   * @description stringify rgba color, like "hsla(12, 66, 8, 1)"
    */
   toString: () => string;
 };
