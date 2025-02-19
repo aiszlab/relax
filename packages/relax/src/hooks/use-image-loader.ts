@@ -16,7 +16,7 @@ interface Props {
  * image loader
  */
 export const useImageLoader = ({ src, crossOrigin, referrerPolicy = "no-referrer" }: Props) => {
-  const loader = useRef<Subscriber<void>>();
+  const loader = useRef<Subscriber<void>>(null);
   const [status, setStatus] = useState<Status>("none");
 
   useEffect(() => {

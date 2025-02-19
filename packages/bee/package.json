@@ -27,23 +27,23 @@
   "author": "tutu@fantufantu.com",
   "license": "MIT",
   "dependencies": {
-    "@aiszlab/relax": "*",
-    "@babel/runtime": "^7.26.0",
+    "@aiszlab/relax": "workspace:^",
+    "@babel/runtime": "^7.26.9",
     "react-router": "^7.2.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-react": "^7.25.9",
+    "@babel/plugin-transform-runtime": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
     "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "rollup": "^4.28.1"
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rollup": "^4.34.8"
   },
   "peerDependencies": {
     "react": "18",

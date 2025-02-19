@@ -2,6 +2,7 @@ import { type RefObject, useEffect, useRef } from "react";
 import { useEvent } from "./use-event";
 import { debounce } from "../utils/debounce";
 import { first } from "../utils/first";
+import type { Nullable } from "../types";
 
 type UsingInfiniteScroll = {
   /**
@@ -23,7 +24,10 @@ type UsingInfiniteScroll = {
   onLoadMore?: () => void;
 };
 
-type UsedInfiniteScroll<S, V> = [sentinelRef: RefObject<S>, viewportRef: RefObject<V>];
+type UsedInfiniteScroll<S, V> = [
+  sentinelRef: RefObject<Nullable<S>>,
+  viewportRef: RefObject<Nullable<V>>,
+];
 
 /**
  * @description
