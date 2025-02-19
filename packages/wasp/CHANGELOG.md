@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 2.0.0
+
+### Major Changes
+
+- chore: update package dependencies and improve type safety in hooks
+
 ## 1.5.12
 
 ### Patch Changes
