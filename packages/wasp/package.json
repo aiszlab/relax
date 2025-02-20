@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/wasp",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "bin": {
     "wasp": "bin/index.js"
@@ -19,8 +19,7 @@
   },
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc",
-    "publish:npm": "npm publish"
+    "build": "tsc"
   },
   "description": "shell for any build scripts",
   "dependencies": {

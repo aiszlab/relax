@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 2.0.2
+
+### Patch Changes
+
+- chore: use pnpm publish
+- Updated dependencies
+  - @aiszlab/relax@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 2.0.2
+
+### Patch Changes
+
+- chore: use pnpm publish
+
 ## 2.0.1
 
 ### Patch Changes
