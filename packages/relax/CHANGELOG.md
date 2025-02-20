@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 2.0.1
+
+### Patch Changes
+
+- chore: use pnpm publish
+
 ## 2.0.0
 
 ### Major Changes
