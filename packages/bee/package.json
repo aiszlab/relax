@@ -45,8 +45,8 @@
     "rollup": "^4.34.8"
   },
   "peerDependencies": {
-    "react": "18",
-    "react-dom": "18"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "files": [
     "dist/"
