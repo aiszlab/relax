@@ -1,7 +1,8 @@
 import { type Key, useCallback, useRef } from "react";
 import { type Orientation, scrollTo as _scrollTo } from "../dom";
+import type { Nullable } from "../types";
 
-interface UseScrollableProps {
+interface UsingScrollable {
   orientation?: Orientation;
 }
 
@@ -11,9 +12,9 @@ interface UseScrollableProps {
  */
 export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
   orientation = "vertical",
-}: UseScrollableProps = {}) => {
+}: UsingScrollable = {}) => {
   const targetRef = useRef<P>(null);
-  const triggerRefs = useRef<Map<Key, C | null>>(new Map());
+  const triggerRefs = useRef<Map<Key, Nullable<C>>>(new Map());
 
   const scrollTo = useCallback(
     (to: number, duration = 0) => {
@@ -40,7 +41,7 @@ export const useScrollable = <P extends HTMLElement, C extends HTMLElement>({
   );
 
   // set trigger
-  const setTrigger = useCallback((key: Key, trigger: C) => {
+  const setTrigger = useCallback((key: Key, trigger: Nullable<C>) => {
     triggerRefs.current.set(key, trigger);
   }, []);
 

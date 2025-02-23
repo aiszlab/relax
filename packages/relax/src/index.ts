@@ -41,6 +41,7 @@ export { useDrag } from "./hooks/use-drag";
 export { useEventSource } from "./hooks/use-event-source";
 export { useResize } from "./hooks/use-resize";
 export { useDraggable } from "./hooks/use-draggable";
+export { useAsyncEffect } from "./hooks/use-async-effect";
 
 /**
  * @description
@@ -89,3 +90,4 @@ export { merge } from "./utils/merge";
 export { max } from "./utils/max";
 export { min } from "./utils/min";
 export { load } from "./utils/load";
+export { at } from "./utils/at";
