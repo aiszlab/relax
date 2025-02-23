@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 2.0.3
+
+### Patch Changes
+
+- chore: update type-safe
+- Updated dependencies
+  - @aiszlab/relax@2.0.3
+
 ## 2.0.2
 
 ### Patch Changes

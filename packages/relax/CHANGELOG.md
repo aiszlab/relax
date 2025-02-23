@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 2.0.3
+
+### Patch Changes
+
+- chore: update type-safe
+
 ## 2.0.2
 
 ### Patch Changes
