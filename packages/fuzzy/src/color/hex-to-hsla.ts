@@ -1,6 +1,6 @@
 import { hexToRgba } from "./hex-to-rgba";
 
-type Hsla = readonly [number, number, number, number] & {
+type Hsla = Omit<readonly [number, number, number, number], "toString"> & {
   /**
    * @override toString
    * @description stringify rgba color, like "hsla(12, 66, 8, 1)"

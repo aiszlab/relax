@@ -1,7 +1,7 @@
 import { toArray } from "@aiszlab/relax";
 import { isHex } from "./is-hex";
 
-type Rgba = readonly [number, number, number, number] & {
+type Rgba = Omit<readonly [number, number, number, number], "toString"> & {
   /**
    * @override toString
    * @description stringify rgba color, like "rgba(255, 255, 255, 1)"
