@@ -11,5 +11,8 @@ export function isIndex(value: PropertyKey, length = Number.MAX_SAFE_INTEGER): b
     case "string": {
       return IS_UNSIGNED_INTEGER.test(value);
     }
+    default: {
+      return false;
+    }
   }
 }
