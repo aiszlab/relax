@@ -12,5 +12,5 @@ export const first = <T = unknown>(value: T): First<T, T> => {
     return value.at(0) as First<T, T>;
   }
 
-  return at(toArray(value), 0) as First<T, T>;
+  return at(toArray(value) as unknown[], 0) as First<T, T>;
 };

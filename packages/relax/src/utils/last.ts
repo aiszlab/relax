@@ -12,5 +12,5 @@ export const last = <T = unknown>(value: T): Last<T, T> => {
     return value.at(-1) as Last<T, T>;
   }
 
-  return at(toArray(value), -1) as Last<T, T>;
+  return at(toArray(value) as unknown[], -1) as Last<T, T>;
 };

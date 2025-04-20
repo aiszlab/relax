@@ -8,7 +8,9 @@ type Splitter = string | RegExp;
  * convert any type data to a array
  */
 function toArray(value: string, splitter?: Splitter): string[];
-function toArray<T = unknown>(value: T): T extends Iterable<unknown> ? T : T[];
+function toArray<T = unknown>(
+  value: T,
+): T extends string ? string[] : T extends Iterable<unknown> ? T : T[];
 function toArray<T extends unknown = unknown>(value: T | Array<T>, splitter?: Splitter) {
   // string branch
   if (isString(value)) {
