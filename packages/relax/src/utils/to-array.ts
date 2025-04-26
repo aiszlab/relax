@@ -1,32 +1,30 @@
-import { isString } from "../is/is-string";
-import { isUndefined } from "../is/is-undefined";
+import { isArray } from "../is/is-array";
+import { isVoid } from "../is/is-void";
 
-type Splitter = string | RegExp;
+type ToArrayReturn<T> = T extends null
+  ? unknown[]
+  : T extends undefined
+  ? unknown
+  : T extends Array<infer E>
+  ? E[]
+  : T[];
 
 /**
  * @description
  * convert any type data to a array
  */
-function toArray(value: string, splitter?: Splitter): string[];
-function toArray<T = unknown>(
-  value: T,
-): T extends string ? string[] : T extends Iterable<unknown> ? T : T[];
-function toArray<T extends unknown = unknown>(value: T | Array<T>, splitter?: Splitter) {
-  // string branch
-  if (isString(value)) {
-    if (isUndefined(splitter)) {
-      return [value];
-    }
-
-    return value.split(splitter);
+function toArray<T extends unknown = unknown>(value: T): ToArrayReturn<T> {
+  // in `void` case, just return empty array
+  if (isVoid(value)) {
+    return [] as ToArrayReturn<typeof value>;
   }
 
-  // array branch
-  if (Array.isArray(value)) {
-    return value;
+  // already is `Array`
+  if (isArray(value)) {
+    return value as ToArrayReturn<typeof value>;
   }
 
-  return [value];
+  return [value] as ToArrayReturn<typeof value>;
 }
 
 export { toArray };

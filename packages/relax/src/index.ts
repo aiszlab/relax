@@ -83,7 +83,7 @@ export { throttle } from "./utils/throttle";
 export { clone } from "./utils/clone";
 export { toggle } from "./utils/toggle";
 export { taggedTemplateLiterals } from "./utils/tagged-template-literals";
-export { replace } from "./utils/replace";
+export { replace, replaceAt } from "./utils/replace";
 export { first } from "./utils/first";
 export { last } from "./utils/last";
 export { merge } from "./utils/merge";

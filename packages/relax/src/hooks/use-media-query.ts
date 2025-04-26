@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toArray } from "../utils/to-array";
-import { replace } from "../utils/replace";
+import { replaceAt } from "../utils/replace";
 
 export const useMediaQuery = (query: string[] | string) => {
   const _query = useMemo(() => query.toString(), [query]);
@@ -11,7 +11,7 @@ export const useMediaQuery = (query: string[] | string) => {
   });
 
   const onMediaQueryChange = useCallback((event: MediaQueryListEvent, index: number) => {
-    setValue((prev) => replace(prev, event.matches, index));
+    setValue((prev) => replaceAt(prev, index, event.matches));
   }, []);
 
   useEffect(() => {
