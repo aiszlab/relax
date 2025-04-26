@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 2.0.4
+
+### Patch Changes
+
+- upgrade relax utils
+- Updated dependencies
+  - @aiszlab/relax@2.0.4
+
 ## 2.0.3
 
 ### Patch Changes
