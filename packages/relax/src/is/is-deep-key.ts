@@ -24,8 +24,8 @@ export function isDeepKey(key: PropertyKey): boolean {
     case "string": {
       const _deepKeys = new Set([".", "[", "]"]);
 
-      for (let pos = 0; pos < key.length; pos++) {
-        if (_deepKeys.has(key[pos])) {
+      for (let index = 0; index < key.length; index++) {
+        if (_deepKeys.has(key[index])) {
           return true;
         }
       }
