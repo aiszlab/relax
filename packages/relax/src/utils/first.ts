@@ -1,21 +1,21 @@
-import { type First } from "@aiszlab/relax/types";
-import { toArray } from "./to-array";
+import { Nullable, Partialable, type First } from "@aiszlab/relax/types";
 import { at } from "./at";
-import { isString } from "../is/is-string";
 import { isVoid } from "../is/is-void";
 
 /**
  * @description
- * first element of array
+ * first element
  */
-export const first = <T = unknown>(value: T): First<T> => {
+function first(value: undefined | null): undefined;
+function first(value: string): string;
+function first<T extends Array<unknown>>(value: T): First<T> | undefined;
+function first<T extends Array<unknown>>(value: Nullable<Partialable<string | T>>) {
   if (isVoid(value)) {
-    return void 0 as First<T>;
+    return void 0;
   }
 
-  if (isString(value)) {
-    return at(value, 0) as First<T>;
-  }
+  // @ts-expect-error `at` support types
+  return at(value, 0);
+}
 
-  return at(toArray(value) as unknown[], 0) as First<T>;
-};
+export { first };

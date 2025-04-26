@@ -1,16 +1,21 @@
-import { type Last } from "@aiszlab/relax/types";
-import { toArray } from "./to-array";
-import { isString } from "../is/is-string";
+import { Nullable, Partialable, type Last } from "@aiszlab/relax/types";
 import { at } from "./at";
+import { isVoid } from "../is/is-void";
 
 /**
  * @description
- * last element of array
+ * last element
  */
-export const last = <T = unknown>(value: T): Last<T, T> => {
-  if (isString(value)) {
-    return value.at(-1) as Last<T, T>;
+function last(value: undefined | null): undefined;
+function last(value: string): string;
+function last<T extends Array<unknown>>(value: T): Last<T> | undefined;
+function last<T extends Array<unknown>>(value: Nullable<Partialable<string | T>>) {
+  if (isVoid(value)) {
+    return void 0;
   }
 
-  return at(toArray(value) as unknown[], -1) as Last<T, T>;
-};
+  // @ts-expect-error `at` support types
+  return at(value, -1);
+}
+
+export { last };
