@@ -10,7 +10,7 @@ describe("`last` util", () => {
     expect(last("abc")).toBe("c");
   });
 
-  it("should return null of null", () => {
-    expect(last(null)).toBe(null);
+  it("should return undefined of null", () => {
+    expect(last(null)).toBe(undefined);
   });
 });

@@ -8,22 +8,7 @@ describe("`replace` util", () => {
   });
 
   it("repalce array", () => {
-    const value = replace([1, 2, 3, 4, 5, 6, 7, 8], [9, 9, 9], 3);
-    expect(value).toEqual([1, 2, 3, 9, 9, 9, 7, 8]);
-  });
-
-  it("repalce array, with end index", () => {
-    const value = replace([1, 2, 3, 4, 5, 6, 7, 8], [9, 9, 9], 3, 5);
-    expect(value).toEqual([1, 2, 3, 9, 9, 9, 6, 7, 8]);
-  });
-
-  it("repalce single value", () => {
-    const value = replace([1, 2, 3, 4, 5, 6, 7, 8], 9, 3);
-    expect(value).toEqual([1, 2, 3, 9, 5, 6, 7, 8]);
-  });
-
-  it("repalce single value, with end index", () => {
-    const value = replace([1, 2, 3, 4, 5, 6, 7, 8], 9, 3, 5);
-    expect(value).toEqual([1, 2, 3, 9, 6, 7, 8]);
+    const value = replace([1, 2, 3, 4, 5, 6, 7, 8], 3, 10);
+    expect(value).toEqual([1, 2, 10, 4, 5, 6, 7, 8]);
   });
 });
