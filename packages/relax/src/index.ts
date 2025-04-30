@@ -42,6 +42,7 @@ export { useEventSource } from "./hooks/use-event-source";
 export { useResize } from "./hooks/use-resize";
 export { useDraggable } from "./hooks/use-draggable";
 export { useAsyncEffect } from "./hooks/use-async-effect";
+export { useLazyRef } from "./hooks/use-lazy-ref";
 
 /**
  * @description
