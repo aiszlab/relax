@@ -1,4 +1,5 @@
 import { isArray } from "../is/is-array";
+import { isIterable } from "../is/is-iterable";
 import { isVoid } from "../is/is-void";
 
 type ToArrayReturn<T> = T extends null
@@ -7,6 +8,8 @@ type ToArrayReturn<T> = T extends null
   ? unknown
   : T extends Array<infer E>
   ? E[]
+  : T extends Iterable<infer I>
+  ? I[]
   : T[];
 
 /**
@@ -22,6 +25,11 @@ function toArray<T extends unknown = unknown>(value: T): ToArrayReturn<T> {
   // already is `Array`
   if (isArray(value)) {
     return value as ToArrayReturn<typeof value>;
+  }
+
+  // has iterator
+  if (isIterable(value)) {
+    return Array.from(value) as ToArrayReturn<typeof value>;
   }
 
   return [value] as ToArrayReturn<typeof value>;
