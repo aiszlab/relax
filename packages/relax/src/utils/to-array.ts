@@ -3,11 +3,13 @@ import { isIterable } from "../is/is-iterable";
 import { isVoid } from "../is/is-void";
 
 type ToArrayReturn<T> = T extends null
-  ? unknown[]
+  ? never[]
   : T extends undefined
-  ? unknown
-  : T extends Array<infer E>
-  ? E[]
+  ? never[]
+  : T extends string
+  ? T[]
+  : T extends Array<infer R>
+  ? R[]
   : T extends Iterable<infer I>
   ? I[]
   : T[];
