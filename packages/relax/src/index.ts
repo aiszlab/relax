@@ -94,3 +94,4 @@ export { load } from "./utils/load";
 export { at } from "./utils/at";
 export { pick } from "./utils/pick";
 export { get } from "./utils/get";
+export { set } from "./utils/set";
