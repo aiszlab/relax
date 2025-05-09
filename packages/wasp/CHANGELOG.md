@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 2.0.5
+
+### Patch Changes
+
+- refactor relax utils
+
 ## 2.0.4
 
 ### Patch Changes
