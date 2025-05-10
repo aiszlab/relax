@@ -1,5 +1,6 @@
 import { isArray } from "../is/is-array";
 import { isIterable } from "../is/is-iterable";
+import { isString } from "../is/is-string";
 import { isVoid } from "../is/is-void";
 
 type ToArrayReturn<T> = T extends null
@@ -30,7 +31,8 @@ function toArray<T extends unknown = unknown>(value: T): ToArrayReturn<T> {
   }
 
   // has iterator
-  if (isIterable(value)) {
+  // `string` to `[string]`
+  if (isIterable(value) && !isString(value)) {
     return Array.from(value) as ToArrayReturn<typeof value>;
   }
 

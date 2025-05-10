@@ -1,10 +1,10 @@
-import { isArray } from "./is-array.js";
-import { isBoolean } from "./is-boolean.js";
-import { isNull } from "./is-null.js";
-import { isNumber } from "./is-number.js";
-import { isObject } from "./is-object.js";
-import { isString } from "./is-string.js";
-import { isSymbol } from "./is-symbol.js";
+import { isArray } from "./is-array";
+import { isBoolean } from "./is-boolean";
+import { isNull } from "./is-null";
+import { isNumber } from "./is-number";
+import { isObject } from "./is-object";
+import { isString } from "./is-string";
+import { isSymbol } from "./is-symbol";
 
 /**  Matches any deep property path. (e.g. `a.b[0].c`)*/
 const _IS_DEEP_KEY = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;

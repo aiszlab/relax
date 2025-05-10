@@ -1,4 +1,4 @@
-import { update } from "./update.js";
+import { update } from "./update";
 
 /**
  * Sets the value at the specified path of the given object. If any part of the path does not exist, it will be created.

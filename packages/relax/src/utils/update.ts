@@ -1,11 +1,10 @@
-import { isKey } from "../is/is-key.js";
-import { isNull } from "../is/is-null.js";
-import { isObject } from "../is/is-object.js";
-import { isUndefined } from "../is/is-undefined.js";
-import { isVoid } from "../is/is-void.js";
-import { isIndex } from "./is-index.js";
-import { toKey } from "./to-key.js";
-import { toPaths } from "./to-paths.js";
+import { isKey } from "../is/is-key";
+import { isObject } from "../is/is-object";
+import { isUndefined } from "../is/is-undefined";
+import { isVoid } from "../is/is-void";
+import { isIndex } from "./is-index";
+import { toKey } from "./to-key";
+import { toPaths } from "./to-paths";
 
 /**
  * Updates the value at the specified path of the given object using an updater function.
