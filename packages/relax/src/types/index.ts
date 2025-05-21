@@ -10,3 +10,4 @@ export type { State, StateGetter } from "./state";
 export type { Arrayable } from "./arrayable";
 export type { RequiredTo } from "./required-to";
 export type { AnyFunction } from "./any-function";
+export type { DeepPartial } from "./deep-partial";
