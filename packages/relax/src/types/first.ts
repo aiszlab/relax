@@ -4,6 +4,6 @@ export type First<T> = T extends null | undefined
   ? string
   : T extends [infer D, ...Array<any>]
   ? D
-  : T extends Array<infer S>
-  ? S | undefined
+  : T extends Array<infer I>
+  ? I | undefined
   : T;

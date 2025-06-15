@@ -96,3 +96,4 @@ export { at } from "./utils/at";
 export { pick } from "./utils/pick";
 export { get } from "./utils/get";
 export { set } from "./utils/set";
+export { tryParse } from "./utils/try-parse";

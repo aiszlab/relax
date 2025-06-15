@@ -6,15 +6,11 @@ import { isVoid } from "../is/is-void";
  * @description
  * first element
  */
-function first(value: undefined | null): undefined;
-function first(value: string): string;
-function first<T extends Array<unknown>>(value: T): First<T> | undefined;
-function first<T extends Array<unknown>>(value: Voidable<string | T>) {
+function first<T extends Array<unknown>>(value: Voidable<string | T>): First<T> {
   if (isVoid(value)) {
-    return void 0;
+    return void 0 as First<T>;
   }
 
-  // @ts-expect-error `at` support types
   return at(value, 0);
 }
 
