@@ -1,4 +1,4 @@
-import { type Voidable, type First } from "@aiszlab/relax/types";
+import type { Voidable, First } from "@aiszlab/relax/types";
 import { at } from "./at";
 import { isVoid } from "../is/is-void";
 
