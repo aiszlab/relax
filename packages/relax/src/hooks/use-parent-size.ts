@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useDebounceCallback } from "./use-debounce-callback";
 import { useMounted } from "./use-mounted";
+import { Nullable } from "../types";
 
 /**
  * @description
@@ -22,7 +23,7 @@ export const useParentSize = <T extends HTMLElement = HTMLDivElement>() => {
   );
 
   useMounted(() => {
-    const resizer = new ResizeObserver((entries) => {
+    let resizer: Nullable<ResizeObserver> = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const { width, height } = entry?.contentRect ?? {};
         _animation.current = window.requestAnimationFrame(() => {
@@ -37,7 +38,8 @@ export const useParentSize = <T extends HTMLElement = HTMLDivElement>() => {
 
     return () => {
       cancelAnimationFrame(_animation.current);
-      resizer.disconnect();
+      resizer?.disconnect();
+      resizer = null;
       abort();
     };
   });

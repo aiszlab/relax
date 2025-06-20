@@ -2,6 +2,7 @@ import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } fr
 import { clamp } from "../utils/clamp";
 import type { State } from "@aiszlab/relax/types";
 import { useDefault } from "./use-default";
+import { useEvent } from "./use-event";
 
 type Props = {
   /**
@@ -39,32 +40,25 @@ export const useCounter = (
   initialState: State<number> = 0,
   { max = Infinity, min = -Infinity }: Props = {},
 ): UsedCounter => {
+  const [_count, _setCount] = useState(initialState);
   // memorized first time prop value
   const defaultState = useDefault(initialState);
 
-  const [_count, _setCount] = useState(defaultState);
+  const add = useEvent((step = 1) => {
+    _setCount((prev) => Math.min(max, prev + step));
+  });
 
-  const add = useCallback(
-    (step = 1) => {
-      _setCount((prev) => Math.min(max, prev + step));
-    },
-    [max],
-  );
+  const subtract = useEvent((step = 1) => {
+    _setCount((prev) => Math.max(min, prev - step));
+  });
 
-  const subtract = useCallback(
-    (step = 1) => {
-      _setCount((prev) => Math.max(min, prev - step));
-    },
-    [min],
-  );
-
-  const first = useCallback(() => {
+  const first = useEvent(() => {
     _setCount(min);
-  }, [min]);
+  });
 
-  const last = useCallback(() => {
+  const last = useEvent(() => {
     _setCount(max);
-  }, [max]);
+  });
 
   const reset = useCallback(() => {
     _setCount(defaultState);

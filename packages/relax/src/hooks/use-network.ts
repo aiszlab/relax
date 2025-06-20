@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMounted } from "./use-mounted";
+import type { Nullable } from "../types";
 
 /**
  * @description
@@ -9,11 +10,10 @@ export const useNetwork = () => {
   const [isOnline, setIsOnline] = useState<boolean>(() => navigator.onLine);
 
   useMounted(() => {
-    const onOnline = () => {
+    let onOnline: Nullable<VoidFunction> = () => {
       setIsOnline(true);
     };
-
-    const onOffline = () => {
+    let onOffline: Nullable<VoidFunction> = () => {
       setIsOnline(false);
     };
 
@@ -21,8 +21,10 @@ export const useNetwork = () => {
     window.addEventListener("offline", onOffline);
 
     return () => {
-      window.removeEventListener("online", onOnline);
-      window.removeEventListener("offline", onOffline);
+      onOnline && window.removeEventListener("online", onOnline);
+      onOffline && window.removeEventListener("offline", onOffline);
+      onOnline = null;
+      onOffline = null;
     };
   });
 

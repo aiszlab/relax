@@ -12,11 +12,13 @@ export const useScreenSize = () => {
     width: number;
     height: number;
   }>(() => {
-    if (!isDomUsable())
+    if (!isDomUsable()) {
       return {
         width: 0,
         height: 0,
       };
+    }
+
     return {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -32,6 +34,7 @@ export const useScreenSize = () => {
 
   useMounted(() => {
     window.addEventListener("resize", resize);
+
     return () => {
       window.removeEventListener("resize", resize);
       abort();
