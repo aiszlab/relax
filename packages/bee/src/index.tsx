@@ -1,4 +1,4 @@
-import React, { createElement, lazy, type ReactNode, StrictMode, Suspense, type FC } from "react";
+import React, { createElement, lazy, type ReactNode, StrictMode, type FC, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { isHTMLElement } from "@aiszlab/relax";
 import { type RouteObject } from "react-router";
@@ -22,11 +22,7 @@ const bootstrap = async ({ selectors, render = Application, routes = false }: Pr
 
   // with router
   if (routes) {
-    children = (
-      <Suspense fallback={null}>
-        <Router routes={routes}>{children}</Router>
-      </Suspense>
-    );
+    children = <Router>{routes}</Router>;
   }
 
   // with application

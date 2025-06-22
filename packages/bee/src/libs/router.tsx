@@ -1,30 +1,26 @@
 import { RouterProvider } from "react-router/dom";
 import { type RouteObject, createBrowserRouter } from "react-router";
-import React, { useMemo } from "react";
+import React from "react";
 
 interface Props {
-  routes: RouteObject[];
   basename?: string;
-  children?: React.ReactNode;
+  children?: RouteObject[];
 }
 
-const Router = ({ routes, basename, children }: Props) => {
-  const router = useMemo(
-    () =>
-      createBrowserRouter(
+const Router = ({ basename, children }: Props) => {
+  return (
+    <RouterProvider
+      router={createBrowserRouter(
         [
           {
             path: "/",
-            children: routes,
-            hydrateFallbackElement: children,
+            children,
           },
         ],
         { basename },
-      ),
-    [routes, basename, children],
+      )}
+    />
   );
-
-  return <RouterProvider router={router} />;
 };
 
 export default Router;

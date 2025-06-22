@@ -1,7 +1,7 @@
 {
   "name": "@aiszlab/bee",
-  "version": "2.0.5",
-  "description": "react app",
+  "version": "2.0.6-beta.7",
+  "description": "aiszlab csr app",
   "type": "module",
   "exports": {
     ".": {
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "prepublishOnly": "z rm dist && npm run build"
   },
   "author": "tutu@fantufantu.com",
   "license": "MIT",
