@@ -1,4 +1,3 @@
-import { toArray } from "@aiszlab/relax";
 import { isHex } from "./is-hex";
 
 type Rgba = Omit<readonly [number, number, number, number], "toString"> & {
@@ -19,7 +18,7 @@ function hexToRgba(input: string, alpha?: number): Rgba {
   }
 
   // exclude '#': charCode = 35
-  const _hex = toArray(input.slice(input.charCodeAt(0) === 35 ? 1 : 0), "");
+  const _hex = input.slice(input.charCodeAt(0) === 35 ? 1 : 0).split("");
 
   // using shortcut hex
   // like "#fff", to "#ffffff"
