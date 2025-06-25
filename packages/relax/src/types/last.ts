@@ -4,6 +4,6 @@ export type Last<T> = T extends null | undefined
   ? string
   : T extends [...Array<unknown>, infer D]
   ? D
-  : T extends Array<infer I>
+  : T extends ReadonlyArray<infer I>
   ? I | undefined
   : T;

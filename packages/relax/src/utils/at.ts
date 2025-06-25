@@ -4,7 +4,7 @@ import type { At } from "../types/at";
 /**
  * @description for different browser or browser version, use good api to cover
  */
-function at<T>(value: string | Array<T>, index: number): At<T> {
+function at<T>(value: string | ReadonlyArray<T>, index: number): At<T> {
   if (isString(value)) {
     return value.at(index) as At<T>;
   }

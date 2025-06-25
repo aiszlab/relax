@@ -6,7 +6,7 @@ import { isVoid } from "../is/is-void";
  * @description
  * first element
  */
-function first<T extends Array<unknown>>(value: Voidable<string | T>): First<T> {
+function first<T extends ReadonlyArray<unknown>>(value: Voidable<string | T>): First<T> {
   if (isVoid(value)) {
     return void 0 as First<T>;
   }
