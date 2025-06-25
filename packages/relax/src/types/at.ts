@@ -1,6 +1,10 @@
 import { Partialable } from "./partialable";
 
 /**
- * At
+ * `At` types
  */
-export type At<T> = T extends string ? Partialable<string> : T extends Array<infer R> ? R : never;
+export type At<T> = T extends string
+  ? Partialable<string>
+  : T extends ReadonlyArray<infer R>
+  ? R
+  : never;

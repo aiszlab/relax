@@ -6,7 +6,7 @@ import { isVoid } from "../is/is-void";
  * @description
  * last element
  */
-function last<T extends Array<unknown>>(value: Voidable<string | T>): Last<T> {
+function last<T extends ReadonlyArray<unknown>>(value: Voidable<string | T>): Last<T> {
   if (isVoid(value)) {
     return void 0 as Last<T>;
   }
