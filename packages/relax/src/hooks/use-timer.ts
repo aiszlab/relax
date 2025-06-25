@@ -1,12 +1,13 @@
 import { useCallback, useRef } from "react";
 import { useUnmount } from "./use-unmount";
+import type { Partialable } from "../types";
 
 /**
  * @description
  * use timer
  */
 export const useTimer = () => {
-  const timed = useRef<number | undefined>(void 0);
+  const timed = useRef<Partialable<ReturnType<typeof setTimeout>>>(void 0);
 
   const clear = useCallback(() => {
     clearTimeout(timed.current);
