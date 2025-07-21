@@ -24,10 +24,10 @@ type UsingInfiniteScroll = {
   onLoadMore?: () => void;
 };
 
-type UsedInfiniteScroll<S, V> = [
-  sentinelRef: RefObject<Nullable<S>>,
-  viewportRef: RefObject<Nullable<V>>,
-];
+type UsedInfiniteScroll<S, V> = {
+  sentinelRef: RefObject<Nullable<S>>;
+  viewportRef: RefObject<Nullable<V>>;
+};
 
 /**
  * @description
@@ -50,7 +50,7 @@ export const useInfiniteScroll = <
 
   useEffect(() => {
     const _sentinel = sentinelRef.current;
-    const _viewport = viewportRef.current ?? globalThis.window.document.body;
+    const _viewport = viewportRef.current;
 
     // no more data, never listen
     if (!hasMore) return;
@@ -59,10 +59,13 @@ export const useInfiniteScroll = <
     // use `scroll` event to listen `viewport`
     // it is not recommended, has performance issue!!!
     if (!_sentinel) {
+      if (!_viewport) return;
+
       const { next, abort } = debounce(() => {
         if (_viewport.scrollHeight - _viewport.scrollTop > _viewport.clientHeight + distance) {
           return;
         }
+
         loadMore();
       }, 200);
 
@@ -95,5 +98,8 @@ export const useInfiniteScroll = <
     };
   }, [hasMore]);
 
-  return [sentinelRef, viewportRef];
+  return {
+    sentinelRef,
+    viewportRef,
+  };
 };
