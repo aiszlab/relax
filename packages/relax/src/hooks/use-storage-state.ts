@@ -21,8 +21,6 @@ export const useStorageState = (
 
   useEffect(() => {
     const onStorageChange = (event: StorageEvent) => {
-      console.log("12321321321321321");
-
       if (event.key !== key) return;
       if (event.storageArea !== storage) return;
       setState(event.newValue);

@@ -5,9 +5,9 @@ import { useEvent } from "./use-event";
 
 /**
  * @description
- * togglable key
+ * toggleable key
  */
-type TogglableKey = {
+type ToggleableKey = {
   /**
    * @description
    * unique key
@@ -18,14 +18,14 @@ type TogglableKey = {
    * @description
    * children
    */
-  children?: TogglableKey[];
+  children?: ToggleableKey[];
 };
 
 /**
  * @description
  * extra options
  */
-type UseTogglableOptions = {
+type UseToggleableOptions = {
   /**
    * @description
    * default toggled
@@ -86,13 +86,13 @@ class Tree {
     return this.#groupedLeaves;
   }
 
-  public grow(togglableKey: TogglableKey) {
+  public grow(toggleableKey: ToggleableKey) {
     // create leaf, leaf will auto trigger tree collect callback
     new Leaf({
-      key: togglableKey.key,
+      key: toggleableKey.key,
       parent: null,
       belongTo: this,
-    }).grow(togglableKey.children);
+    }).grow(toggleableKey.children);
 
     return this;
   }
@@ -154,7 +154,7 @@ class Leaf {
     return this.#key;
   }
 
-  public grow(children: Partialable<TogglableKey[]> = []) {
+  public grow(children: Partialable<ToggleableKey[]> = []) {
     if (children.length === 0) return this;
 
     children.forEach((node) => {
@@ -209,16 +209,16 @@ class Leaf {
  * @description
  * toggle able
  */
-export const useTogglable = (
-  togglableKeys: TogglableKey[],
-  { onToggle, defaultToggledKeys = [], isDefaultToggled, toggledKeys }: UseTogglableOptions = {},
+export const useToggleable = (
+  toggleableKeys: ToggleableKey[],
+  { onToggle, defaultToggledKeys = [], isDefaultToggled, toggledKeys }: UseToggleableOptions = {},
 ) => {
-  // re-create tree when togglable keys changed
+  // re-create tree when toggleable keys changed
   const tree = useMemo(() => {
-    return togglableKeys.reduce((_tree, togglable) => {
-      return _tree.grow(togglable);
+    return toggleableKeys.reduce((_tree, toggleable) => {
+      return _tree.grow(toggleable);
     }, new Tree());
-  }, [togglableKeys]);
+  }, [toggleableKeys]);
 
   // use controlled state to record toggled keys
   const [_toggledKeys, _setToggledKeys] = useControlledState(toggledKeys, {

@@ -2,8 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { describe, expect, it } from "@jest/globals";
-import { isOverflow, useScrollLocker } from "../../src";
+import { describe, it } from "@jest/globals";
 
 describe("`useScrollLocker`", () => {
   it("render scroll", () => {

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useMounted } from "./use-mounted";
 
 /**
  * @author murukal
@@ -7,7 +8,7 @@ import { useEffect } from "react";
  * unmount
  */
 export const useUnmount = (callback: () => void) => {
-  useEffect(() => {
+  useMounted(() => {
     return callback;
-  }, []);
+  });
 };

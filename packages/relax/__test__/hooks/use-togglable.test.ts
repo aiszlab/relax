@@ -3,16 +3,19 @@
  */
 
 import { renderHook, act } from "@testing-library/react";
-import { useTogglable } from "../../src";
+import { useToggleable } from "../../src";
 import { describe, it, expect } from "@jest/globals";
 
 describe("useTogglable", () => {
   it("toggle", async () => {
     const { result } = renderHook(() =>
-      useTogglable([
+      useToggleable([
         {
           key: "node-1",
-          children: [{ key: "leaf-1" }, { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] }],
+          children: [
+            { key: "leaf-1" },
+            { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] },
+          ],
         },
       ]),
     );
@@ -50,10 +53,13 @@ describe("useTogglable", () => {
 
   it("toggle single leaf, not effect root node", async () => {
     const { result } = renderHook(() =>
-      useTogglable([
+      useToggleable([
         {
           key: "node-1",
-          children: [{ key: "leaf-1" }, { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] }],
+          children: [
+            { key: "leaf-1" },
+            { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] },
+          ],
         },
       ]),
     );
@@ -69,11 +75,14 @@ describe("useTogglable", () => {
 
   it("controlled toggled keys", async () => {
     const { result } = renderHook(() =>
-      useTogglable(
+      useToggleable(
         [
           {
             key: "node-1",
-            children: [{ key: "leaf-1" }, { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] }],
+            children: [
+              { key: "leaf-1" },
+              { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] },
+            ],
           },
         ],
         {
@@ -91,11 +100,14 @@ describe("useTogglable", () => {
 
   it("default toggled keys", async () => {
     const { result } = renderHook(() =>
-      useTogglable(
+      useToggleable(
         [
           {
             key: "node-1",
-            children: [{ key: "leaf-1" }, { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] }],
+            children: [
+              { key: "leaf-1" },
+              { key: "leaf-2", children: [{ key: "child-3" }, { key: "child-4" }] },
+            ],
           },
         ],
         {

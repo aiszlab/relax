@@ -15,7 +15,7 @@ export { useScrollLocker } from "./hooks/use-scroll-locker";
 export { useForceUpdate } from "./hooks/use-force-update";
 export { useScrollable } from "./hooks/use-scrollable";
 export { useComposedRef } from "./hooks/use-composed-ref";
-export { useTogglable } from "./hooks/use-togglable";
+export { useToggleable } from "./hooks/use-toggleable";
 export { useEvent } from "./hooks/use-event";
 export { useUpdateEffect } from "./hooks/use-update-effect";
 export { useCounter } from "./hooks/use-counter";
@@ -64,6 +64,7 @@ export { isThenable } from "./is/is-thenable";
 export { isHTMLElement } from "./is/is-html-element";
 export { isHTMLInputElement } from "./is/is-html-input-element";
 export { isObject } from "./is/is-object";
+export { useScale } from "./hooks/use-scale";
 
 /**
  * @description
