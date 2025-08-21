@@ -35,7 +35,7 @@ export { useSessionStorageState } from "./hooks/use-session-storage-state";
 export { useIsMounted } from "./hooks/use-is-mounted";
 export { useInfiniteScroll } from "./hooks/use-infinite-scroll";
 export { useReactive } from "./hooks/use-reactive";
-export { useParentSize } from "./hooks/use-parent-size";
+export { useElementSize } from "./hooks/use-element-size";
 export { useScreenSize } from "./hooks/use-screen-size";
 export { useDrag } from "./hooks/use-drag";
 export { useEventSource } from "./hooks/use-event-source";

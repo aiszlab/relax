@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMount } from "./use-mount";
 import { isNumber } from "../is/is-number";
 
@@ -8,7 +8,7 @@ import { isNumber } from "../is/is-number";
 export const useScale = (resize: string | number, originalSize: string | number) => {
   const [scale, setScale] = useState(1);
 
-  useMount(() => {
+  useEffect(() => {
     const _parent = document.createElement("div");
     _parent.style.width = "0px";
     _parent.style.height = "0px";
@@ -25,12 +25,17 @@ export const useScale = (resize: string | number, originalSize: string | number)
     _parent.appendChild(_originalSizedElement);
     document.body.appendChild(_parent);
 
-    if (_originalSizedElement.offsetWidth === 0) {
-      return;
+    const _resizedWidth = _resizedElement.offsetWidth;
+    const _originalSizedWidth = _originalSizedElement.offsetWidth;
+
+    if (_originalSizedWidth > 0) {
+      setScale(_resizedWidth / _originalSizedWidth);
+    } else {
+      setScale(1);
     }
 
-    setScale(_resizedElement.offsetWidth / _originalSizedElement.offsetWidth);
-  });
+    _parent.remove();
+  }, [resize, originalSize]);
 
   return scale;
 };

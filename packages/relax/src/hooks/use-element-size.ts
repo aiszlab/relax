@@ -1,15 +1,20 @@
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { useDebounceCallback } from "./use-debounce-callback";
 import { useMounted } from "./use-mounted";
 import { Nullable } from "../types";
+
+type UsedElementSize<T extends HTMLElement> = [
+  RefObject<T | null>,
+  { width: number; height: number },
+];
 
 /**
  * @description
  * listen parent size change
  * provider with\height to child
  */
-export const useParentSize = <T extends HTMLElement = HTMLDivElement>() => {
-  const parentRef = useRef<T>(null);
+export const useElementSize = <T extends HTMLElement = HTMLDivElement>(): UsedElementSize<T> => {
+  const elementRef = useRef<T>(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const _animation = useRef(0);
@@ -32,8 +37,8 @@ export const useParentSize = <T extends HTMLElement = HTMLDivElement>() => {
       });
     });
 
-    if (parentRef.current) {
-      resizer.observe(parentRef.current);
+    if (elementRef.current) {
+      resizer.observe(elementRef.current);
     }
 
     return () => {
@@ -44,9 +49,5 @@ export const useParentSize = <T extends HTMLElement = HTMLDivElement>() => {
     };
   });
 
-  return {
-    parentRef,
-    width,
-    height,
-  };
+  return [elementRef, { width, height }];
 };
