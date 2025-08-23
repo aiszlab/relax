@@ -1,7 +1,7 @@
 import { RefObject, useRef, useState } from "react";
-import { useDebounceCallback } from "./use-debounce-callback";
 import { useMounted } from "./use-mounted";
 import { Nullable } from "../types";
+import { useEvent } from "./use-event";
 
 type UsedElementSize<T extends HTMLElement> = [
   RefObject<T | null>,
@@ -19,13 +19,10 @@ export const useElementSize = <T extends HTMLElement = HTMLDivElement>(): UsedEl
   const [height, setHeight] = useState(0);
   const _animation = useRef(0);
 
-  const { next: resize, abort } = useDebounceCallback(
-    ({ width, height }: { width: number; height: number }) => {
-      setWidth(width);
-      setHeight(height);
-    },
-    300,
-  );
+  const resize = useEvent(({ width, height }: { width: number; height: number }) => {
+    setWidth(width);
+    setHeight(height);
+  });
 
   useMounted(() => {
     let resizer: Nullable<ResizeObserver> = new ResizeObserver((entries) => {
@@ -45,7 +42,6 @@ export const useElementSize = <T extends HTMLElement = HTMLDivElement>(): UsedEl
       cancelAnimationFrame(_animation.current);
       resizer?.disconnect();
       resizer = null;
-      abort();
     };
   });
 

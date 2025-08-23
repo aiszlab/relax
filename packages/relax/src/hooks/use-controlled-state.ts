@@ -4,7 +4,7 @@ import { isUndefined } from "../is/is-undefined";
 import { useUpdateEffect } from "./use-update-effect";
 import { isFunction } from "../is/is-function";
 
-type UseControlledStateBy<S> = {
+type UsingControlledState<S> = {
   /**
    * @description
    * default value
@@ -24,19 +24,19 @@ function useControlledState<T>(): UsedControlledState<Partialable<T>>;
 function useControlledState<T>(controlledState: T): UsedControlledState<T>;
 function useControlledState<T>(
   controlledState: T,
-  useControlledStateBy: UseControlledStateBy<undefined>,
+  usingControlledState: UsingControlledState<undefined>,
 ): UsedControlledState<T>;
 function useControlledState<T>(
   controlledState: Partialable<T>,
-  useControlledStateBy: RequiredIn<UseControlledStateBy<T>, "defaultState">,
+  usingControlledState: RequiredIn<UsingControlledState<T>, "defaultState">,
 ): UsedControlledState<T>;
 function useControlledState<T>(
   controlledState: T,
-  useControlledStateBy: UseControlledStateBy<T>,
+  usingControlledState: UsingControlledState<T>,
 ): UsedControlledState<T>;
 function useControlledState<T>(
   controlledState?: T,
-  { defaultState }: UseControlledStateBy<T> = {},
+  { defaultState }: UsingControlledState<T> = {},
 ) {
   // initialize state
   const [_state, _setState] = useState(() => {

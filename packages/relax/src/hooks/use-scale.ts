@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useMount } from "./use-mount";
+import { useLayoutEffect, useState } from "react";
 import { isNumber } from "../is/is-number";
 
 /**
@@ -8,7 +7,7 @@ import { isNumber } from "../is/is-number";
 export const useScale = (resize: string | number, originalSize: string | number) => {
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const _parent = document.createElement("div");
     _parent.style.width = "0px";
     _parent.style.height = "0px";
