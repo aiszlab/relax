@@ -10,6 +10,12 @@ type UsingControlledState<S> = {
    * default value
    */
   defaultState?: State<S>;
+
+  /**
+   * @description
+   * value update callback
+   */
+  onUpdate?: (next: S | undefined, prev: S | undefined) => void;
 };
 
 type UsedControlledState<T> = [T, Dispatch<SetStateAction<T>>];
@@ -36,7 +42,7 @@ function useControlledState<T>(
 ): UsedControlledState<T>;
 function useControlledState<T>(
   controlledState?: T,
-  { defaultState }: UsingControlledState<T> = {},
+  { defaultState, onUpdate }: UsingControlledState<T> = {},
 ) {
   // initialize state
   const [_state, _setState] = useState(() => {
@@ -49,11 +55,16 @@ function useControlledState<T>(
     if (isFunction(defaultState)) {
       return defaultState();
     }
+
     return defaultState ?? controlledState;
   });
 
   // sync value back to `undefined` when it from control to un-control
   useUpdateEffect(() => {
+    if (controlledState !== _state) {
+      onUpdate?.(controlledState, _state);
+    }
+
     if (!isUndefined(controlledState)) {
       return;
     }
