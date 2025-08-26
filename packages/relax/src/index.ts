@@ -44,6 +44,7 @@ export { useDraggable } from "./hooks/use-draggable";
 export { useAsyncEffect } from "./hooks/use-async-effect";
 export { useLazyRef } from "./hooks/use-lazy-ref";
 export { useScroll } from "./hooks/use-scroll";
+export { useScale } from "./hooks/use-scale";
 
 /**
  * @description
@@ -54,6 +55,7 @@ export { isUndefined } from "./is/is-undefined";
 export { isNull } from "./is/is-null";
 export { isVoid } from "./is/is-void";
 export { isArray } from "./is/is-array";
+export { isNumber } from "./is/is-number";
 export { isEmpty } from "./is/is-empty";
 export { isDomUsable } from "./is/is-dom-usable";
 export { isMobile } from "./is/is-mobile";
@@ -64,7 +66,11 @@ export { isThenable } from "./is/is-thenable";
 export { isHTMLElement } from "./is/is-html-element";
 export { isHTMLInputElement } from "./is/is-html-input-element";
 export { isObject } from "./is/is-object";
-export { useScale } from "./hooks/use-scale";
+export { isDeepKey } from "./is/is-deep-key";
+export { isString } from "./is/is-string";
+export { isBoolean } from "./is/is-boolean";
+export { isMap } from "./is/is-map";
+export { isSet } from "./is/is-set";
 
 /**
  * @description
