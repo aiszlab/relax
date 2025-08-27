@@ -21,7 +21,7 @@ export { useUpdateEffect } from "./hooks/use-update-effect";
 export { useCounter } from "./hooks/use-counter";
 export { useHover } from "./hooks/use-hover";
 export { useFocus } from "./hooks/use-focus";
-export { useMemorable } from "./hooks/use-memorable";
+export { useMemorized } from "./hooks/use-memorized";
 export { useMutateObserver } from "./hooks/use-mutate-observer";
 export { useRaf } from "./hooks/use-raf";
 export { useDevicePixelRatio } from "./hooks/use-device-pixel-ratio";
