@@ -15,7 +15,7 @@ type UsingControlledState<S> = {
    * @description
    * value update callback
    */
-  onUpdate?: (next: S | undefined, prev: S | undefined) => void;
+  onUpdate?: (next: Partialable<S>, prev: Partialable<S>) => void;
 };
 
 type UsedControlledState<T> = [T, Dispatch<SetStateAction<T>>];

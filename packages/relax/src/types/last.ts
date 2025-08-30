@@ -6,4 +6,4 @@ export type Last<T> = T extends null | undefined
   ? D
   : T extends ReadonlyArray<infer I>
   ? I | undefined
-  : T;
+  : never;
