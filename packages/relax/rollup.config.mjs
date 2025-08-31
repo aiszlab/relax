@@ -25,7 +25,7 @@ const OUTPUS = [
  * @type {import("rollup").RollupOptions}
  */
 const configuration = {
-  input: ["src", "src/dom", "src/react", "src/class-name", "src/fetch-event-source", "src/next"],
+  input: ["src", "src/dom", "src/react", "src/class-name", "src/fetch-event-source"],
 
   output: OUTPUS.map((_output) => ({
     ..._output,
