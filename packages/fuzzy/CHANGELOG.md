@@ -1,5 +1,14 @@
 # @aiszlab/fuzzy
 
+## 2.0.6
+
+### Patch Changes
+
+- - Feature(relax): refactor `utils` & `hooks`
+  - Feature(bee): use sync router
+- Updated dependencies
+  - @aiszlab/relax@2.0.6
+
 ## 2.0.5
 
 ### Patch Changes
