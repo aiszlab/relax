@@ -5,7 +5,7 @@ import { isNumber } from "../is/is-number";
  * @description 比较两个`css`单位的缩放比例
  */
 export const useScale = (resize: string | number, originalSize: string | number) => {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0);
 
   useLayoutEffect(() => {
     const _parent = document.createElement("div");
@@ -30,7 +30,7 @@ export const useScale = (resize: string | number, originalSize: string | number)
     if (_originalSizedWidth > 0) {
       setScale(_resizedWidth / _originalSizedWidth);
     } else {
-      setScale(1);
+      setScale(0);
     }
 
     _parent.remove();
