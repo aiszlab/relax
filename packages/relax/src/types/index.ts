@@ -12,3 +12,4 @@ export type { RequiredTo } from "./required-to";
 export type { AnyFunction } from "./any-function";
 export type { DeepPartial } from "./deep-partial";
 export type { ArrayAt } from "./array-at";
+export type { ValueOf } from "./value-of";
