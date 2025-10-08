@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 2.1.0
+
+### Minor Changes
+
+- chore: version sync
+
 ## 2.0.6
 
 ### Patch Changes

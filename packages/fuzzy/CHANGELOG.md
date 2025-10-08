@@ -1,5 +1,16 @@
 # @aiszlab/fuzzy
 
+## 2.1.0
+
+### Minor Changes
+
+- chore: version sync
+
+### Patch Changes
+
+- Updated dependencies
+  - @aiszlab/relax@2.1.0
+
 ## 2.0.6
 
 ### Patch Changes
