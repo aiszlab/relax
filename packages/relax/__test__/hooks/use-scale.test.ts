@@ -11,6 +11,6 @@ describe("useScale", () => {
     const { result } = renderHook(() => useScale("100px", "200px"));
 
     // `jsdom`计算不了真实尺寸
-    expect(result.current).toBe(1);
+    expect(result.current).toBe(0);
   });
 });

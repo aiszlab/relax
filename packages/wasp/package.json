@@ -23,11 +23,11 @@
   },
   "description": "shell for any build scripts",
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.7",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^4.7.0",
     "commander": "^13.1.0",
-    "tailwindcss": "^4.1.7",
-    "vite": "^6.3.5"
+    "tailwindcss": "^4.1.14",
+    "vite": "^6.3.6"
   },
   "devDependencies": {
     "typescript": "5.8.3"
