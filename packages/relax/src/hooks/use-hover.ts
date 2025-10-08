@@ -1,13 +1,19 @@
-import { type PointerEventHandler } from "react";
+import {
+  type PointerEventHandler,
+  type MouseEventHandler,
+  type MouseEvent,
+  type RefObject,
+  useCallback,
+} from "react";
 import { useBoolean } from "../hooks/use-boolean";
-import { chain } from "../utils/chain";
-import type { Last } from "@aiszlab/relax/types";
 import { useEvent } from "./use-event";
-import { useDefault } from "./use-default";
+import { contains } from "../dom";
+import type { Nullable } from "../types";
 
 type UsingHover<T> = {
-  onEnter?: PointerEventHandler<T>;
-  onLeave?: PointerEventHandler<T>;
+  onEnter?: MouseEventHandler<T>;
+  onLeave?: MouseEventHandler<T>;
+  ref?: RefObject<Nullable<T>>;
 };
 
 type UsedHover<T> = [
@@ -15,29 +21,46 @@ type UsedHover<T> = [
   {
     onPointerEnter: PointerEventHandler<T>;
     onPointerLeave: PointerEventHandler<T>;
-    // onMouseEnter: MouseEventHandler<T>;
-    // onMouseLeave: MouseEventHandler<T>;
+    onMouseEnter: MouseEventHandler<T>;
+    onMouseLeave: MouseEventHandler<T>;
+    onMouseOut?: MouseEventHandler<T>;
   },
 ];
 
 export const useHover = <T extends Element = Element>({
   onEnter,
   onLeave,
+  ref,
 }: UsingHover<T> = {}): UsedHover<T> => {
   const [isHovered, { turnOn, turnOff }] = useBoolean(false);
 
-  const onPointerEnter = useEvent<Last<UsedHover<T>>["onPointerEnter"]>((event) => {
-    chain(onEnter, turnOn)(event);
+  const enter = useEvent((event: MouseEvent<T>) => {
+    onEnter?.(event);
+    turnOn();
   });
 
-  const onPointerLeave = useEvent<Last<UsedHover<T>>["onPointerLeave"]>((event) => {
-    chain(onLeave, turnOff)(event);
+  const leave = useEvent((event: MouseEvent<T>) => {
+    onLeave?.(event);
+    turnOff();
   });
 
-  const hoverProps = useDefault<Last<UsedHover<T>>>(() => ({
-    onPointerEnter,
-    onPointerLeave,
-  }));
+  const moveOut = useCallback((event: MouseEvent<T>) => {
+    if (!ref?.current) return;
+    if (contains(ref?.current, event.relatedTarget)) return;
 
-  return [isHovered, hoverProps];
+    leave(event);
+  }, []);
+
+  return [
+    isHovered,
+    {
+      onMouseEnter: enter,
+      onPointerEnter: enter,
+      onMouseLeave: leave,
+      onPointerLeave: leave,
+      ...(!!ref && {
+        onMouseOut: moveOut,
+      }),
+    },
+  ];
 };

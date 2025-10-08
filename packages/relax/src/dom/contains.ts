@@ -24,7 +24,7 @@ export const contains = (
   }
 
   // Use native if support
-  if (!!root.contains) {
+  if (root.contains) {
     return root.contains(node as Nullable<Node>);
   }
 
