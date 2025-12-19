@@ -45,6 +45,7 @@ export { useAsyncEffect } from "./hooks/use-async-effect";
 export { useLazyRef } from "./hooks/use-lazy-ref";
 export { useScroll } from "./hooks/use-scroll";
 export { useScale } from "./hooks/use-scale";
+export { useLazyMemo } from "./hooks/use-lazy-memo";
 
 /**
  * @description
