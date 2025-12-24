@@ -14,8 +14,7 @@ const useLazyMemo = <T>(fn: () => T, deps: unknown[]) => {
 
   const compute = useDefault(() => {
     return new Proxy<{ value: T }>(
-      // @ts-expect-error 重写 get 会强制返回 value 的值
-      {},
+      { value: null as T },
       {
         get(target, key) {
           if (key !== "value") {

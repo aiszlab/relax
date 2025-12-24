@@ -1,5 +1,16 @@
 # @aiszlab/bee
 
+## 2.1.1
+
+### Patch Changes
+
+- [relax]:
+
+  - new feature: `useLazyMemo`
+
+- Updated dependencies
+  - @aiszlab/relax@2.1.1
+
 ## 2.1.0
 
 ### Minor Changes
