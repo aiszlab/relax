@@ -14,7 +14,8 @@ export const useIdentity = (signal = ""): UsedIdentity => {
     if (!signal) {
       return `${id}${count.current++}`;
     }
-    return `${id}${signal}:${count.current++}`;
+
+    return `${id}${signal}_${count.current++}`;
   }, []);
 
   return [id, unique];
