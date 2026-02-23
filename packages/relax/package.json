@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "2.1.2-beta.1",
+  "version": "2.1.2",
   "description": "react utils collection",
   "exports": {
     ".": {
@@ -23,7 +23,7 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "clean:build": "z rm dist",
-    "prepublishOnly": "npm run clean:build && npm run build",
+    "prepublishOnly": "pnpm run clean:build && pnpm run build",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -52,7 +52,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rollup": "^4.52.4",
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "react": ">=18",

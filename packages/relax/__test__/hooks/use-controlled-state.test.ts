@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
-import { useControlledState, useCounter } from "../../src";
+import { useControlledState } from "../../src";
 import { act, useState } from "react";
 
 describe("useControlledState", () => {
@@ -51,36 +51,42 @@ describe("useControlledState", () => {
     });
 
     expect(result.current.count).toBe(10);
+
     act(() => {
       result.current.setCount(void 0);
     });
-    expect(result.current.count).toBeUndefined();
+    expect(result.current.count).toBe(10);
   });
 
   it("controlled state", () => {
+    const _cb = jest.fn<(x?: number[]) => void>();
     const { result } = renderHook(() => {
-      const [count, { add }] = useCounter(0);
-      const [controlled, setControlled] = useControlledState(count);
+      const [results, setResults] = useState<number[]>([]);
+      const [controlledValue, setControlledValue] = useControlledState<number[]>(results, {
+        onChange: _cb,
+      });
 
       return {
-        controlled,
-        add,
-        setControlled,
+        controlledValue,
+        setResults,
+        setControlledValue,
       };
     });
 
-    expect(result.current.controlled).toBe(0);
+    expect(result.current.controlledValue.length).toBe(0);
 
     act(() => {
-      result.current.add();
+      result.current.setResults([1]);
     });
-    expect(result.current.controlled).toBe(1);
+    expect(result.current.controlledValue.length).toBe(1);
 
     // when controlled, setter will not work
     act(() => {
-      result.current.setControlled(2);
+      result.current.setControlledValue([1, 2]);
     });
-    expect(result.current.controlled).toBe(1);
+
+    expect(_cb).toBeCalledWith([1, 2]);
+    expect(result.current.controlledValue.length).toBe(1);
   });
 
   it("uncontrolled state", () => {

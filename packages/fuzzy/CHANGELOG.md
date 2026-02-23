@@ -1,5 +1,13 @@
 # @aiszlab/fuzzy
 
+## 2.1.2
+
+### Patch Changes
+
+- controlled state hook 新增 onChange 的回调功能
+- Updated dependencies
+  - @aiszlab/relax@2.1.2
+
 ## 2.1.1
 
 ### Patch Changes
