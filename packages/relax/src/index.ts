@@ -24,6 +24,7 @@ export { useFocus } from "./hooks/use-focus";
 export { useMemorized } from "./hooks/use-memorized";
 export { useMutateObserver } from "./hooks/use-mutate-observer";
 export { useRaf } from "./hooks/use-raf";
+export { useRequest } from "./hooks/use-request";
 export { useDevicePixelRatio } from "./hooks/use-device-pixel-ratio";
 export { useIdentity } from "./hooks/use-identity";
 export { useMediaQuery } from "./hooks/use-media-query";
