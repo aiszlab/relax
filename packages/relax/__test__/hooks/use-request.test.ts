@@ -121,4 +121,118 @@ describe("useRequest", () => {
     expect(result.current.error).toBe(null);
     expect(result.current.data).toBe("ok");
   });
+
+  it("calls then callback on success", async () => {
+    const thenFn = jest.fn();
+    const fn = jest.fn(async () => "data");
+    const { result } = renderHook(() =>
+      useRequest(fn, { then: thenFn }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(thenFn).toHaveBeenCalledTimes(1);
+    expect(thenFn).toHaveBeenCalledWith("data");
+  });
+
+  it("calls catch callback on error", async () => {
+    const err = new Error("boom");
+    const catchFn = jest.fn();
+    const fn = jest.fn(async () => {
+      throw err;
+    });
+    const { result } = renderHook(() =>
+      useRequest(fn, { catch: catchFn }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(catchFn).toHaveBeenCalledTimes(1);
+    expect(catchFn).toHaveBeenCalledWith(err);
+  });
+
+  it("calls finally callback on success", async () => {
+    const finallyFn = jest.fn();
+    const fn = jest.fn(async () => "ok");
+    const { result } = renderHook(() =>
+      useRequest(fn, { finally: finallyFn }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(finallyFn).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls finally callback on error", async () => {
+    const finallyFn = jest.fn();
+    const fn = jest.fn(async () => {
+      throw new Error("fail");
+    });
+    const { result } = renderHook(() =>
+      useRequest(fn, { finally: finallyFn }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(finallyFn).toHaveBeenCalledTimes(1);
+  });
+
+  it("callbacks fire in order: then → finally on success", async () => {
+    const order: string[] = [];
+    const fn = jest.fn(async () => "data");
+    const { result } = renderHook(() =>
+      useRequest(fn, {
+        then: () => order.push("then"),
+        finally: () => order.push("finally"),
+      }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(order).toEqual(["then", "finally"]);
+  });
+
+  it("callbacks fire in order: catch → finally on error", async () => {
+    const order: string[] = [];
+    const fn = jest.fn(async () => {
+      throw new Error("fail");
+    });
+    const { result } = renderHook(() =>
+      useRequest(fn, {
+        catch: () => order.push("catch"),
+        finally: () => order.push("finally"),
+      }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(order).toEqual(["catch", "finally"]);
+  });
+
+  it("then receives null when request returns null", async () => {
+    const thenFn = jest.fn();
+    const fn = jest.fn(async () => null);
+    const { result } = renderHook(() =>
+      useRequest(fn, { then: thenFn }),
+    );
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(thenFn).toHaveBeenCalledTimes(1);
+    expect(thenFn).toHaveBeenCalledWith(null);
+  });
 });
