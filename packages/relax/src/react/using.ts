@@ -4,7 +4,7 @@ import { chain } from "../utils/chain";
 import { toFunction } from "../utils/to-function";
 
 type SetState<T> = (state: T | ((previous: T) => T)) => void;
-type Initializer<T> = (setState: SetState<T>) => T;
+type Initializer<T> = (setState: SetState<T>, getState: () => T) => T;
 
 type UseStore<T> = {
   (): T;
@@ -40,8 +40,10 @@ const initialize = <T>(initializer: Initializer<T>) => {
     store.state = toFunction(previous)(store.state ?? initialState);
   };
 
+  const getState = () => store.state ?? initialState;
+
   // initialize state
-  const initialState = (store.state = initializer(setState));
+  const initialState = (store.state = initializer(setState, getState));
 
   return {
     subscribe,
