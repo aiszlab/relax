@@ -2,8 +2,8 @@ import { type Dispatch, type SetStateAction, useState } from "react";
 import type { Partialable, RequiredIn, State } from "@aiszlab/relax/types";
 import { isUndefined } from "../is/is-undefined";
 import { isFunction } from "../is/is-function";
-import { useUpdateEffect } from "./use-update-effect";
 import { useEvent } from "./use-event";
+import { useUpdateEffect } from "./use-update-effect";
 
 type UsingControlledState<S> = {
   /**
@@ -62,6 +62,14 @@ function useControlledState<T>(
 
   // use controlled
   const state = isUndefined(controlledState) ? _state : controlledState;
+
+  useUpdateEffect(() => {
+    if (!isUndefined(controlledState)) {
+      return;
+    }
+
+    _setState(defaultState ?? controlledState);
+  }, [controlledState]);
 
   // 复写状态更新
   const setState = useEvent<typeof _setState>((_newValue) => {
