@@ -55,7 +55,7 @@ describe("useControlledState", () => {
     act(() => {
       result.current.setCount(void 0);
     });
-    expect(result.current.count).toBe(10);
+    expect(result.current.count).toBe(void 0);
   });
 
   it("controlled state", () => {

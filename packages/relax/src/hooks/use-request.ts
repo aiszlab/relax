@@ -1,55 +1,60 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useEvent } from "./use-event";
 import { useMounted } from "./use-mounted";
+import { useDebounceCallback } from "./use-debounce-callback";
 
 type UsingRequest<T> = {
   /**
-   * @description
    * auto request when component mounts
    */
   auto?: boolean;
 
   /**
-   * @description
    * called when the request succeeds, like Promise.then
    */
   then?: (data: T) => void;
 
   /**
-   * @description
    * called when the request fails, like Promise.catch
    */
   catch?: (error: Error) => void;
 
   /**
-   * @description
    * called when the request completes (success or failure), like Promise.finally
    */
   finally?: () => void;
+
+  /**
+   * debounce delay in milliseconds. setting this enables debounce mode —
+   * rapid calls to `run` will be coalesced and only the last call within
+   * the window will execute.
+   *
+   * @zh 防抖延迟时间（毫秒）。设置后启用防抖模式——对 `run` 的快速调用
+   * 会被合并，在时间窗口内仅执行最后一次调用。
+   */
+  debounceWait?: number;
 };
 
 type UsedRequest<T> = {
   /**
-   * @description
    * response data
    */
   data: T | null;
 
   /**
-   * @description
    * error caught from the request
    */
   error: Error | null;
 
   /**
-   * @description
    * whether the request is in progress
    */
   loading: boolean;
 
   /**
-   * @description
-   * manually trigger the request with the same arguments as the source function
+   * manually trigger the request with the same arguments as the source function.
+   * when `debounceWait` is set calls are debounced — the returned Promise
+   * resolves only when the call is actually executed.
    */
   run: (...args: any[]) => Promise<void>;
 };
@@ -57,9 +62,10 @@ type UsedRequest<T> = {
 /**
  * @author murukal
  *
- * @description
  * wraps an async request function, tracking loading / error / data state.
  * when `auto` is true the request fires automatically on mount.
+ *
+ * supports debounce via `debounceWait` option which accepts dynamic updates.
  */
 export const useRequest = <T>(
   request: (...args: any[]) => Promise<T>,
@@ -68,6 +74,7 @@ export const useRequest = <T>(
     then: thenCallback,
     catch: catchCallback,
     finally: finallyCallback,
+    debounceWait,
   }: UsingRequest<T> = {},
 ): UsedRequest<T> => {
   const [data, setData] = useState<T | null>(null);
@@ -92,7 +99,9 @@ export const useRequest = <T>(
     finallyCallback?.();
   });
 
-  const run = useCallback(async (...args: any[]) => {
+  // ---- core execution (always stable) ----
+
+  const _execute = useEvent(async (...args: any[]) => {
     setLoading(true);
     setError(null);
 
@@ -103,14 +112,26 @@ export const useRequest = <T>(
 
     setData(result);
     setLoading(false);
-  }, []);
+  });
+
+  const debounced = useDebounceCallback(_execute, debounceWait);
+
+  const run = useEvent((...args: any[]): Promise<void> => {
+    if (!debounceWait) {
+      return _execute(...args);
+    }
+
+    return Promise.resolve(debounced.next(...args));
+  });
 
   useMounted(() => {
     if (isMountedRef.current) return;
     if (!auto) return;
 
     isMountedRef.current = true;
-    run();
+    // auto-run always fires immediately — debounce only applies to
+    // manual run() calls
+    _execute();
   });
 
   return { data, error, loading, run };

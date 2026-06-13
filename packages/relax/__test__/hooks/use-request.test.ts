@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { renderHook, waitFor } from "@testing-library/react";
 import { useRequest } from "../../src";
 import { act } from "react";
@@ -125,9 +125,7 @@ describe("useRequest", () => {
   it("calls then callback on success", async () => {
     const thenFn = jest.fn();
     const fn = jest.fn(async () => "data");
-    const { result } = renderHook(() =>
-      useRequest(fn, { then: thenFn }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { then: thenFn }));
 
     await act(async () => {
       await result.current.run();
@@ -143,9 +141,7 @@ describe("useRequest", () => {
     const fn = jest.fn(async () => {
       throw err;
     });
-    const { result } = renderHook(() =>
-      useRequest(fn, { catch: catchFn }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { catch: catchFn }));
 
     await act(async () => {
       await result.current.run();
@@ -158,9 +154,7 @@ describe("useRequest", () => {
   it("calls finally callback on success", async () => {
     const finallyFn = jest.fn();
     const fn = jest.fn(async () => "ok");
-    const { result } = renderHook(() =>
-      useRequest(fn, { finally: finallyFn }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { finally: finallyFn }));
 
     await act(async () => {
       await result.current.run();
@@ -174,9 +168,7 @@ describe("useRequest", () => {
     const fn = jest.fn(async () => {
       throw new Error("fail");
     });
-    const { result } = renderHook(() =>
-      useRequest(fn, { finally: finallyFn }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { finally: finallyFn }));
 
     await act(async () => {
       await result.current.run();
@@ -224,9 +216,7 @@ describe("useRequest", () => {
   it("then receives null when request returns null", async () => {
     const thenFn = jest.fn();
     const fn = jest.fn(async () => null);
-    const { result } = renderHook(() =>
-      useRequest(fn, { then: thenFn }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { then: thenFn }));
 
     await act(async () => {
       await result.current.run();
@@ -234,5 +224,396 @@ describe("useRequest", () => {
 
     expect(thenFn).toHaveBeenCalledTimes(1);
     expect(thenFn).toHaveBeenCalledWith(null);
+  });
+});
+
+describe("useRequest — debounce", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("coalesces calls within the wait window", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
+
+    // fire three rapid calls
+    let p1: Promise<void>, p2: Promise<void>, p3: Promise<void>;
+    await act(async () => {
+      p1 = result.current.run(1);
+      p2 = result.current.run(2);
+      p3 = result.current.run(3);
+    });
+
+    // nothing should have fired yet
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // fast-forward past the wait window
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    // only the last call should have executed
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(3);
+    expect(result.current.data).toBe(3);
+
+    // the last call's promise resolves
+    await expect(p3!).resolves.toBeUndefined();
+  });
+
+  it("debounce only affects manual run(), auto runs fire immediately", async () => {
+    const fn = jest.fn(async () => "auto-data");
+    const { result } = renderHook(() => useRequest(fn, { auto: true, debounceWait: 300 }));
+
+    // auto request fires immediately despite debounce
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
+
+    expect(result.current.data).toBe("auto-data");
+  });
+
+  it("resolves only the promise of the actually-executed call", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
+
+    let p1: Promise<void>, p2: Promise<void>;
+
+    await act(async () => {
+      p1 = result.current.run(1);
+      p2 = result.current.run(2);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(2);
+
+    // p2 should resolve (it's the last call that executed)
+    await expect(p2!).resolves.toBeUndefined();
+  });
+
+  it("passes the latest arguments through debounce", async () => {
+    const fn = jest.fn(async (id: number, name: string) => ({ id, name }));
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    await act(async () => {
+      result.current.run(1, "alice");
+      result.current.run(2, "bob");
+      result.current.run(3, "charlie");
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(3, "charlie");
+    expect(result.current.data).toEqual({ id: 3, name: "charlie" });
+  });
+
+  it("supports dynamic update of debounceWait", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result, rerender } = renderHook(({ wait }) => useRequest(fn, { debounceWait: wait }), {
+      initialProps: { wait: 300 },
+    });
+
+    await act(async () => {
+      result.current.run(1);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // dynamically shorten the wait
+    rerender({ wait: 100 });
+
+    await act(async () => {
+      result.current.run(2);
+      jest.advanceTimersByTime(100);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(2);
+  });
+
+  it("handles errors within debounced execution", async () => {
+    const err = new Error("debounced-fail");
+    const fn = jest.fn(async () => {
+      throw err;
+    });
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    await act(async () => {
+      result.current.run();
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(result.current.error).toBe(err);
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("fires then/catch/finally callbacks in debounce mode", async () => {
+    const thenFn = jest.fn();
+    const finallyFn = jest.fn();
+    const fn = jest.fn(async () => "ok");
+    const { result } = renderHook(() =>
+      useRequest(fn, {
+        debounceWait: 200,
+        then: thenFn,
+        finally: finallyFn,
+      }),
+    );
+
+    await act(async () => {
+      result.current.run();
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(thenFn).toHaveBeenCalledWith("ok");
+    expect(finallyFn).toHaveBeenCalledTimes(1);
+  });
+
+  it("loading stays false during debounce wait, true only during execution", async () => {
+    let resolve: (value: string) => void;
+    const promise = new Promise<string>((r) => {
+      resolve = r;
+    });
+    const fn = jest.fn(() => promise);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
+
+    // trigger debounced run
+    await act(async () => {
+      result.current.run();
+    });
+
+    // loading is still false during debounce wait
+    expect(result.current.loading).toBe(false);
+
+    // advance past the debounce wait — now the request fires
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    // loading is true while request is in flight
+    expect(result.current.loading).toBe(true);
+
+    // resolve the request
+    await act(async () => {
+      resolve!("done");
+    });
+
+    // loading goes back to false
+    expect(result.current.loading).toBe(false);
+    expect(result.current.data).toBe("done");
+  });
+
+  it("resolves the returned promise immediately (trigger, not execution)", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
+
+    let resolved = false;
+    await act(async () => {
+      const p = result.current.run(42);
+      p.then(() => {
+        resolved = true;
+      });
+    });
+
+    // promise resolves immediately (it only triggers the debounced call)
+    expect(resolved).toBe(true);
+
+    // but the actual request has not fired yet
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // advance timers to let the debounced call execute
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("handles sequential debounce batches", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    // first batch
+    await act(async () => {
+      result.current.run(1);
+      result.current.run(2);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(2);
+    expect(result.current.data).toBe(2);
+
+    // second batch (after first completed)
+    await act(async () => {
+      result.current.run(3);
+      result.current.run(4);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(2);
+    expect(fn).toHaveBeenLastCalledWith(4);
+    expect(result.current.data).toBe(4);
+  });
+
+  it("recovers from error on subsequent debounced run", async () => {
+    const err = new Error("first-fail");
+    let shouldFail = true;
+    const fn = jest.fn(async (x: number) => {
+      if (shouldFail) throw err;
+      return x;
+    });
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    // first debounced run — fails
+    await act(async () => {
+      result.current.run(1);
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+    expect(result.current.error).toBe(err);
+    expect(result.current.data).toBe(null);
+
+    // second debounced run — succeeds
+    shouldFail = false;
+    await act(async () => {
+      result.current.run(2);
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(result.current.error).toBe(null);
+    expect(result.current.data).toBe(2);
+  });
+
+  it("calls catch callback on debounced error", async () => {
+    const err = new Error("debounced-boom");
+    const catchFn = jest.fn();
+    const fn = jest.fn(async () => {
+      throw err;
+    });
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200, catch: catchFn }));
+
+    await act(async () => {
+      result.current.run();
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(catchFn).toHaveBeenCalledTimes(1);
+    expect(catchFn).toHaveBeenCalledWith(err);
+  });
+
+  it("debounce with async request respects timing", async () => {
+    let resolve1: (value: string) => void;
+    const promise1 = new Promise<string>((r) => {
+      resolve1 = r;
+    });
+    let resolve2: (value: string) => void;
+    const promise2 = new Promise<string>((r) => {
+      resolve2 = r;
+    });
+
+    let callCount = 0;
+    const fn = jest.fn(async () => {
+      callCount++;
+      return callCount === 1 ? promise1 : promise2;
+    });
+
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    // first debounced call
+    await act(async () => {
+      result.current.run("a");
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(result.current.loading).toBe(true);
+
+    // resolve first request
+    await act(async () => {
+      resolve1!("first");
+    });
+
+    expect(result.current.loading).toBe(false);
+    expect(result.current.data).toBe("first");
+
+    // second debounced call
+    await act(async () => {
+      result.current.run("b");
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(2);
+    expect(result.current.loading).toBe(true);
+
+    await act(async () => {
+      resolve2!("second");
+    });
+
+    expect(result.current.data).toBe("second");
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("does not coalesce calls spaced beyond the wait window", async () => {
+    const fn = jest.fn(async (x: number) => x);
+    const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
+
+    await act(async () => {
+      result.current.run(1);
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(1);
+
+    // second call after the first has settled
+    await act(async () => {
+      result.current.run(2);
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(2);
+    expect(fn).toHaveBeenLastCalledWith(2);
+    expect(result.current.data).toBe(2);
   });
 });

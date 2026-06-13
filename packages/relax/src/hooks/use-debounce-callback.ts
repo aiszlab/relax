@@ -54,32 +54,26 @@ function useDebounceCallback<T extends AnyFunction, R>(
   debouncer: T | Debouncer<T, R>,
   wait: number = 1000,
 ) {
-  const debounced = useRef<Debounced<T> | null>(null);
   const { callback, pipe } = useDebouncer(debouncer);
 
-  useEffect(() => {
-    const _debounced = debounce<T, R>(
+  const _debounced = useMemo(() => {
+    return debounce<T, R>(
       {
         callback,
         pipe,
       },
       wait,
     );
+  }, [wait]);
 
-    debounced.current = _debounced;
-
+  useEffect(() => {
     // dispose
     return () => {
       _debounced.abort();
-      debounced.current = null;
     };
-  }, [wait]);
+  }, [_debounced]);
 
-  return useDefault<Debounced<T>>(() => ({
-    next: (...args) => debounced.current?.next(...args),
-    flush: () => debounced.current?.flush(),
-    abort: () => debounced.current?.abort(),
-  }));
+  return _debounced;
 }
 
 export { useDebounceCallback };
