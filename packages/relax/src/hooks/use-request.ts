@@ -1,6 +1,5 @@
-import { useRef, useState } from "react";
+import { type DependencyList, useEffect, useRef, useState } from "react";
 import { useEvent } from "./use-event";
-import { useMounted } from "./use-mounted";
 import { useDebounceCallback } from "./use-debounce-callback";
 
 type UsingRequest<T> = {
@@ -33,6 +32,14 @@ type UsingRequest<T> = {
    * 会被合并，在时间窗口内仅执行最后一次调用。
    */
   debounceWait?: number;
+
+  /**
+   * dependency list. when any value in this array changes (after initial
+   * mount), the request is automatically re-executed.
+   *
+   * @zh 依赖项列表。数组中的任意值发生变化时（首次挂载后），自动重新请求数据。
+   */
+  deps?: DependencyList;
 };
 
 type UsedRequest<T> = {
@@ -75,6 +82,7 @@ export const useRequest = <T>(
     catch: catchCallback,
     finally: finallyCallback,
     debounceWait,
+    deps,
   }: UsingRequest<T> = {},
 ): UsedRequest<T> => {
   const [data, setData] = useState<T | null>(null);
@@ -124,15 +132,17 @@ export const useRequest = <T>(
     return Promise.resolve(debounced.next(...args));
   });
 
-  useMounted(() => {
-    if (isMountedRef.current) return;
-    if (!auto) return;
+  useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
 
-    isMountedRef.current = true;
-    // auto-run always fires immediately — debounce only applies to
-    // manual run() calls
+      if (!auto) return;
+      _execute();
+      return;
+    }
+
     _execute();
-  });
+  }, deps ?? []);
 
   return { data, error, loading, run };
 };

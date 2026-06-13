@@ -617,3 +617,158 @@ describe("useRequest — debounce", () => {
     expect(result.current.data).toBe(2);
   });
 });
+
+describe("useRequest — deps", () => {
+  it("re-executes when deps change", async () => {
+    let currentId = 0;
+    const fn = jest.fn(async () => ({ id: currentId }));
+    const { result, rerender } = renderHook(
+      ({ id }) => {
+        currentId = id;
+        return useRequest(fn, { deps: [id] });
+      },
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is false by default — no request on initial mount
+    expect(fn).toHaveBeenCalledTimes(0);
+    expect(result.current.data).toBe(null);
+
+    // change deps — should trigger first execution
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 2 });
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // change deps again — should trigger second execution
+    rerender({ id: 3 });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 3 });
+    });
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not re-execute when deps are unchanged", async () => {
+    let currentId = 0;
+    const fn = jest.fn(async () => ({ id: currentId }));
+    const { rerender } = renderHook(
+      ({ id }) => {
+        currentId = id;
+        return useRequest(fn, { deps: [id] });
+      },
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is false — no request on mount
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // first dep change triggers request
+    rerender({ id: 2 });
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    // rerender with the same deps — should NOT re-execute
+    rerender({ id: 2 });
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("re-executes on mount when auto is true with deps", async () => {
+    const fn = jest.fn(async () => "auto-data");
+    const { result, rerender } = renderHook(
+      ({ id }) => useRequest(fn, { auto: true, deps: [id] }),
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is true — request fires on mount
+    await waitFor(() => {
+      expect(result.current.data).toBe("auto-data");
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // change deps — should re-execute
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  it("does not fire on mount when auto is false with deps", async () => {
+    let currentId = 0;
+    const fn = jest.fn(async () => ({ id: currentId }));
+    const { result, rerender } = renderHook(
+      ({ id }) => {
+        currentId = id;
+        return useRequest(fn, { deps: [id] });
+      },
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is false — request should NOT fire on mount
+    expect(fn).toHaveBeenCalledTimes(0);
+    expect(result.current.data).toBe(null);
+
+    // change deps — now the request fires
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 2 });
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("multiple deps changes trigger multiple re-fetches", async () => {
+    const fn = jest.fn(async () => "data");
+    const { rerender } = renderHook(({ id }) => useRequest(fn, { deps: [id] }), {
+      initialProps: { id: 1 },
+    });
+
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    rerender({ id: 2 });
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    rerender({ id: 3 });
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(2);
+    });
+
+    rerender({ id: 4 });
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  it("works with debounceWait and deps together", async () => {
+    jest.useFakeTimers();
+
+    const fn = jest.fn(async () => "data");
+    const { rerender } = renderHook(
+      ({ id }) => useRequest(fn, { debounceWait: 300, deps: [id] }),
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is false — no request on mount even after debounce wait
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // change deps — should trigger debounced execution
+    rerender({ id: 2 });
+
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    jest.useRealTimers();
+  });
+});
