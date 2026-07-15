@@ -1,11 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-
 import React, { createElement, useRef } from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { useBoolean, useClickAway } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 const ClickAway = () => {
   const targetRef = useRef<HTMLDivElement>(null);

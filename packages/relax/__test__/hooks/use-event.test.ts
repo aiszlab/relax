@@ -1,10 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useEvent } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("useEvent", () => {
   it("keep method same", async () => {

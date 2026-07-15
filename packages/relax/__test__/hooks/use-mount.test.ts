@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useMount } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 import type { ThenableEffectCallback } from "../../src/types";
 
 describe("useMount", () => {
   it("mount", async () => {
-    const fn = jest.fn<ThenableEffectCallback>();
+    const fn = vi.fn<ThenableEffectCallback>();
     const hook = renderHook(() => useMount(fn));
     expect(fn).toHaveBeenCalledTimes(1);
     hook.rerender();
@@ -22,8 +17,8 @@ describe("useMount", () => {
   });
 
   it("unmount", () => {
-    const runner = jest.fn();
-    const cleaner = jest.fn<VoidFunction>();
+    const runner = vi.fn();
+    const cleaner = vi.fn<VoidFunction>();
     const hook = renderHook(() =>
       useMount(() => {
         runner();
@@ -39,8 +34,8 @@ describe("useMount", () => {
   });
 
   it("async unmount", () => {
-    const runner = jest.fn();
-    const cleaner = jest.fn<VoidFunction>();
+    const runner = vi.fn();
+    const cleaner = vi.fn<VoidFunction>();
     const hook = renderHook(() =>
       useMount(async () => {
         runner();

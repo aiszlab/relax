@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, it } from "@jest/globals";
 import { setStyle } from "../../src";
 
 describe("`setStyle` util", () => {

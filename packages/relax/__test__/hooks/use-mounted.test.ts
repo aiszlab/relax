@@ -1,14 +1,9 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useMounted } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 
 describe("useMount", () => {
   it("mounted", async () => {
-    const fn = jest.fn<VoidFunction>();
+    const fn = vi.fn<VoidFunction>();
     const hook = renderHook(() => useMounted(fn));
     expect(fn).toHaveBeenCalledTimes(1);
     hook.rerender();
@@ -21,8 +16,8 @@ describe("useMount", () => {
   });
 
   it("unmounted", () => {
-    const runner = jest.fn();
-    const cleaner = jest.fn<VoidFunction>();
+    const runner = vi.fn();
+    const cleaner = vi.fn<VoidFunction>();
     const hook = renderHook(() =>
       useMounted(() => {
         runner();
@@ -38,8 +33,8 @@ describe("useMount", () => {
   });
 
   it("async unmounted", () => {
-    const runner = jest.fn();
-    const cleaner = jest.fn<VoidFunction>();
+    const runner = vi.fn();
+    const cleaner = vi.fn<VoidFunction>();
     const hook = renderHook(() =>
       useMounted(async () => {
         runner();

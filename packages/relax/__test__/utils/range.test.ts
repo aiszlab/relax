@@ -1,5 +1,4 @@
 import { range } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`range` util", () => {
   it("range", () => {

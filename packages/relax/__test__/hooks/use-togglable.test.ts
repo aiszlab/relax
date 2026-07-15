@@ -1,10 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook, act } from "@testing-library/react";
 import { useToggleable } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("useTogglable", () => {
   it("toggle", async () => {

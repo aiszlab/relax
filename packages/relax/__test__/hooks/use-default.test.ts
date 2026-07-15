@@ -1,10 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook, act } from "@testing-library/react";
 import { useDefault, useCounter } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("useDefault", () => {
   it("rerender no changes", async () => {

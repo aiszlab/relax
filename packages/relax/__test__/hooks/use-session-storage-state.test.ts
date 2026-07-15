@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, test } from "@jest/globals";
 import { useSessionStorageState } from "../../src";
 import { renderHook } from "@testing-library/react";
 import { act } from "react";

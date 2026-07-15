@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
-import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { renderHook, waitFor } from "@testing-library/react";
 import { useRequest } from "../../src";
 import { act } from "react";
 
 describe("useRequest", () => {
   it("initial state", () => {
-    const fn = jest.fn(async () => "data");
+    const fn = vi.fn(async () => "data");
     const { result } = renderHook(() => useRequest(fn));
 
     expect(result.current.data).toBe(null);
@@ -18,7 +13,7 @@ describe("useRequest", () => {
   });
 
   it("manual run", async () => {
-    const fn = jest.fn(async () => "result");
+    const fn = vi.fn(async () => "result");
     const { result } = renderHook(() => useRequest(fn));
 
     await act(async () => {
@@ -32,7 +27,7 @@ describe("useRequest", () => {
   });
 
   it("auto run on mount", async () => {
-    const fn = jest.fn(async () => "auto-data");
+    const fn = vi.fn(async () => "auto-data");
     const { result } = renderHook(() => useRequest(fn, { auto: true }));
 
     expect(result.current.loading).toBe(true);
@@ -48,7 +43,7 @@ describe("useRequest", () => {
 
   it("error handling", async () => {
     const err = new Error("boom");
-    const fn = jest.fn(async () => {
+    const fn = vi.fn(async () => {
       throw err;
     });
     const { result } = renderHook(() => useRequest(fn));
@@ -63,7 +58,7 @@ describe("useRequest", () => {
   });
 
   it("passes arguments through run", async () => {
-    const fn = jest.fn(async (id: number, name: string) => ({ id, name }));
+    const fn = vi.fn(async (id: number, name: string) => ({ id, name }));
     const { result } = renderHook(() => useRequest(fn));
 
     await act(async () => {
@@ -79,7 +74,7 @@ describe("useRequest", () => {
     const promise = new Promise<string>((r) => {
       resolve = r;
     });
-    const fn = jest.fn(() => promise);
+    const fn = vi.fn(() => promise);
     const { result } = renderHook(() => useRequest(fn));
 
     let promiseFromRun: Promise<void>;
@@ -102,7 +97,7 @@ describe("useRequest", () => {
   it("resets error on subsequent successful run", async () => {
     const err = new Error("fail");
     let shouldFail = true;
-    const fn = jest.fn(async () => {
+    const fn = vi.fn(async () => {
       if (shouldFail) throw err;
       return "ok";
     });
@@ -123,8 +118,8 @@ describe("useRequest", () => {
   });
 
   it("calls then callback on success", async () => {
-    const thenFn = jest.fn();
-    const fn = jest.fn(async () => "data");
+    const thenFn = vi.fn();
+    const fn = vi.fn(async () => "data");
     const { result } = renderHook(() => useRequest(fn, { then: thenFn }));
 
     await act(async () => {
@@ -137,8 +132,8 @@ describe("useRequest", () => {
 
   it("calls catch callback on error", async () => {
     const err = new Error("boom");
-    const catchFn = jest.fn();
-    const fn = jest.fn(async () => {
+    const catchFn = vi.fn();
+    const fn = vi.fn(async () => {
       throw err;
     });
     const { result } = renderHook(() => useRequest(fn, { catch: catchFn }));
@@ -152,8 +147,8 @@ describe("useRequest", () => {
   });
 
   it("calls finally callback on success", async () => {
-    const finallyFn = jest.fn();
-    const fn = jest.fn(async () => "ok");
+    const finallyFn = vi.fn();
+    const fn = vi.fn(async () => "ok");
     const { result } = renderHook(() => useRequest(fn, { finally: finallyFn }));
 
     await act(async () => {
@@ -164,8 +159,8 @@ describe("useRequest", () => {
   });
 
   it("calls finally callback on error", async () => {
-    const finallyFn = jest.fn();
-    const fn = jest.fn(async () => {
+    const finallyFn = vi.fn();
+    const fn = vi.fn(async () => {
       throw new Error("fail");
     });
     const { result } = renderHook(() => useRequest(fn, { finally: finallyFn }));
@@ -179,7 +174,7 @@ describe("useRequest", () => {
 
   it("callbacks fire in order: then → finally on success", async () => {
     const order: string[] = [];
-    const fn = jest.fn(async () => "data");
+    const fn = vi.fn(async () => "data");
     const { result } = renderHook(() =>
       useRequest(fn, {
         then: () => order.push("then"),
@@ -196,7 +191,7 @@ describe("useRequest", () => {
 
   it("callbacks fire in order: catch → finally on error", async () => {
     const order: string[] = [];
-    const fn = jest.fn(async () => {
+    const fn = vi.fn(async () => {
       throw new Error("fail");
     });
     const { result } = renderHook(() =>
@@ -214,8 +209,8 @@ describe("useRequest", () => {
   });
 
   it("then receives null when request returns null", async () => {
-    const thenFn = jest.fn();
-    const fn = jest.fn(async () => null);
+    const thenFn = vi.fn();
+    const fn = vi.fn(async () => null);
     const { result } = renderHook(() => useRequest(fn, { then: thenFn }));
 
     await act(async () => {
@@ -229,15 +224,15 @@ describe("useRequest", () => {
 
 describe("useRequest — debounce", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it("coalesces calls within the wait window", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
 
     // fire three rapid calls
@@ -253,7 +248,7 @@ describe("useRequest — debounce", () => {
 
     // fast-forward past the wait window
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     // only the last call should have executed
@@ -266,21 +261,21 @@ describe("useRequest — debounce", () => {
   });
 
   it("debounce only affects manual run(), auto runs fire immediately", async () => {
-    const fn = jest.fn(async () => "auto-data");
+    const fn = vi.fn(async () => "auto-data");
     const { result } = renderHook(() => useRequest(fn, { auto: true, debounceWait: 300 }));
 
     // auto request fires immediately despite debounce
     expect(fn).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      jest.advanceTimersByTime(100);
+      vi.advanceTimersByTime(100);
     });
 
     expect(result.current.data).toBe("auto-data");
   });
 
   it("resolves only the promise of the actually-executed call", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
 
     let p1: Promise<void>, p2: Promise<void>;
@@ -293,7 +288,7 @@ describe("useRequest — debounce", () => {
     expect(fn).toHaveBeenCalledTimes(0);
 
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -304,7 +299,7 @@ describe("useRequest — debounce", () => {
   });
 
   it("passes the latest arguments through debounce", async () => {
-    const fn = jest.fn(async (id: number, name: string) => ({ id, name }));
+    const fn = vi.fn(async (id: number, name: string) => ({ id, name }));
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
 
     await act(async () => {
@@ -314,7 +309,7 @@ describe("useRequest — debounce", () => {
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -323,7 +318,7 @@ describe("useRequest — debounce", () => {
   });
 
   it("supports dynamic update of debounceWait", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result, rerender } = renderHook(({ wait }) => useRequest(fn, { debounceWait: wait }), {
       initialProps: { wait: 300 },
     });
@@ -339,7 +334,7 @@ describe("useRequest — debounce", () => {
 
     await act(async () => {
       result.current.run(2);
-      jest.advanceTimersByTime(100);
+      vi.advanceTimersByTime(100);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -348,7 +343,7 @@ describe("useRequest — debounce", () => {
 
   it("handles errors within debounced execution", async () => {
     const err = new Error("debounced-fail");
-    const fn = jest.fn(async () => {
+    const fn = vi.fn(async () => {
       throw err;
     });
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
@@ -358,7 +353,7 @@ describe("useRequest — debounce", () => {
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -367,9 +362,9 @@ describe("useRequest — debounce", () => {
   });
 
   it("fires then/catch/finally callbacks in debounce mode", async () => {
-    const thenFn = jest.fn();
-    const finallyFn = jest.fn();
-    const fn = jest.fn(async () => "ok");
+    const thenFn = vi.fn();
+    const finallyFn = vi.fn();
+    const fn = vi.fn(async () => "ok");
     const { result } = renderHook(() =>
       useRequest(fn, {
         debounceWait: 200,
@@ -383,7 +378,7 @@ describe("useRequest — debounce", () => {
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(thenFn).toHaveBeenCalledWith("ok");
@@ -395,7 +390,7 @@ describe("useRequest — debounce", () => {
     const promise = new Promise<string>((r) => {
       resolve = r;
     });
-    const fn = jest.fn(() => promise);
+    const fn = vi.fn(() => promise);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
 
     // trigger debounced run
@@ -408,7 +403,7 @@ describe("useRequest — debounce", () => {
 
     // advance past the debounce wait — now the request fires
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     // loading is true while request is in flight
@@ -425,7 +420,7 @@ describe("useRequest — debounce", () => {
   });
 
   it("resolves the returned promise immediately (trigger, not execution)", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 300 }));
 
     let resolved = false;
@@ -444,14 +439,14 @@ describe("useRequest — debounce", () => {
 
     // advance timers to let the debounced call execute
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
   it("handles sequential debounce batches", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
 
     // first batch
@@ -461,7 +456,7 @@ describe("useRequest — debounce", () => {
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -475,7 +470,7 @@ describe("useRequest — debounce", () => {
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(2);
@@ -486,7 +481,7 @@ describe("useRequest — debounce", () => {
   it("recovers from error on subsequent debounced run", async () => {
     const err = new Error("first-fail");
     let shouldFail = true;
-    const fn = jest.fn(async (x: number) => {
+    const fn = vi.fn(async (x: number) => {
       if (shouldFail) throw err;
       return x;
     });
@@ -497,7 +492,7 @@ describe("useRequest — debounce", () => {
       result.current.run(1);
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
     expect(result.current.error).toBe(err);
     expect(result.current.data).toBe(null);
@@ -508,7 +503,7 @@ describe("useRequest — debounce", () => {
       result.current.run(2);
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(result.current.error).toBe(null);
@@ -517,8 +512,8 @@ describe("useRequest — debounce", () => {
 
   it("calls catch callback on debounced error", async () => {
     const err = new Error("debounced-boom");
-    const catchFn = jest.fn();
-    const fn = jest.fn(async () => {
+    const catchFn = vi.fn();
+    const fn = vi.fn(async () => {
       throw err;
     });
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 200, catch: catchFn }));
@@ -527,7 +522,7 @@ describe("useRequest — debounce", () => {
       result.current.run();
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(catchFn).toHaveBeenCalledTimes(1);
@@ -545,7 +540,7 @@ describe("useRequest — debounce", () => {
     });
 
     let callCount = 0;
-    const fn = jest.fn(async () => {
+    const fn = vi.fn(async () => {
       callCount++;
       return callCount === 1 ? promise1 : promise2;
     });
@@ -557,7 +552,7 @@ describe("useRequest — debounce", () => {
       result.current.run("a");
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -576,7 +571,7 @@ describe("useRequest — debounce", () => {
       result.current.run("b");
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(2);
@@ -591,14 +586,14 @@ describe("useRequest — debounce", () => {
   });
 
   it("does not coalesce calls spaced beyond the wait window", async () => {
-    const fn = jest.fn(async (x: number) => x);
+    const fn = vi.fn(async (x: number) => x);
     const { result } = renderHook(() => useRequest(fn, { debounceWait: 200 }));
 
     await act(async () => {
       result.current.run(1);
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -609,7 +604,7 @@ describe("useRequest — debounce", () => {
       result.current.run(2);
     });
     await act(async () => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     expect(fn).toHaveBeenCalledTimes(2);
@@ -621,7 +616,7 @@ describe("useRequest — debounce", () => {
 describe("useRequest — deps", () => {
   it("re-executes when deps change", async () => {
     let currentId = 0;
-    const fn = jest.fn(async () => ({ id: currentId }));
+    const fn = vi.fn(async () => ({ id: currentId }));
     const { result, rerender } = renderHook(
       ({ id }) => {
         currentId = id;
@@ -653,7 +648,7 @@ describe("useRequest — deps", () => {
 
   it("does not re-execute when deps are unchanged", async () => {
     let currentId = 0;
-    const fn = jest.fn(async () => ({ id: currentId }));
+    const fn = vi.fn(async () => ({ id: currentId }));
     const { rerender } = renderHook(
       ({ id }) => {
         currentId = id;
@@ -677,7 +672,7 @@ describe("useRequest — deps", () => {
   });
 
   it("re-executes on mount when auto is true with deps", async () => {
-    const fn = jest.fn(async () => "auto-data");
+    const fn = vi.fn(async () => "auto-data");
     const { result, rerender } = renderHook(
       ({ id }) => useRequest(fn, { auto: true, deps: [id] }),
       { initialProps: { id: 1 } },
@@ -699,7 +694,7 @@ describe("useRequest — deps", () => {
 
   it("does not fire on mount when auto is false with deps", async () => {
     let currentId = 0;
-    const fn = jest.fn(async () => ({ id: currentId }));
+    const fn = vi.fn(async () => ({ id: currentId }));
     const { result, rerender } = renderHook(
       ({ id }) => {
         currentId = id;
@@ -722,7 +717,7 @@ describe("useRequest — deps", () => {
   });
 
   it("multiple deps changes trigger multiple re-fetches", async () => {
-    const fn = jest.fn(async () => "data");
+    const fn = vi.fn(async () => "data");
     const { rerender } = renderHook(({ id }) => useRequest(fn, { deps: [id] }), {
       initialProps: { id: 1 },
     });
@@ -746,9 +741,9 @@ describe("useRequest — deps", () => {
   });
 
   it("works with debounceWait and deps together", async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
-    const fn = jest.fn(async () => "data");
+    const fn = vi.fn(async () => "data");
     const { rerender } = renderHook(
       ({ id }) => useRequest(fn, { debounceWait: 300, deps: [id] }),
       { initialProps: { id: 1 } },
@@ -756,7 +751,7 @@ describe("useRequest — deps", () => {
 
     // auto is false — no request on mount even after debounce wait
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
     expect(fn).toHaveBeenCalledTimes(0);
 
@@ -764,18 +759,18 @@ describe("useRequest — deps", () => {
     rerender({ id: 2 });
 
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     expect(fn).toHaveBeenCalledTimes(1);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });
 
 describe("useRequest — defaultParams", () => {
   it("auto executes with defaultParams as array", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { result } = renderHook(() =>
       useRequest(fn, { auto: true, defaultParams: [42] }),
     );
@@ -789,7 +784,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("auto executes with defaultParams as factory", async () => {
-    const fn = jest.fn(async (id: number, name: string) => ({ id, name }));
+    const fn = vi.fn(async (id: number, name: string) => ({ id, name }));
     const { result } = renderHook(() =>
       useRequest(fn, {
         auto: true,
@@ -806,7 +801,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("skips auto execution when fn expects params but defaultParams is missing", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { result } = renderHook(() => useRequest(fn, { auto: true }));
 
     // fn expects a param but none provided — should not execute
@@ -816,7 +811,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("auto executes without params when fn takes no args (existing behavior)", async () => {
-    const fn = jest.fn(async () => "no-params");
+    const fn = vi.fn(async () => "no-params");
     const { result } = renderHook(() => useRequest(fn, { auto: true }));
 
     await waitFor(() => {
@@ -827,7 +822,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("deps change re-executes with defaultParams", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { result, rerender } = renderHook(
       ({ id }) => useRequest(fn, { deps: [id], defaultParams: [id] }),
       { initialProps: { id: 1 } },
@@ -847,7 +842,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("manual run does not use defaultParams", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { result } = renderHook(() =>
       useRequest(fn, { defaultParams: [1] }),
     );
@@ -863,7 +858,7 @@ describe("useRequest — defaultParams", () => {
 
   it("defaultParams factory reflects latest state on deps change", async () => {
     let currentId = 0;
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { rerender } = renderHook(
       ({ id }) => {
         currentId = id;
@@ -893,7 +888,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("defaultParams with auto and deps together", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { result, rerender } = renderHook(
       ({ id }) => useRequest(fn, { auto: true, deps: [id], defaultParams: [id] }),
       { initialProps: { id: 1 } },
@@ -915,7 +910,7 @@ describe("useRequest — defaultParams", () => {
   });
 
   it("skips deps re-execution when fn expects params but defaultParams is missing", async () => {
-    const fn = jest.fn(async (id: number) => ({ id }));
+    const fn = vi.fn(async (id: number) => ({ id }));
     const { rerender } = renderHook(
       ({ id }) => useRequest(fn, { deps: [id] }),
       { initialProps: { id: 1 } },

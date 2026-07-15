@@ -1,10 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
 import React, { useState } from "react";
 import { using } from "../../src/react";
-import { describe, expect, it } from "@jest/globals";
 import { fireEvent, render } from "@testing-library/react";
 
 const useCount = using<{

@@ -1,5 +1,4 @@
 import { effect } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`effect` util", () => {
   it("call effect", () => {

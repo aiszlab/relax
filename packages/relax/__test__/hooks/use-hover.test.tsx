@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, it, jest } from "@jest/globals";
 import { isEmpty, useHover } from "../../src";
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
@@ -36,8 +31,8 @@ describe("`useHover`", () => {
   });
 
   it("callbacks", () => {
-    const enter = jest.fn();
-    const leave = jest.fn();
+    const enter = vi.fn();
+    const leave = vi.fn();
 
     const { container } = render(<Hoverable onEnter={enter} onLeave={leave} />);
     const hoverable = container.querySelector("#hoverable")!;

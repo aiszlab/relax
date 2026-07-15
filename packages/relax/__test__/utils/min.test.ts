@@ -1,4 +1,3 @@
-import { describe, expect, it } from "@jest/globals";
 import { min } from "../../src";
 
 describe("`min`", () => {

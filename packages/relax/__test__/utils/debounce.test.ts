@@ -1,11 +1,10 @@
 import { debounce } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 
 describe("`debounce` util", () => {
   it("debounce callback", () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
-    const fn = jest.fn();
+    const fn = vi.fn();
 
     const { next: debounced } = debounce((value: string) => {
       fn();
@@ -17,7 +16,7 @@ describe("`debounce` util", () => {
     debounced("2");
     expect(fn).toBeCalledTimes(0);
 
-    jest.runOnlyPendingTimers();
+    vi.runOnlyPendingTimers();
     expect(fn).toBeCalledTimes(1);
 
     debounced("3");
@@ -25,15 +24,15 @@ describe("`debounce` util", () => {
     debounced("5");
 
     expect(fn).toBeCalledTimes(1);
-    jest.runOnlyPendingTimers();
+    vi.runOnlyPendingTimers();
     expect(fn).toBeCalledTimes(2);
   });
 
   it("debounce pipe", () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
-    const _pipe = jest.fn();
-    const _callback = jest.fn();
+    const _pipe = vi.fn();
+    const _callback = vi.fn();
 
     const { next: debounced } = debounce(
       {
@@ -55,7 +54,7 @@ describe("`debounce` util", () => {
 
     expect(_pipe).toBeCalledTimes(0);
     expect(_callback).toBeCalledTimes(0);
-    jest.runOnlyPendingTimers();
+    vi.runOnlyPendingTimers();
     expect(_pipe).toBeCalledTimes(1);
     expect(_callback).toBeCalledTimes(1);
 
@@ -65,14 +64,14 @@ describe("`debounce` util", () => {
 
     expect(_pipe).toBeCalledTimes(1);
     expect(_callback).toBeCalledTimes(1);
-    jest.runOnlyPendingTimers();
+    vi.runOnlyPendingTimers();
     expect(_pipe).toBeCalledTimes(2);
     expect(_callback).toBeCalledTimes(2);
   });
 
   it("debounce flush", () => {
-    jest.useFakeTimers();
-    const fn = jest.fn();
+    vi.useFakeTimers();
+    const fn = vi.fn();
 
     const { flush, next } = debounce((value: string) => {
       fn();
@@ -88,8 +87,8 @@ describe("`debounce` util", () => {
   });
 
   it("debounce abort", () => {
-    jest.useFakeTimers();
-    const fn = jest.fn();
+    vi.useFakeTimers();
+    const fn = vi.fn();
     const { abort, next, flush } = debounce((value: string) => {
       fn();
       return value;
@@ -103,7 +102,7 @@ describe("`debounce` util", () => {
     abort();
     expect(fn).toBeCalledTimes(0);
 
-    jest.runOnlyPendingTimers();
+    vi.runOnlyPendingTimers();
     expect(fn).toBeCalledTimes(0);
 
     next("3");
@@ -113,9 +112,9 @@ describe("`debounce` util", () => {
   });
 
   it("debounce promise pipe", (done) => {
-    jest.useRealTimers();
+    vi.useRealTimers();
 
-    const callback = jest.fn<(value: number) => void>();
+    const callback = vi.fn<(value: number) => void>();
     const pipe = (value: number) => Promise.resolve(value);
 
     const { next } = debounce(

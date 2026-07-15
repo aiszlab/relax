@@ -1,4 +1,3 @@
-import { describe, expect, it } from "@jest/globals";
 import { stringify } from "../../src/class-name";
 
 describe("stringify", () => {

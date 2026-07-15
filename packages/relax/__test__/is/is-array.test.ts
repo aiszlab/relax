@@ -1,5 +1,4 @@
 import { isArray } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("isArray", () => {
   it("check null", () => {

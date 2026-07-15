@@ -1,5 +1,4 @@
 import { at } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("Util `at`", () => {
   it("Get Index Value In `String`", () => {

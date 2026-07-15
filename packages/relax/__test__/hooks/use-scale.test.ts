@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, it, expect } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useScale } from "../../src/hooks/use-scale";
 

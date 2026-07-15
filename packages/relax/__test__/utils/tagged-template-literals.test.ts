@@ -1,5 +1,4 @@
 import { taggedTemplateLiterals } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`taggedTemplateLiterals` util", () => {
   it("normal string", () => {

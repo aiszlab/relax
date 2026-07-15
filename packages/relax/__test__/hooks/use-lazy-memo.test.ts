@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useCounter, useEvent, useLazyMemo } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 import { act, useMemo } from "react";
 
 describe("useLazyMemo", () => {
   it("lazy performance", () => {
-    const getter = jest.fn();
+    const getter = vi.fn();
 
     const { result } = renderHook(() => {
       const counter = useCounter(0);
@@ -40,8 +35,8 @@ describe("useLazyMemo", () => {
   });
 
   it("deps watcher feature", () => {
-    const mockFnInLazy = jest.fn();
-    const mockFnInSync = jest.fn();
+    const mockFnInLazy = vi.fn();
+    const mockFnInSync = vi.fn();
 
     const { result } = renderHook(() => {
       const counter = useCounter(0);

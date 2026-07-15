@@ -1,9 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
 import { isHTMLInputElement } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("isHTMLInputElement", () => {
   it("check null", () => {

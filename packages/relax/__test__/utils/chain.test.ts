@@ -1,5 +1,4 @@
 import { chain } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`chain` util", () => {
   it("chain value", () => {

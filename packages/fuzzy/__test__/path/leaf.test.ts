@@ -1,6 +1,3 @@
-import { expect } from "@jest/globals";
-import { it } from "@jest/globals";
-import { describe } from "@jest/globals";
 import { leaf } from "../../src/path";
 
 describe("path.leaf", () => {

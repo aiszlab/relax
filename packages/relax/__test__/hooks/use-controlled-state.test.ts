@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, it, jest } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useControlledState } from "../../src";
 import { act, useState } from "react";
@@ -59,7 +54,7 @@ describe("useControlledState", () => {
   });
 
   it("controlled state", () => {
-    const _cb = jest.fn<(x?: number[]) => void>();
+    const _cb = vi.fn<(x?: number[]) => void>();
     const { result } = renderHook(() => {
       const [results, setResults] = useState<number[]>([]);
       const [controlledValue, setControlledValue] = useControlledState<number[]>(results, {

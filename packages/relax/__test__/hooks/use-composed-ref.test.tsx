@@ -1,9 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
 import React, { useRef } from "react";
-import { describe, expect, test } from "@jest/globals";
 import { fireEvent, render } from "@testing-library/react";
 import { createElement } from "react";
 import { useComposedRef } from "../../src";

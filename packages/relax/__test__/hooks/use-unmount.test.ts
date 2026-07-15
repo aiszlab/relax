@@ -1,14 +1,9 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useUnmount } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 
 describe("useMount", () => {
   it("unmount", () => {
-    const runner = jest.fn();
+    const runner = vi.fn();
     const hook = renderHook(() =>
       useUnmount(() => {
         runner();

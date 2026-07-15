@@ -1,9 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
 import { isMobile } from "../../../src";
-import { describe, expect, it } from "@jest/globals";
 
 describe("`isMobile`", () => {
   it("normal browser environment", () => {

@@ -1,9 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
 import { isDomUsable } from "../../../src";
-import { describe, expect, it } from "@jest/globals";
 
 describe("`isDomUsable`", () => {
   it("should return true when document is defined", () => {

@@ -1,9 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, it } from "@jest/globals";
-
 describe("`useScrollLocker`", () => {
   it("render scroll", () => {
     const root = document.createElement("div");

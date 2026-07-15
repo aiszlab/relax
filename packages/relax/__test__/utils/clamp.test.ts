@@ -1,5 +1,4 @@
 import { clamp } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`clamp` util", () => {
   it("middle value", () => {

@@ -1,5 +1,4 @@
 import { toArray } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`toArray` util", () => {
   it("already array value", () => {

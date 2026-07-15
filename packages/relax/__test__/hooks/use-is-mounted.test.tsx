@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, test } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useIsMounted } from "../../src";
 import { useEffect, useRef } from "react";

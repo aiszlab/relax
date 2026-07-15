@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import { describe, expect, it } from "@jest/globals";
 import { contains } from "../../src/dom";
 
 describe("dom/contains", () => {

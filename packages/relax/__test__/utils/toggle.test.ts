@@ -1,5 +1,4 @@
 import { toggle } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`toggle` util", () => {
   it("add value into array", () => {

@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, it } from "@jest/globals";
 import { renderHook } from "@testing-library/react";
 import { useCounter } from "../../src";
 import { act } from "react";

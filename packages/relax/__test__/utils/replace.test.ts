@@ -1,4 +1,3 @@
-import { describe, expect, it } from "@jest/globals";
 import { replace } from "../../src";
 
 describe("`replace` util", () => {

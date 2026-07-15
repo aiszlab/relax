@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useCounter, useMemorized } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 import { act } from "react";
 
 describe("useMemorable", () => {
   it("performance", () => {
-    const getter = jest.fn();
+    const getter = vi.fn();
 
     const { result } = renderHook(() => {
       const counter = useCounter(0);

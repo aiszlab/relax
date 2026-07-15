@@ -1,5 +1,4 @@
 import { isThenable } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("isThenable", () => {
   it("check null", () => {

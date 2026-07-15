@@ -1,16 +1,11 @@
-/**
- * @jest-environment jsdom
- */
-
 import { renderHook } from "@testing-library/react";
 import { useCounter, useUpdateEffect } from "../../src";
-import { describe, it, expect, jest } from "@jest/globals";
 import { act, useEffect } from "react";
 
 describe("useUpdateEffect", () => {
   it("effect will only run after mounted", () => {
-    const updateEffect = jest.fn();
-    const normalEffect = jest.fn();
+    const updateEffect = vi.fn();
+    const normalEffect = vi.fn();
 
     const hook = renderHook(() => {
       useEffect(() => {
@@ -31,7 +26,7 @@ describe("useUpdateEffect", () => {
   });
 
   it("effect will never run with empty deps", () => {
-    const effect = jest.fn();
+    const effect = vi.fn();
 
     const hook = renderHook(() =>
       useUpdateEffect(() => {
@@ -46,7 +41,7 @@ describe("useUpdateEffect", () => {
   });
 
   it("effect will only auto run after deps changed", () => {
-    const effect = jest.fn();
+    const effect = vi.fn();
 
     const hook = renderHook(() => {
       const [count, { add }] = useCounter(0);

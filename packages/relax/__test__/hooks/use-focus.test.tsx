@@ -1,11 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-
 import { fireEvent, render } from "@testing-library/react";
 import { isEmpty, useFocus } from "../../src";
 import React from "react";
-import { describe, it, expect, jest } from "@jest/globals";
 import { First } from "../../src/types";
 
 enum FocusedToken {
@@ -36,9 +31,9 @@ describe("useFocus", () => {
   });
 
   it("focus callbacks", () => {
-    const blur = jest.fn();
-    const focus = jest.fn();
-    const focusChange = jest.fn();
+    const blur = vi.fn();
+    const focus = vi.fn();
+    const focusChange = vi.fn();
 
     const { container } = render(
       <Focusable onBlur={blur} onFocus={focus} onFocusChange={focusChange} />,

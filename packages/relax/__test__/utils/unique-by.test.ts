@@ -1,4 +1,3 @@
-import { describe, expect, it } from "@jest/globals";
 import { unique, uniqueBy } from "../../src";
 
 describe("`uniqueBy` util", () => {

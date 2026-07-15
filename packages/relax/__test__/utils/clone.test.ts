@@ -1,5 +1,4 @@
 import { clone } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`clone` util", () => {
   it("primitive value", () => {

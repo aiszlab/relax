@@ -1,5 +1,4 @@
 import { exclude } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`exclude` util", () => {
   it("primitive type", () => {

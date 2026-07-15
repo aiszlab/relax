@@ -1,4 +1,3 @@
-import { describe, it, expect } from "@jest/globals";
 import { toFormData } from "../../src";
 
 describe("`toFormData` util", () => {

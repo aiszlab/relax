@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
-import { jest, describe, it, expect } from "@jest/globals";
 import { useReactive } from "../../src";
 import { renderHook } from "@testing-library/react";
 import { act } from "react";

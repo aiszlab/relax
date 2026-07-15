@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
-import { describe, expect, it, jest } from "@jest/globals";
 import { render, renderHook } from "@testing-library/react";
 import React, { Component, createRef, useRef } from "react";
 import { mountRef } from "../../src/react/mount-ref";
 
 describe("`mountRef`", () => {
   it("callback ref", () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
 
     const { unmount } = render(<div ref={(_ref) => mountRef(fn, _ref)} />);
 
@@ -31,8 +26,8 @@ describe("`mountRef`", () => {
   });
 
   it("string ref", () => {
-    const stringRef = jest.fn<(ref: null) => void>();
-    const callbackRef = jest.fn();
+    const stringRef = vi.fn<(ref: null) => void>();
+    const callbackRef = vi.fn();
 
     class Sample extends Component {
       current: null = null;

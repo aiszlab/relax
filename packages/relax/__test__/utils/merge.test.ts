@@ -1,5 +1,4 @@
 import { merge } from "../../src";
-import { describe, it, expect } from "@jest/globals";
 
 describe("`merge` util", () => {
   it("merge always return a new object", () => {

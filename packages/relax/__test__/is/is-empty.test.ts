@@ -1,4 +1,3 @@
-import { describe, expect, it } from "@jest/globals";
 import { isEmpty } from "../../src";
 
 describe("`isEmpty` util", () => {
