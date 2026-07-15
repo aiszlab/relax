@@ -148,7 +148,7 @@ export const useRequest = <T>(
   });
 
   useEffect(() => {
-    const params = toFunction(defaultParams)?.();
+    const params = toFunction(defaultParams)();
 
     if (!isMountedRef.current) {
       isMountedRef.current = true;
