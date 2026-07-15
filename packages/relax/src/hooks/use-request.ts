@@ -1,6 +1,7 @@
 import { type DependencyList, useEffect, useRef, useState } from "react";
 import { useEvent } from "./use-event";
 import { useDebounceCallback } from "./use-debounce-callback";
+import { toFunction } from "../utils/to-function";
 
 type UsingRequest<T> = {
   /**
@@ -40,6 +41,19 @@ type UsingRequest<T> = {
    * @zh 依赖项列表。数组中的任意值发生变化时（首次挂载后），自动重新请求数据。
    */
   deps?: DependencyList;
+
+  /**
+   * default parameters passed to the request on auto execution or
+   * deps-triggered re-execution. accepts an array or a factory that
+   * returns an array.
+   *
+   * when the request function declares formal parameters (fn.length > 0)
+   * and defaultParams is not provided, auto execution is skipped.
+   *
+   * @zh 默认参数，在自动执行或依赖触发的重新执行时传递给请求函数。
+   * 接受数组或返回数组的工厂函数。
+   */
+  defaultParams?: any[] | (() => any[]);
 };
 
 type UsedRequest<T> = {
@@ -83,6 +97,7 @@ export const useRequest = <T>(
     finally: finallyCallback,
     debounceWait,
     deps,
+    defaultParams,
   }: UsingRequest<T> = {},
 ): UsedRequest<T> => {
   const [data, setData] = useState<T | null>(null);
@@ -133,15 +148,19 @@ export const useRequest = <T>(
   });
 
   useEffect(() => {
+    const params = toFunction(defaultParams)?.();
+
     if (!isMountedRef.current) {
       isMountedRef.current = true;
 
       if (!auto) return;
-      _execute();
+      if (_request.length && !params) return;
+      _execute(...(params ?? []));
       return;
     }
 
-    _execute();
+    if (_request.length && !params) return;
+    _execute(...(params ?? []));
   }, deps ?? []);
 
   return { data, error, loading, run };
