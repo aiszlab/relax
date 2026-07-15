@@ -154,12 +154,12 @@ export const useRequest = <T>(
       isMountedRef.current = true;
 
       if (!auto) return;
-      if (_request.length && !params) return;
+      if (request.length > 0 && !params) return;
       _execute(...(params ?? []));
       return;
     }
 
-    if (_request.length && !params) return;
+    if (request.length > 0 && !params) return;
     _execute(...(params ?? []));
   }, deps ?? []);
 

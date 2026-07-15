@@ -772,3 +772,163 @@ describe("useRequest — deps", () => {
     jest.useRealTimers();
   });
 });
+
+describe("useRequest — defaultParams", () => {
+  it("auto executes with defaultParams as array", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { result } = renderHook(() =>
+      useRequest(fn, { auto: true, defaultParams: [42] }),
+    );
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 42 });
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(42);
+  });
+
+  it("auto executes with defaultParams as factory", async () => {
+    const fn = jest.fn(async (id: number, name: string) => ({ id, name }));
+    const { result } = renderHook(() =>
+      useRequest(fn, {
+        auto: true,
+        defaultParams: () => [1, "alice"],
+      }),
+    );
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 1, name: "alice" });
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(1, "alice");
+  });
+
+  it("skips auto execution when fn expects params but defaultParams is missing", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { result } = renderHook(() => useRequest(fn, { auto: true }));
+
+    // fn expects a param but none provided — should not execute
+    expect(fn).toHaveBeenCalledTimes(0);
+    expect(result.current.data).toBe(null);
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("auto executes without params when fn takes no args (existing behavior)", async () => {
+    const fn = jest.fn(async () => "no-params");
+    const { result } = renderHook(() => useRequest(fn, { auto: true }));
+
+    await waitFor(() => {
+      expect(result.current.data).toBe("no-params");
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("deps change re-executes with defaultParams", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { result, rerender } = renderHook(
+      ({ id }) => useRequest(fn, { deps: [id], defaultParams: [id] }),
+      { initialProps: { id: 1 } },
+    );
+
+    // auto is false, defaultParams is set but deps haven't changed yet
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // trigger deps change
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 2 });
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(2);
+  });
+
+  it("manual run does not use defaultParams", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { result } = renderHook(() =>
+      useRequest(fn, { defaultParams: [1] }),
+    );
+
+    await act(async () => {
+      await result.current.run(99);
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(99);
+    expect(result.current.data).toEqual({ id: 99 });
+  });
+
+  it("defaultParams factory reflects latest state on deps change", async () => {
+    let currentId = 0;
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { rerender } = renderHook(
+      ({ id }) => {
+        currentId = id;
+        return useRequest(fn, {
+          deps: [id],
+          defaultParams: () => [currentId],
+        });
+      },
+      { initialProps: { id: 1 } },
+    );
+
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+    expect(fn).toHaveBeenCalledWith(2);
+
+    rerender({ id: 3 });
+
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(2);
+    });
+    expect(fn).toHaveBeenLastCalledWith(3);
+  });
+
+  it("defaultParams with auto and deps together", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { result, rerender } = renderHook(
+      ({ id }) => useRequest(fn, { auto: true, deps: [id], defaultParams: [id] }),
+      { initialProps: { id: 1 } },
+    );
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 1 });
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(1);
+
+    rerender({ id: 2 });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ id: 2 });
+    });
+    expect(fn).toHaveBeenCalledTimes(2);
+    expect(fn).toHaveBeenLastCalledWith(2);
+  });
+
+  it("skips deps re-execution when fn expects params but defaultParams is missing", async () => {
+    const fn = jest.fn(async (id: number) => ({ id }));
+    const { rerender } = renderHook(
+      ({ id }) => useRequest(fn, { deps: [id] }),
+      { initialProps: { id: 1 } },
+    );
+
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    rerender({ id: 2 });
+
+    // fn expects a param, no defaultParams — should not execute
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    rerender({ id: 3 });
+    expect(fn).toHaveBeenCalledTimes(0);
+  });
+});
