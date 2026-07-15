@@ -43,4 +43,20 @@ describe("useTimeout", () => {
     expect(prevFn).toHaveBeenCalledTimes(0);
     expect(nextFn).toHaveBeenCalledTimes(1);
   });
+
+  it("immediate execution when duration is 0", () => {
+    const fn = vi.fn();
+    const { result } = renderHook(useTimer);
+
+    result.current.timeout(fn, 0);
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("immediate execution when duration is negative", () => {
+    const fn = vi.fn();
+    const { result } = renderHook(useTimer);
+
+    result.current.timeout(fn, -1);
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
 });

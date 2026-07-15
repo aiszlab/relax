@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import { using } from "../../src/react";
 import { fireEvent, render } from "@testing-library/react";
 
@@ -71,5 +72,28 @@ describe("using global store", () => {
     expect(counter2.innerHTML).toBe("0");
     expect(counter3.innerHTML).toBe("2");
     expect(counter4.innerHTML).toBe("2");
+  });
+
+  it("state property returns current value", () => {
+    const count = useCount.state.count;
+    expect(typeof count).toBe("number");
+  });
+
+  it("state setter warns readonly", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    (useCount as any).state = 5;
+    expect(warnSpy).toHaveBeenCalledWith("`useStore`.`state` is readonly property!");
+
+    warnSpy.mockRestore();
+  });
+
+  it("renders initial state via SSR (getServerSnapshot)", () => {
+    // This test exercises the `initialState: () => initialState` function at line 51,
+    // which is passed as the getServerSnapshot argument to useSyncExternalStore.
+    // ReactDOMServer.renderToString calls useSyncExternalStore on the server,
+    // which invokes getServerSnapshot to obtain the initial snapshot for SSR.
+    const html = ReactDOMServer.renderToString(<Counter id="ssr-counter" />);
+    expect(html).toContain("0");
   });
 });

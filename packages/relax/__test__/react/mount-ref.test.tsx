@@ -62,4 +62,10 @@ describe("`mountRef`", () => {
     expect(callbackRef).toBeCalledTimes(2);
     expect(callbackRef).toBeCalledWith(null);
   });
+
+  it("void refable does nothing", () => {
+    // mountRef with null/undefined should not throw
+    expect(() => mountRef(null, document.createElement("div"))).not.toThrow();
+    expect(() => mountRef(undefined, document.createElement("div"))).not.toThrow();
+  });
 });

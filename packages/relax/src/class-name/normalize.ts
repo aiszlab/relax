@@ -1,7 +1,7 @@
 import { isString } from "../is/is-string";
-import type { Partialable } from "../types";
+import type { Voidable } from "../types";
 
-function normalize(...classNames: Partialable<string>[]) {
+function normalize(...classNames: Voidable<string>[]) {
   const values = new Set<string>();
 
   for (const _classNames of classNames) {

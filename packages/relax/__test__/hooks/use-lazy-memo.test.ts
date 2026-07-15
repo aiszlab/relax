@@ -87,4 +87,21 @@ describe("useLazyMemo", () => {
     expect(mockFnInLazy).toHaveBeenCalledTimes(2);
     expect(mockFnInSync).toHaveBeenCalledTimes(2);
   });
+
+  it("accessing non-value proxy key hits Reflect.get", () => {
+    const { result } = renderHook(() => {
+      const lazyValue = useLazyMemo(() => 42, []);
+
+      // Access Symbol.toPrimitive on the proxy to trigger Reflect.get with non-"value" key
+      const _ = (lazyValue as any)[Symbol.toPrimitive];
+
+      // Also try in operator
+      const hasToString = "toString" in (lazyValue as object);
+
+      return hasToString;
+    });
+
+    // The proxy delegates non-value access to the target
+    expect(result.current).toBe(true);
+  });
 });

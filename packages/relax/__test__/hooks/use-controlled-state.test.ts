@@ -94,4 +94,27 @@ describe("useControlledState", () => {
     });
     expect(result.current[0]).toBe(13);
   });
+
+  it("functional update", () => {
+    const { result } = renderHook(() =>
+      useControlledState<number>(void 0, { defaultState: 5 }),
+    );
+
+    expect(result.current[0]).toBe(5);
+
+    act(() => {
+      result.current[1]((prev) => (prev as number) * 2);
+    });
+
+    expect(result.current[0]).toBe(10);
+  });
+
+  it("with default state as function", () => {
+    const defaultFn = () => 42;
+    const { result } = renderHook(() =>
+      useControlledState<number>(void 0, { defaultState: defaultFn }),
+    );
+
+    expect(result.current[0]).toBe(42);
+  });
 });
