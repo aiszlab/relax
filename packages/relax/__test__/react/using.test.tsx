@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { using } from "../../src/react";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, renderHook } from "@testing-library/react";
 
 const useCount = using<{
   count: number;
@@ -86,6 +86,53 @@ describe("using global store", () => {
     expect(warnSpy).toHaveBeenCalledWith("`useStore`.`state` is readonly property!");
 
     warnSpy.mockRestore();
+  });
+
+  it("initializer receives and can call getState", () => {
+    // Covers line 43: getState is called, exercising the non-null ?? path
+    // because store.state is set to the initial value before getState is
+    // called here (inside an action, not during init).
+    const useStore = using<{ value: number; read: () => number | null }>(
+      (setState, getState) => ({
+        value: 0,
+        read: () => {
+          // getState() returns store.state (non-null after init)
+          // This covers the non-nullish branch of ?? on line 43
+          return getState()?.value ?? null;
+        },
+      }),
+    );
+
+    const { result } = renderHook(() => useStore());
+    const state = result.current;
+
+    expect(state.read()).toBe(0);
+  });
+
+  it("handles nullish ?? fallback when store state is null", () => {
+    // When initializer returns null, store.state remains null.
+    // This covers the nullish ?? paths on lines 40, 43, and 50.
+    // We also capture setState and getState to exercise line 40 & 43 null paths.
+    let externalSetState: ((
+      state: (previous: null) => null,
+    ) => void) | null = null;
+    let externalGetState: (() => null) | null = null;
+
+    const useNullStore = using<null>((setState, getState) => {
+      externalSetState = setState;
+      externalGetState = getState;
+      return null;
+    });
+
+    // store.state is null at this point — covers line 50 null ??
+    const { result } = renderHook(() => useNullStore());
+    expect(result.current).toBe(null);
+
+    // Call setState when store.state is null — covers line 40 null ??
+    externalSetState!(() => null);
+
+    // Call getState when store.state is null — covers line 43 null ??
+    expect(externalGetState!()).toBe(null);
   });
 
   it("renders initial state via SSR (getServerSnapshot)", () => {

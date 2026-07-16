@@ -29,8 +29,11 @@ describe("useScreenSize", () => {
       window.dispatchEvent(new Event("resize"));
     });
 
-    // Debounce delay is 300ms
-    vi.advanceTimersByTime(350);
+    // Debounce delay is 300ms — advance timers inside act() to capture
+    // the setSize() state update from the debounced callback
+    act(() => {
+      vi.advanceTimersByTime(350);
+    });
 
     // Size should still be a number (might be same in jsdom)
     expect(typeof result.current.width).toBe("number");

@@ -28,10 +28,10 @@ export function update<T extends object | null | undefined>(
   const _paths = isKey(path, target)
     ? [path]
     : Array.isArray(path)
-    ? path
-    : typeof path === "string"
-    ? toPaths(path)
-    : [path];
+      ? path
+      : typeof path === "string"
+        ? toPaths(path)
+        : [path];
 
   let current: object = target;
 
@@ -46,13 +46,7 @@ export function update<T extends object | null | undefined>(
       // @ts-expect-error get value of key
       const _value = current[key];
 
-      _newValue = !isUndefined(_value)
-        ? _value
-        : isObject(_value)
-        ? _value
-        : isIndex(_paths[i + 1])
-        ? []
-        : {};
+      _newValue = !isUndefined(_value) ? _value : isIndex(_paths[i + 1]) ? [] : {};
     }
 
     Object.assign(current, { [key]: _newValue });

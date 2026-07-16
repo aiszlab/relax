@@ -259,8 +259,9 @@ describe("useDrag", () => {
   });
 
   it("does not trigger move callback when drag not started", () => {
-    // Verifies the guard at line 174: if (!_state.isDragging) return;
-    // The onDragMove callback should not fire when a drag has never been started
+    // The onDragMove callback should not fire when a drag has never been started,
+    // because the updater returns state unchanged (isDragging is false),
+    // so the state does not change and the callback is never invoked.
     const onDragMove = vi.fn();
     const { result } = renderHook(() => useDrag({ onDragMove }));
     const [, { onDragMove: moveDrag }] = result.current;
@@ -272,5 +273,53 @@ describe("useDrag", () => {
 
     // onDragMove callback should NOT be called because isDragging is false
     expect(onDragMove).not.toHaveBeenCalled();
+  });
+
+  it("returns default position for TouchEvent with no touches", () => {
+    // TouchEvent with touches.length !== 1 falls through to default return
+    const touchEvent = new TouchEvent("touchstart", {
+      touches: [] as any,
+      bubbles: true,
+    });
+
+    const { result } = renderHook(() => useDrag());
+    const [, { onDragStart }] = result.current;
+
+    act(() => {
+      onDragStart(touchEvent as UIEvent);
+    });
+
+    const [state] = result.current;
+    expect(state.x).toBe(0);
+    expect(state.y).toBe(0);
+    expect(state.isDragging).toBe(true);
+  });
+
+  it("returns default position for TouchEvent with item(0) returning null", () => {
+    // Covers the ?. short-circuit (item returns null) and ?? fallback to 0
+    const touchEvent = new TouchEvent("touchstart", {
+      touches: [] as any,
+      bubbles: true,
+    });
+    // Patch touches to have length=1 but item(0) returns null
+    Object.defineProperty(touchEvent, "touches", {
+      value: {
+        length: 1,
+        item: () => null,
+      },
+      configurable: true,
+    });
+
+    const { result } = renderHook(() => useDrag());
+    const [, { onDragStart }] = result.current;
+
+    act(() => {
+      onDragStart(touchEvent as UIEvent);
+    });
+
+    const [state] = result.current;
+    expect(state.x).toBe(0);
+    expect(state.y).toBe(0);
+    expect(state.isDragging).toBe(true);
   });
 });

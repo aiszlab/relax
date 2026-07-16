@@ -11,9 +11,11 @@ describe("useImageLoader", () => {
 
       addEventListener(event: string, handler: () => void) {
         (this.listeners[event] ??= []).push(handler);
-        // Simulate successful load
+        // Simulate successful load synchronously — the real async behavior
+        // is not relevant to this test; firing handler inside act() avoids
+        // the "not wrapped in act()" warning.
         if (event === "load") {
-          setTimeout(handler, 0);
+          handler();
         }
       }
       removeEventListener() {}
@@ -58,8 +60,10 @@ describe("useImageLoader", () => {
 
     renderHook(() => useImageLoader({ src: "https://example.com/image.png" }));
 
-    // Trigger load event
-    if (loadCallback) loadCallback();
+    // Trigger load event — wrap in act() to capture the setStatus("loaded") update
+    act(() => {
+      if (loadCallback) loadCallback();
+    });
 
     globalThis.Image = originalImage;
   });
@@ -81,8 +85,10 @@ describe("useImageLoader", () => {
 
     renderHook(() => useImageLoader({ src: "https://example.com/broken.png" }));
 
-    // Trigger error event
-    if (errorCallback) errorCallback();
+    // Trigger error event — wrap in act() to capture the setStatus("error") update
+    act(() => {
+      if (errorCallback) errorCallback();
+    });
 
     globalThis.Image = originalImage;
   });

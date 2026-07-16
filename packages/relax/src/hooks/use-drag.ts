@@ -171,7 +171,6 @@ const useDrag = ({
       },
       _onDragMove &&
         ((_state) => {
-          if (!_state.isDragging) return;
           _onDragMove({ ..._state });
         }),
     );

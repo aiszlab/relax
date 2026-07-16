@@ -70,19 +70,4 @@ describe("`isRefable`", () => {
     expect(isRefable(element)).toBe(true);
   });
 
-  it("returns false for function element directly (not via type check)", () => {
-    // This test covers the branch at line 36-38 in isElementRefable:
-    //   if (typeof element === "function" && !element.prototype?.render)
-    //   return false;
-    // This is a secondary defensive check: after verifying the type is a
-    // class-like (type.prototype.render exists), it also checks whether the
-    // element itself is a bare function without .prototype.render.
-    // Normally a React element is always an object per isValidElement, so
-    // this path is dead code from the public API. But for coverage we
-    // construct an element whose type passes the class check while also
-    // being a function itself.
-    const FnComponent = () => React.createElement("div");
-    const element = React.createElement(FnComponent);
-    expect(isRefable(element)).toBe(false);
-  });
 });

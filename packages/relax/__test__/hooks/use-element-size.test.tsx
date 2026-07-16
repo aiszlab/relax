@@ -69,7 +69,10 @@ describe("useElementSize", () => {
       );
     });
 
-    vi.advanceTimersByTime(100);
+    // rAF callback triggers setWidth/setHeight — must be wrapped in act()
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
     vi.useRealTimers();
   });
 

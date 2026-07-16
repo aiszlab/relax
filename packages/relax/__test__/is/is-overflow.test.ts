@@ -63,4 +63,49 @@ describe("isOverflow", () => {
 
     document.body.removeChild(tallContent);
   });
+
+  it("returns false for body when vertically overflowing but not narrower than window", () => {
+    // scrollHeight > innerHeight is TRUE, but innerWidth > offsetWidth is FALSE
+    Object.defineProperty(document.body, "scrollHeight", {
+      configurable: true,
+      value: 10000,
+    });
+
+    // offsetWidth >= innerWidth means body is NOT narrower than window
+    Object.defineProperty(document.body, "offsetWidth", {
+      configurable: true,
+      value: window.innerWidth + 100,
+    });
+
+    expect(isOverflow(document.body)).toBe(false);
+  });
+
+  it("falls back to documentElement.clientHeight when innerHeight is falsy", () => {
+    const originalInnerHeight = window.innerHeight;
+
+    // Set innerHeight to 0 (falsy), triggering the || fallback
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: 0,
+    });
+
+    // Ensure scrollHeight exceeds clientHeight so we exercise the full expression
+    Object.defineProperty(document.body, "scrollHeight", {
+      configurable: true,
+      value: 10000,
+    });
+
+    Object.defineProperty(document.body, "offsetWidth", {
+      configurable: true,
+      value: 100,
+    });
+
+    expect(isOverflow(document.body)).toBe(true);
+
+    // Restore
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+  });
 });

@@ -26,7 +26,7 @@ const initialize = <T>(initializer: Initializer<T>) => {
       set: (target, key, value: T) => {
         Reflect.set(target, key, value);
         chain(...listeners)();
-        return Reflect.get(target, key);
+        return true;
       },
     },
   );

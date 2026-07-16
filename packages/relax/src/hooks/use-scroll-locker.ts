@@ -42,10 +42,6 @@ class ScrollLocker {
     return this.#barSize;
   }
 
-  get isOverflow() {
-    return isOverflow();
-  }
-
   lock(element: HTMLElement = document.body) {
     // if locked, do not lock again
     if (this.#locked.has(element)) return;

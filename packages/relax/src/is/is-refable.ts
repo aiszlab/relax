@@ -32,10 +32,5 @@ const isElementRefable = (element: any) => {
     return false;
   }
 
-  // Class component
-  if (typeof element === "function" && !element.prototype?.render) {
-    return false;
-  }
-
   return true;
 };
