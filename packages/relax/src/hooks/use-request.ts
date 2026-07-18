@@ -3,7 +3,7 @@ import { useEvent } from "./use-event";
 import { useDebounceCallback } from "./use-debounce-callback";
 import { toFunction } from "../utils/to-function";
 
-type UsingRequest<T> = {
+type UsingRequest<T, Args extends unknown[] = unknown[]> = {
   /**
    * auto request when component mounts
    */
@@ -53,10 +53,10 @@ type UsingRequest<T> = {
    * @zh 默认参数，在自动执行或依赖触发的重新执行时传递给请求函数。
    * 接受数组或返回数组的工厂函数。
    */
-  defaultParams?: any[] | (() => any[]);
+  defaultParams?: Args | (() => Args);
 };
 
-type UsedRequest<T> = {
+type UsedRequest<T, Args extends unknown[] = unknown[]> = {
   /**
    * response data
    */
@@ -77,7 +77,7 @@ type UsedRequest<T> = {
    * when `debounceWait` is set calls are debounced — the returned Promise
    * resolves only when the call is actually executed.
    */
-  run: (...args: any[]) => Promise<void>;
+  run: (...args: Args) => Promise<void>;
 };
 
 /**
@@ -88,8 +88,8 @@ type UsedRequest<T> = {
  *
  * supports debounce via `debounceWait` option which accepts dynamic updates.
  */
-export const useRequest = <T>(
-  request: (...args: any[]) => Promise<T>,
+export const useRequest = <T, Args extends unknown[] = unknown[]>(
+  request: (...args: Args) => Promise<T>,
   {
     auto = false,
     then: thenCallback,
@@ -98,8 +98,8 @@ export const useRequest = <T>(
     debounceWait,
     deps,
     defaultParams,
-  }: UsingRequest<T> = {},
-): UsedRequest<T> => {
+  }: UsingRequest<T, Args> = {},
+): UsedRequest<T, Args> => {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -112,9 +112,10 @@ export const useRequest = <T>(
     return _data;
   });
 
-  const _catch = useEvent((error: any) => {
-    catchCallback?.(error);
-    setError(error);
+  const _catch = useEvent((error: unknown) => {
+    const _error = error instanceof Error ? error : new Error(String(error));
+    catchCallback?.(_error);
+    setError(_error);
     return null;
   });
 
@@ -124,11 +125,11 @@ export const useRequest = <T>(
 
   // ---- core execution (always stable) ----
 
-  const _execute = useEvent(async (...args: any[]) => {
+  const _execute = useEvent(async (...args: unknown[]) => {
     setLoading(true);
     setError(null);
 
-    const result = await _request(...args)
+    const result = await (_request as (...a: unknown[]) => Promise<T>)(...args)
       .then(_then)
       .catch(_catch)
       .finally(_finally);
@@ -139,7 +140,7 @@ export const useRequest = <T>(
 
   const debounced = useDebounceCallback(_execute, debounceWait);
 
-  const run = useEvent((...args: any[]): Promise<void> => {
+  const run = useEvent((...args: unknown[]): Promise<void> => {
     if (!debounceWait) {
       return _execute(...args);
     }

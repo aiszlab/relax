@@ -208,6 +208,21 @@ describe("useRequest", () => {
     expect(order).toEqual(["catch", "finally"]);
   });
 
+  it("wraps non-Error thrown value in Error", async () => {
+    const fn = vi.fn(async () => {
+      throw "string-error";
+    });
+    const { result } = renderHook(() => useRequest(fn));
+
+    await act(async () => {
+      await result.current.run();
+    });
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error!.message).toBe("string-error");
+    expect(result.current.loading).toBe(false);
+  });
+
   it("then receives null when request returns null", async () => {
     const thenFn = vi.fn();
     const fn = vi.fn(async () => null);
@@ -540,7 +555,7 @@ describe("useRequest — debounce", () => {
     });
 
     let callCount = 0;
-    const fn = vi.fn(async () => {
+    const fn = vi.fn(async (params?: unknown) => {
       callCount++;
       return callCount === 1 ? promise1 : promise2;
     });
@@ -568,7 +583,7 @@ describe("useRequest — debounce", () => {
 
     // second debounced call
     await act(async () => {
-      result.current.run("b");
+      result.current.run();
     });
     await act(async () => {
       vi.advanceTimersByTime(200);
@@ -744,10 +759,9 @@ describe("useRequest — deps", () => {
     vi.useFakeTimers();
 
     const fn = vi.fn(async () => "data");
-    const { rerender } = renderHook(
-      ({ id }) => useRequest(fn, { debounceWait: 300, deps: [id] }),
-      { initialProps: { id: 1 } },
-    );
+    const { rerender } = renderHook(({ id }) => useRequest(fn, { debounceWait: 300, deps: [id] }), {
+      initialProps: { id: 1 },
+    });
 
     // auto is false — no request on mount even after debounce wait
     await act(async () => {
@@ -771,9 +785,7 @@ describe("useRequest — deps", () => {
 describe("useRequest — defaultParams", () => {
   it("auto executes with defaultParams as array", async () => {
     const fn = vi.fn(async (id: number) => ({ id }));
-    const { result } = renderHook(() =>
-      useRequest(fn, { auto: true, defaultParams: [42] }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { auto: true, defaultParams: [42] }));
 
     await waitFor(() => {
       expect(result.current.data).toEqual({ id: 42 });
@@ -788,7 +800,7 @@ describe("useRequest — defaultParams", () => {
     const { result } = renderHook(() =>
       useRequest(fn, {
         auto: true,
-        defaultParams: () => [1, "alice"],
+        defaultParams: () => [1, "alice"] as [number, string],
       }),
     );
 
@@ -843,9 +855,7 @@ describe("useRequest — defaultParams", () => {
 
   it("manual run does not use defaultParams", async () => {
     const fn = vi.fn(async (id: number) => ({ id }));
-    const { result } = renderHook(() =>
-      useRequest(fn, { defaultParams: [1] }),
-    );
+    const { result } = renderHook(() => useRequest(fn, { defaultParams: [1] }));
 
     await act(async () => {
       await result.current.run(99);
@@ -864,7 +874,7 @@ describe("useRequest — defaultParams", () => {
         currentId = id;
         return useRequest(fn, {
           deps: [id],
-          defaultParams: () => [currentId],
+          defaultParams: () => [currentId] as [number],
         });
       },
       { initialProps: { id: 1 } },
@@ -911,10 +921,9 @@ describe("useRequest — defaultParams", () => {
 
   it("skips deps re-execution when fn expects params but defaultParams is missing", async () => {
     const fn = vi.fn(async (id: number) => ({ id }));
-    const { rerender } = renderHook(
-      ({ id }) => useRequest(fn, { deps: [id] }),
-      { initialProps: { id: 1 } },
-    );
+    const { rerender } = renderHook(({ id }) => useRequest(fn, { deps: [id] }), {
+      initialProps: { id: 1 },
+    });
 
     expect(fn).toHaveBeenCalledTimes(0);
 
