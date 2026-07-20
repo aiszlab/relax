@@ -32,7 +32,7 @@ function hexToHsla(input: string, alpha?: number): Hsla {
     h = (g - b) / delta;
   } else if (g === max) {
     h = 2 + (b - r) / delta;
-  } else if (b === max) {
+  } else {
     h = 4 + (r - g) / delta;
   }
 

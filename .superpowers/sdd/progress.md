@@ -1,2 +1,5 @@
 Task 1: complete (commits 4be48c3..ac6a109, review clean — spec ✅, quality approved)
 Task 2: complete (commits cdeff63..ea22a80, review clean — spec ✅, quality approved; includes source fix for _request.length → request.length)
+Task 1: complete (no commits, file created at packages/relax/src/utils/to-percentage.ts, review clean — spec ✅, quality approved)
+Task 2: complete (export line added at index.ts:94, review clean — spec ✅, quality approved)
+Task 3: complete (test file created, 580 tests pass, review clean — spec ✅, quality approved)

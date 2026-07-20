@@ -33,6 +33,7 @@
     "@rollup/plugin-typescript": "^12.1.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
+    "@vitest/coverage-v8": "^4.1.10",
     "rollup": "^4.52.4",
     "vitest": "^4.1.10"
   },
