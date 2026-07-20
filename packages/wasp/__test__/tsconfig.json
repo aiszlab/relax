@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "rootDir": "..",
+    "outDir": "../coverage-tmp",
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}

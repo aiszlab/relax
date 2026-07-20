@@ -6,6 +6,5 @@
     "module": "NodeNext",
     "declaration": true
   },
-  "include": ["src"],
-  "exclude": ["vitest.config.ts", "__test__"]
+  "include": ["src"]
 }
