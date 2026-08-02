@@ -1,4 +1,4 @@
-import { type DependencyList, useEffect, useRef, useState } from "react";
+import { type DependencyList, useEffect, useState } from "react";
 import { useEvent } from "./use-event";
 import { useDebounceCallback } from "./use-debounce-callback";
 import { toFunction } from "../utils/to-function";
@@ -103,9 +103,6 @@ export const useRequest = <T, Args extends unknown[] = unknown[]>(
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
-  const isMountedRef = useRef(false);
-
-  const _request = useEvent(request);
 
   const _then = useEvent((_data: T) => {
     thenCallback?.(_data);
@@ -119,20 +116,14 @@ export const useRequest = <T, Args extends unknown[] = unknown[]>(
     return null;
   });
 
-  const _finally = useEvent(() => {
-    finallyCallback?.();
-  });
-
-  // ---- core execution (always stable) ----
-
-  const _execute = useEvent(async (...args: unknown[]) => {
+  const _execute = useEvent(async (...args: Args) => {
     setLoading(true);
     setError(null);
 
-    const result = await (_request as (...a: unknown[]) => Promise<T>)(...args)
+    const result = await request(...args)
       .then(_then)
       .catch(_catch)
-      .finally(_finally);
+      .finally(finallyCallback);
 
     setData(result);
     setLoading(false);
@@ -140,7 +131,7 @@ export const useRequest = <T, Args extends unknown[] = unknown[]>(
 
   const debounced = useDebounceCallback(_execute, debounceWait);
 
-  const run = useEvent((...args: unknown[]): Promise<void> => {
+  const run = useEvent((...args: Args): Promise<void> => {
     if (!debounceWait) {
       return _execute(...args);
     }
@@ -151,17 +142,12 @@ export const useRequest = <T, Args extends unknown[] = unknown[]>(
   useEffect(() => {
     const params = toFunction(defaultParams)();
 
-    if (!isMountedRef.current) {
-      isMountedRef.current = true;
-
-      if (!auto) return;
-      if (request.length > 0 && !params) return;
-      _execute(...(params ?? []));
+    if (!auto || (request.length > 0 && !params)) {
+      setLoading(false);
       return;
     }
 
-    if (request.length > 0 && !params) return;
-    _execute(...(params ?? []));
+    _execute(...((params ?? []) as Args));
   }, deps ?? []);
 
   return { data, error, loading, run };

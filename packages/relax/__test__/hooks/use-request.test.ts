@@ -635,16 +635,19 @@ describe("useRequest — deps", () => {
     const { result, rerender } = renderHook(
       ({ id }) => {
         currentId = id;
-        return useRequest(fn, { deps: [id] });
+        return useRequest(fn, { auto: true, deps: [id] });
       },
       { initialProps: { id: 1 } },
     );
 
-    // auto is false by default — no request on initial mount
-    expect(fn).toHaveBeenCalledTimes(0);
-    expect(result.current.data).toBe(null);
+    // auto is true — request fires on initial mount
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
 
-    // change deps — should trigger first execution
+    fn.mockClear();
+
+    // change deps — should trigger execution
     rerender({ id: 2 });
 
     await waitFor(() => {
@@ -667,13 +670,16 @@ describe("useRequest — deps", () => {
     const { rerender } = renderHook(
       ({ id }) => {
         currentId = id;
-        return useRequest(fn, { deps: [id] });
+        return useRequest(fn, { auto: true, deps: [id] });
       },
       { initialProps: { id: 1 } },
     );
 
-    // auto is false — no request on mount
-    expect(fn).toHaveBeenCalledTimes(0);
+    // auto is true — request fires on mount
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+    fn.mockClear();
 
     // first dep change triggers request
     rerender({ id: 2 });
@@ -707,7 +713,7 @@ describe("useRequest — deps", () => {
     });
   });
 
-  it("does not fire on mount when auto is false with deps", async () => {
+  it("does not fire on mount or deps change when auto is false", async () => {
     let currentId = 0;
     const fn = vi.fn(async () => ({ id: currentId }));
     const { result, rerender } = renderHook(
@@ -722,22 +728,22 @@ describe("useRequest — deps", () => {
     expect(fn).toHaveBeenCalledTimes(0);
     expect(result.current.data).toBe(null);
 
-    // change deps — now the request fires
+    // change deps — request still should NOT fire (auto is false)
     rerender({ id: 2 });
-
-    await waitFor(() => {
-      expect(result.current.data).toEqual({ id: 2 });
-    });
-    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(0);
+    expect(result.current.data).toBe(null);
   });
 
   it("multiple deps changes trigger multiple re-fetches", async () => {
     const fn = vi.fn(async () => "data");
-    const { rerender } = renderHook(({ id }) => useRequest(fn, { deps: [id] }), {
+    const { rerender } = renderHook(({ id }) => useRequest(fn, { auto: true, deps: [id] }), {
       initialProps: { id: 1 },
     });
 
-    expect(fn).toHaveBeenCalledTimes(0);
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // clear mount call, then verify deps changes
+    fn.mockClear();
 
     rerender({ id: 2 });
     await waitFor(() => {
@@ -759,15 +765,14 @@ describe("useRequest — deps", () => {
     vi.useFakeTimers();
 
     const fn = vi.fn(async () => "data");
-    const { rerender } = renderHook(({ id }) => useRequest(fn, { debounceWait: 300, deps: [id] }), {
+    const { rerender } = renderHook(({ id }) => useRequest(fn, { auto: true, debounceWait: 300, deps: [id] }), {
       initialProps: { id: 1 },
     });
 
-    // auto is false — no request on mount even after debounce wait
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-    });
-    expect(fn).toHaveBeenCalledTimes(0);
+    // auto is true — request fires on mount immediately (not debounced)
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    fn.mockClear();
 
     // change deps — should trigger debounced execution
     rerender({ id: 2 });
@@ -835,21 +840,23 @@ describe("useRequest — defaultParams", () => {
 
   it("deps change re-executes with defaultParams", async () => {
     const fn = vi.fn(async (id: number) => ({ id }));
-    const { result, rerender } = renderHook(
-      ({ id }) => useRequest(fn, { deps: [id], defaultParams: [id] }),
+    const { rerender } = renderHook(
+      ({ id }) => useRequest(fn, { auto: true, deps: [id], defaultParams: [id] }),
       { initialProps: { id: 1 } },
     );
 
-    // auto is false, defaultParams is set but deps haven't changed yet
-    expect(fn).toHaveBeenCalledTimes(0);
+    // auto is true — request fires on mount with id=1
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith(1);
+
+    fn.mockClear();
 
     // trigger deps change
     rerender({ id: 2 });
 
     await waitFor(() => {
-      expect(result.current.data).toEqual({ id: 2 });
+      expect(fn).toHaveBeenCalledTimes(1);
     });
-    expect(fn).toHaveBeenCalledTimes(1);
     expect(fn).toHaveBeenCalledWith(2);
   });
 
@@ -873,6 +880,7 @@ describe("useRequest — defaultParams", () => {
       ({ id }) => {
         currentId = id;
         return useRequest(fn, {
+          auto: true,
           deps: [id],
           defaultParams: () => [currentId] as [number],
         });
@@ -880,7 +888,13 @@ describe("useRequest — defaultParams", () => {
       { initialProps: { id: 1 } },
     );
 
-    expect(fn).toHaveBeenCalledTimes(0);
+    // auto is true — request fires on mount with currentId=1
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(1);
+    });
+    expect(fn).toHaveBeenCalledWith(1);
+
+    fn.mockClear();
 
     rerender({ id: 2 });
 
