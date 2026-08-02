@@ -102,7 +102,7 @@ export const useRequest = <T, Args extends unknown[] = unknown[]>(
 ): UsedRequest<T, Args> => {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(auto);
 
   const _then = useEvent((_data: T) => {
     thenCallback?.(_data);
