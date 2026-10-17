@@ -2,6 +2,8 @@ packages:
   - packages/*
 catalog:
   "@aiszlab/jarvis": ^1.1.1
+minimumReleaseAgeExclude:
+  - "@aiszlab/jarvis"
 allowBuilds:
   esbuild: true
 onlyBuiltDependencies:
