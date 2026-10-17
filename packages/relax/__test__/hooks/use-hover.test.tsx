@@ -52,15 +52,64 @@ const HoverableWithUnattachedRef = (
 };
 
 describe("`useHover`", () => {
+  it("uses pointer events when PointerEvent is available", () => {
+    const enter = vi.fn();
+    const leave = vi.fn();
+    const { container } = render(<Hoverable onEnter={enter} onLeave={leave} />);
+    const hoverable = container.querySelector("#hoverable")!;
+
+    fireEvent.pointerEnter(hoverable);
+    fireEvent.mouseEnter(hoverable);
+    expect(enter).toBeCalledTimes(1);
+
+    fireEvent.pointerLeave(hoverable);
+    fireEvent.mouseLeave(hoverable);
+    expect(leave).toBeCalledTimes(1);
+  });
+
+  it("uses mouse events when PointerEvent is unavailable", () => {
+    const pointerEvent = globalThis.PointerEvent;
+    Object.defineProperty(globalThis, "PointerEvent", {
+      configurable: true,
+      value: undefined,
+    });
+
+    try {
+      const enter = vi.fn();
+      const leave = vi.fn();
+      const { container } = render(<Hoverable onEnter={enter} onLeave={leave} />);
+      const hoverable = container.querySelector("#hoverable")!;
+
+      fireEvent.mouseEnter(hoverable);
+      fireEvent.pointerEnter(hoverable);
+      expect(enter).toBeCalledTimes(1);
+
+      fireEvent.mouseLeave(hoverable);
+      fireEvent.pointerLeave(hoverable);
+      expect(leave).toBeCalledTimes(1);
+    } finally {
+      Object.defineProperty(globalThis, "PointerEvent", {
+        configurable: true,
+        value: pointerEvent,
+      });
+    }
+  });
+
   it("hover event trigger", () => {
+    const pointerEvent = globalThis.PointerEvent;
+    Object.defineProperty(globalThis, "PointerEvent", { configurable: true, value: undefined });
+    try {
     const { container } = render(<Hoverable />);
     const hoverable = container.querySelector("#hoverable")!;
 
     expect(hoverable.innerHTML).toBe(HoveredToken.Unhovered);
-    fireEvent.pointerEnter(hoverable);
+    fireEvent.mouseEnter(hoverable);
     expect(hoverable.innerHTML).toBe(HoveredToken.Hovered);
-    fireEvent.pointerLeave(hoverable);
+    fireEvent.mouseLeave(hoverable);
     expect(hoverable.innerHTML).toBe(HoveredToken.Unhovered);
+    } finally {
+      Object.defineProperty(globalThis, "PointerEvent", { configurable: true, value: pointerEvent });
+    }
   });
 
   it("callbacks", () => {
@@ -104,15 +153,20 @@ describe("`useHover`", () => {
   });
 
   it("with unattached ref, mouseOut returns early", () => {
+    const pointerEvent = globalThis.PointerEvent;
+    Object.defineProperty(globalThis, "PointerEvent", { configurable: true, value: undefined });
+    try {
     const { container } = render(<HoverableWithUnattachedRef />);
     const hoverable = container.querySelector("#hoverable")!;
 
-    fireEvent.pointerEnter(hoverable);
+    fireEvent.mouseEnter(hoverable);
     expect(hoverable.innerHTML).toBe(HoveredToken.Hovered);
 
-    // mouseOut triggers moveOut which returns early (ref.current is null)
-    // mouseLeave also fires, leaving hover state
+    // mouseOut triggers moveOut which returns early (ref.current is null).
     fireEvent.mouseOut(hoverable);
     expect(hoverable.innerHTML).toBe(HoveredToken.Unhovered);
+    } finally {
+      Object.defineProperty(globalThis, "PointerEvent", { configurable: true, value: pointerEvent });
+    }
   });
 });

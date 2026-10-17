@@ -2,6 +2,7 @@ import { type Key, useCallback, useMemo } from "react";
 import type { Nullable, Partialable } from "@aiszlab/relax/types";
 import { useControlledState } from "./use-controlled-state";
 import { useEvent } from "./use-event";
+import { unique } from "../utils/unique";
 
 /**
  * @description
@@ -26,6 +27,13 @@ type ToggleableKey = {
  * extra options
  */
 type UseToggleableOptions = {
+  /**
+   * @description
+   * selection mode. In leaf mode, only leaf keys are stored as selected.
+   * In independent mode, each key is toggled without affecting its ancestors or descendants.
+   */
+  selectionMode?: "all" | "leaf" | "independent";
+
   /**
    * @description
    * default toggled
@@ -110,6 +118,30 @@ class Tree {
     return this.toggleBy(key, isToggled, toggledKeys);
   }
 
+  public getLeafKeys(key: Key): Key[] {
+    return Array.from(this.#groupedLeaves.get(key) ?? []).flatMap((leaf) => leaf.leafKeys());
+  }
+
+  public normalizeLeafKeys(keys: Key[]): Key[] {
+    return unique(
+      keys.flatMap((key) =>
+        this.#groupedLeaves.has(key) ? this.getLeafKeys(key) : [key],
+      ),
+    );
+  }
+
+  public getAllLeafKeys(): Key[] {
+    return unique(
+      Array.from(this.#groupedLeaves.values()).flatMap((leaves) =>
+        Array.from(leaves).flatMap((leaf) => leaf.leafKeys()),
+      ),
+    );
+  }
+
+  public isLeafKey(key: Key) {
+    return Array.from(this.#groupedLeaves.get(key) ?? []).every((leaf) => leaf.isLeaf());
+  }
+
   private toggleBy(key: Key, isToggled: boolean, _toggledKeys: Set<Key>) {
     const toggledKeys = new Set(_toggledKeys);
 
@@ -152,6 +184,14 @@ class Leaf {
 
   public get key() {
     return this.#key;
+  }
+
+  public isLeaf() {
+    return this.#children.length === 0;
+  }
+
+  public leafKeys(): Key[] {
+    return this.isLeaf() ? [this.#key] : this.#children.flatMap((child) => child.leafKeys());
   }
 
   public grow(children: Partialable<ToggleableKey[]> = []) {
@@ -211,7 +251,13 @@ class Leaf {
  */
 export const useToggleable = (
   toggleableKeys: ToggleableKey[],
-  { onToggle, defaultToggledKeys = [], isDefaultToggled, toggledKeys }: UseToggleableOptions = {},
+  {
+    onToggle,
+    defaultToggledKeys = [],
+    isDefaultToggled,
+    toggledKeys,
+    selectionMode = "all",
+  }: UseToggleableOptions = {},
 ) => {
   // re-create tree when toggleable keys changed
   const tree = useMemo(() => {
@@ -220,21 +266,73 @@ export const useToggleable = (
     }, new Tree());
   }, [toggleableKeys]);
 
+  const normalizeToggledKeys = useCallback(
+    (keys: Key[]) => selectionMode === "leaf" ? tree.normalizeLeafKeys(keys) : keys,
+    [selectionMode, tree],
+  );
+
   // use controlled state to record toggled keys
   const [_toggledKeys, _setToggledKeys] = useControlledState(toggledKeys, {
     defaultState: () => {
-      return isDefaultToggled ? Array.from(tree.groupedLeaves.keys()) : defaultToggledKeys;
+      const initialKeys = isDefaultToggled
+        ? selectionMode === "leaf"
+          ? tree.getAllLeafKeys()
+          : Array.from(tree.groupedLeaves.keys())
+        : defaultToggledKeys;
+
+      return normalizeToggledKeys(initialKeys);
     },
   });
 
   // use set for toggled keys to make it read easily
-  const readableToggledKeys = useMemo(() => new Set(_toggledKeys), [_toggledKeys]);
+  const readableToggledKeys = useMemo(
+    () => new Set(normalizeToggledKeys(_toggledKeys)),
+    [_toggledKeys, normalizeToggledKeys],
+  );
 
   // check current key is toggled
-  const isToggled = useCallback((key: Key) => readableToggledKeys.has(key), [readableToggledKeys]);
+  const isToggled = useCallback(
+    (key: Key) => {
+      if (selectionMode !== "leaf" || tree.isLeafKey(key)) {
+        return readableToggledKeys.has(key);
+      }
+
+      const leafKeys = tree.getLeafKeys(key);
+      return leafKeys.length > 0 && leafKeys.every((leafKey) => readableToggledKeys.has(leafKey));
+    },
+    [readableToggledKeys, selectionMode, tree],
+  );
 
   // toggle one key
   const toggle = useEvent((key: Key) => {
+    if (selectionMode === "independent") {
+      const nextKeys = new Set(readableToggledKeys);
+      if (nextKeys.has(key)) nextKeys.delete(key);
+      else nextKeys.add(key);
+
+      const nextToggledKeys = Array.from(nextKeys);
+      _setToggledKeys(nextToggledKeys);
+      onToggle?.(nextToggledKeys);
+      return;
+    }
+
+    if (selectionMode === "leaf") {
+      const keysToToggle = unique(tree.getLeafKeys(key));
+      if (keysToToggle.length === 0) return;
+
+      const shouldToggleOn = !keysToToggle.every((leafKey) => readableToggledKeys.has(leafKey));
+      const nextKeys = new Set(readableToggledKeys);
+      keysToToggle.forEach((leafKey) => {
+        if (shouldToggleOn) nextKeys.add(leafKey);
+        else nextKeys.delete(leafKey);
+      });
+
+      const nextToggledKeys = Array.from(nextKeys);
+      _setToggledKeys(nextToggledKeys);
+      onToggle?.(nextToggledKeys);
+      return;
+    }
+
     // get new toggled keys by toggle current key
     const _toggledKeys = Array.from(tree.toggle(key, readableToggledKeys));
     // set state

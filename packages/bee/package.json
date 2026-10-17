@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "prepublishOnly": "z rm dist && npm run build",
+    "prepublishOnly": "jrv rm dist && npm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
@@ -34,6 +34,7 @@
     "react-router": "^7.9.3"
   },
   "devDependencies": {
+    "@aiszlab/jarvis": "catalog:",
     "@babel/plugin-transform-runtime": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.27.1",

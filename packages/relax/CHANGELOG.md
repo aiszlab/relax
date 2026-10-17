@@ -1,5 +1,11 @@
 # @aiszlab/relax
 
+## 2.1.3
+
+### Patch Changes
+
+- Add independent and leaf selection modes to `useToggleable`.
+
 ## 2.1.2
 
 ### Patch Changes

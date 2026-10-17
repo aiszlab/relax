@@ -1,6 +1,6 @@
 {
   "name": "@aiszlab/relax",
-  "version": "2.1.3-beta.12",
+  "version": "2.1.3",
   "description": "react utils collection",
   "exports": {
     ".": {
@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "clean:build": "z rm dist",
+    "clean:build": "jrv rm dist",
     "prepublishOnly": "pnpm run clean:build && pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
@@ -33,6 +33,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@aiszlab/jarvis": "catalog:",
     "@babel/core": "^7.28.4",
     "@babel/plugin-transform-runtime": "^7.28.3",
     "@babel/preset-env": "^7.28.3",

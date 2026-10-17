@@ -33,6 +33,156 @@ const deepKeys = [
 // ---------------------------------------------------------------------------
 
 describe("useToggleable", () => {
+  it("independent selection mode toggles only the selected key", () => {
+    const onToggle = vi.fn();
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "independent",
+        defaultToggledKeys: ["child-1"],
+        onToggle,
+      }),
+    );
+
+    act(() => {
+      result.current.toggle("parent");
+    });
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1", "parent"]);
+    expect(result.current.isToggled("parent")).toBe(true);
+    expect(result.current.isToggled("child-1")).toBe(true);
+    expect(result.current.isToggled("child-2")).toBe(false);
+    expect(onToggle).toHaveBeenCalledWith(["child-1", "parent"]);
+
+    act(() => {
+      result.current.toggle("parent");
+    });
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1"]);
+  });
+
+  it("independent selection mode initializes every tree key when isDefaultToggled is true", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "independent",
+        isDefaultToggled: true,
+      }),
+    );
+
+    expect(Array.from(result.current.toggledKeys)).toEqual([
+      "parent",
+      "child-1",
+      "child-2",
+    ]);
+  });
+
+  it("leaf selection mode toggles only descendant leaf keys", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, { selectionMode: "leaf" }),
+    );
+
+    act(() => {
+      result.current.toggle("parent");
+    });
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1", "child-2"]);
+    expect(result.current.isToggled("parent")).toBe(true);
+    expect(result.current.isToggled("child-1")).toBe(true);
+  });
+
+  it("leaf selection mode expands initially selected parent keys to leaves", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "leaf",
+        defaultToggledKeys: ["parent", "unknown"],
+      }),
+    );
+
+    expect(Array.from(result.current.toggledKeys)).toEqual([
+      "child-1",
+      "child-2",
+      "unknown",
+    ]);
+    expect(result.current.isToggled("parent")).toBe(true);
+  });
+
+  it("leaf selection mode initializes all leaf keys when isDefaultToggled is true", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "leaf",
+        isDefaultToggled: true,
+      }),
+    );
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1", "child-2"]);
+  });
+
+  it("leaf selection mode derives parent state from all descendant leaves", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "leaf",
+        defaultToggledKeys: ["child-1"],
+      }),
+    );
+
+    expect(result.current.isToggled("parent")).toBe(false);
+    act(() => {
+      result.current.toggle("child-2");
+    });
+    expect(result.current.isToggled("parent")).toBe(true);
+  });
+
+  it("leaf selection mode treats a parent with no children as selected only by its own key", () => {
+    const { result } = renderHook(() =>
+      useToggleable([{ key: "leaf" }], {
+        selectionMode: "leaf",
+        defaultToggledKeys: ["leaf"],
+      }),
+    );
+
+    expect(result.current.isToggled("leaf")).toBe(true);
+  });
+
+  it("leaf selection mode can deselect one leaf and updates the parent state", () => {
+    const { result } = renderHook(() =>
+      useToggleable(treeKeys, {
+        selectionMode: "leaf",
+        defaultToggledKeys: ["child-1", "child-2"],
+      }),
+    );
+
+    expect(result.current.isToggled("parent")).toBe(true);
+    act(() => {
+      result.current.toggle("child-1");
+    });
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-2"]);
+    expect(result.current.isToggled("parent")).toBe(false);
+  });
+
+  it("leaf selection mode reports and emits only selected leaves in controlled mode", () => {
+    const onToggle = vi.fn();
+    const { result, rerender } = renderHook(
+      ({ toggledKeys }) =>
+        useToggleable(treeKeys, {
+          selectionMode: "leaf",
+          toggledKeys,
+          onToggle,
+        }),
+      { initialProps: { toggledKeys: ["parent"] as string[] } },
+    );
+
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1", "child-2"]);
+    expect(result.current.isToggled("parent")).toBe(true);
+    act(() => {
+      result.current.toggle("parent");
+    });
+    expect(onToggle).toHaveBeenCalledWith([]);
+    expect(Array.from(result.current.toggledKeys)).toEqual(["child-1", "child-2"]);
+
+    rerender({ toggledKeys: ["child-1"] });
+    expect(result.current.isToggled("parent")).toBe(false);
+  });
+
   // -------------------------------------------------------------------------
   // Empty / edge cases
   // -------------------------------------------------------------------------

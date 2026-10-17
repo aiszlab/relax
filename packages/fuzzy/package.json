@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "clean:build": "z rm dist",
+    "clean:build": "jrv rm dist",
     "prepublishOnly": "npm run clean:build && npm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
@@ -25,6 +25,7 @@
     "@babel/runtime": "^7.28.4"
   },
   "devDependencies": {
+    "@aiszlab/jarvis": "catalog:",
     "@babel/plugin-transform-runtime": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-typescript": "^7.27.1",

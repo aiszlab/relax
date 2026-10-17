@@ -9,6 +9,7 @@ import { useBoolean } from "../hooks/use-boolean";
 import { useEvent } from "./use-event";
 import { contains } from "../dom";
 import type { Nullable } from "../types";
+import { isPointerUsable } from "../is/is-pointer-usable";
 
 type UsingHover<T> = {
   onEnter?: MouseEventHandler<T>;
@@ -19,10 +20,10 @@ type UsingHover<T> = {
 type UsedHover<T> = [
   boolean,
   {
-    onPointerEnter: PointerEventHandler<T>;
-    onPointerLeave: PointerEventHandler<T>;
-    onMouseEnter: MouseEventHandler<T>;
-    onMouseLeave: MouseEventHandler<T>;
+    onPointerEnter?: PointerEventHandler<T>;
+    onPointerLeave?: PointerEventHandler<T>;
+    onMouseEnter?: MouseEventHandler<T>;
+    onMouseLeave?: MouseEventHandler<T>;
     onMouseOut?: MouseEventHandler<T>;
   },
 ];
@@ -54,10 +55,9 @@ export const useHover = <T extends Element = Element>({
   return [
     isHovered,
     {
-      onMouseEnter: enter,
-      onPointerEnter: enter,
-      onMouseLeave: leave,
-      onPointerLeave: leave,
+      ...(isPointerUsable()
+        ? { onPointerEnter: enter, onPointerLeave: leave }
+        : { onMouseEnter: enter, onMouseLeave: leave }),
       ...(!!ref && {
         onMouseOut: moveOut,
       }),

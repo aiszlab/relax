@@ -9,10 +9,10 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "version": "z cs version",
-    "changesets": "z cs"
+    "version": "jrv cs version",
+    "changesets": "jrv cs"
   },
   "devDependencies": {
-    "@aiszlab/jarvis": "^1.0.3"
+    "@aiszlab/jarvis": "catalog:"
   }
 }
