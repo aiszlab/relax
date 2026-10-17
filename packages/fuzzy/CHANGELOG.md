@@ -1,5 +1,12 @@
 # @aiszlab/fuzzy
 
+## 2.1.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @aiszlab/relax@2.1.3
+
 ## 2.1.2
 
 ### Patch Changes

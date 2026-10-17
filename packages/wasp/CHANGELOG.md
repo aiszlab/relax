@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 2.1.3
+
+### Patch Changes
+
+- Version synchronized with the workspace packages.
+
 ## 2.1.2
 
 ### Patch Changes
