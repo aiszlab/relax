@@ -25,17 +25,17 @@
   },
   "description": "shell for any build scripts",
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.14",
-    "@vitejs/plugin-react": "^4.7.0",
-    "commander": "^13.1.0",
-    "tailwindcss": "^4.1.14",
-    "vite": "^6.3.6"
+    "@tailwindcss/vite": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "commander": "catalog:",
+    "tailwindcss": "catalog:",
+    "vite": "catalog:"
   },
   "devDependencies": {
     "@aiszlab/jarvis": "catalog:",
-    "@vitest/coverage-v8": "^4.1.10",
-    "typescript": "5.8.3",
-    "vitest": "^4.1.10"
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "files": [
     "bin/",

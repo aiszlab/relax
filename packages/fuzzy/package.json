@@ -22,21 +22,21 @@
   },
   "dependencies": {
     "@aiszlab/relax": "workspace:^",
-    "@babel/runtime": "^7.28.4"
+    "@babel/runtime": "catalog:"
   },
   "devDependencies": {
     "@aiszlab/jarvis": "catalog:",
-    "@babel/plugin-transform-runtime": "^7.28.3",
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-typescript": "^7.27.1",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^16.0.2",
-    "@rollup/plugin-typescript": "^12.1.4",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
-    "@vitest/coverage-v8": "^4.1.10",
-    "rollup": "^4.52.4",
-    "vitest": "^4.1.10"
+    "@babel/plugin-transform-runtime": "catalog:",
+    "@babel/preset-env": "catalog:",
+    "@babel/preset-typescript": "catalog:",
+    "@rollup/plugin-babel": "catalog:",
+    "@rollup/plugin-node-resolve": "catalog:",
+    "@rollup/plugin-typescript": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "rollup": "catalog:",
+    "vitest": "catalog:"
   },
   "author": "tutu@fantufantu.com",
   "license": "MIT",
