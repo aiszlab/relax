@@ -1,5 +1,13 @@
 # @aiszlab/bee
 
+## 3.0.1
+
+### Patch Changes
+
+- Upgrade workspace dependencies and fix the Vite configuration test for the current React plugin.
+- Updated dependencies
+  - @aiszlab/relax@3.0.1
+
 ## 3.0.0
 
 ### Major Changes

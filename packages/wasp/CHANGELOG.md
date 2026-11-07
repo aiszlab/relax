@@ -1,5 +1,11 @@
 # @aiszlab/wasp
 
+## 3.0.1
+
+### Patch Changes
+
+- Upgrade workspace dependencies and fix the Vite configuration test for the current React plugin.
+
 ## 3.0.0
 
 ## 2.1.3

@@ -10,12 +10,12 @@ describe("vite.config", () => {
     expect(configuration.plugins).toHaveLength(2);
   });
 
-  it("has react plugin group (first plugin array)", () => {
+  it("includes the React transform and refresh plugins", () => {
     const reactPlugins = configuration.plugins?.[0];
     expect(Array.isArray(reactPlugins)).toBe(true);
-    expect(reactPlugins).toHaveLength(2);
-    expect((reactPlugins as any)[0].name).toBe("vite:react-babel");
-    expect((reactPlugins as any)[1].name).toBe("vite:react-refresh");
+    const pluginNames = (reactPlugins as any[]).map(({ name }) => name);
+    expect(pluginNames).toContain("vite:react-babel");
+    expect(pluginNames).toContain("vite:react-refresh");
   });
 
   it("has tailwindcss plugin group (second plugin array)", () => {
