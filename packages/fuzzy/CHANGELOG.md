@@ -2,8 +2,6 @@
 
 ## 3.0.0
 
-### Patch Changes
-
 - Upgrade workspace dependencies and fix the Vite configuration test for the current React plugin.
 - Updated dependencies
   - @aiszlab/relax@3.0.0

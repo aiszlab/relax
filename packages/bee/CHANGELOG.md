@@ -2,13 +2,9 @@
 
 ## 3.0.0
 
-### Patch Changes
-
 - Upgrade workspace dependencies and fix the Vite configuration test for the current React plugin.
 - Updated dependencies
   - @aiszlab/relax@3.0.0
-
-### Major Changes
 
 - 2ea1810: Upgrade bee to React Router 8. React and React DOM 18 are no longer supported; the minimum peer version is 19.2.7.
 
