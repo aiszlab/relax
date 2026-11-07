@@ -1,5 +1,15 @@
 # @aiszlab/bee
 
+## 3.0.0
+
+### Major Changes
+
+- 2ea1810: Upgrade bee to React Router 8. React and React DOM 18 are no longer supported; the minimum peer version is 19.2.7.
+
+### Patch Changes
+
+- @aiszlab/relax@3.0.0
+
 ## 2.1.3
 
 ### Patch Changes

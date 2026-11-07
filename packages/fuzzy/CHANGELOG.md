@@ -1,5 +1,11 @@
 # @aiszlab/fuzzy
 
+## 3.0.0
+
+### Patch Changes
+
+- @aiszlab/relax@3.0.0
+
 ## 2.1.3
 
 ### Patch Changes
