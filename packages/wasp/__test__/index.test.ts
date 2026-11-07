@@ -60,11 +60,13 @@ describe("index (CLI)", () => {
   });
 
   it("build command action calls build", () => {
+    vi.clearAllMocks();
+
     const buildAction = commands.get("build");
     expect(buildAction).toBeDefined();
     buildAction!();
 
     expect(mockBuildAction).toHaveBeenCalledTimes(1);
-    expect(mockDevAction).toHaveBeenCalledTimes(1); // from previous test
+    expect(mockDevAction).not.toHaveBeenCalled();
   });
 });
