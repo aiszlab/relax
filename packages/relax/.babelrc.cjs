@@ -1,4 +1,4 @@
-const pkg = require("./package.json");
+const runtimeVersion = require("@babel/runtime/package.json").version;
 
 /**
  * @type {import("@babel/core").ConfigFunction}
@@ -10,7 +10,7 @@ const config = (api) => {
   // in unit tests, use jsx, need convert to js
   return {
     presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
-    plugins: [["@babel/plugin-transform-runtime", { version: pkg.dependencies["@babel/runtime"] }]],
+    plugins: [["@babel/plugin-transform-runtime", { version: runtimeVersion }]],
   };
 };
 
